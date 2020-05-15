@@ -1,0 +1,42 @@
+/**********************************************************************
+Mensaje de configuración del navegador
+**********************************************************************/
+			.mdl-typography--display-3{
+			text-align: center;
+			}
+			.card-square.mdl-card {
+			width: 100%;
+			height: 100%;
+			}
+			.card-square > .mdl-card__title {
+			height: 200px;
+			max-height: 200px;
+			color: #fff;
+			background: bottom right 15% no-repeat #448AFF;
+			background-size: auto 150px;
+			background-origin: content-box;
+			}
+			.card-square > .mdl-card__supporting-text{
+			height: calc(100% - 285px);
+			}
+			.card-square > .mdl-card__actions{
+			min-height: 53px;
+			}
+			#firefox{
+			background-image: url('#{resource['img/firefox.svg']}');
+			}
+			#chrome{
+			background-image: url('#{resource['img/chrome.svg']}');
+			}
+			#opera{
+			background-image: url('#{resource['img/opera.svg']}');
+			}
+			#safari{
+			background-image: url('#{resource['img/safari.svg']}');
+			}
+			#ie{
+			background-image: url('#{resource['img/internetExplorer.svg']}');
+			}
+			#edge{
+			background-image: url('#{resource['img/microsoftEdge.svg']}');
+			}

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+	<h:head>
+		<title>Control de órdenes de producción | SEA</title>
+		<ui:composition template="/templates/resources.xhtml" />
+		<h:outputStylesheet library="css" name="reportes.css" />
+	</h:head>
+	<h:body>
+        <div class="mdl-layout mdl-js-layout">
+			<ui:composition template="/templates/header.xhtml" />
+			<main class="mdl-layout__content" id="controlOP">
+				<div class="page-content">
+					<h:form>
+						<h3 class="mdl-typography--title fullWidth">Filtros</h3>
+						<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+							<h:inputText class="mdl-textfield__input" id="cliente" required="required" p:maxlength="256" />
+							<h:outputLabel class="mdl-textfield__label" for="cliente">Cliente</h:outputLabel>
+						</h:panelGroup>
+						<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+							<h:inputText class="mdl-textfield__input" id="asesor" required="required" p:maxlength="256" />
+							<h:outputLabel class="mdl-textfield__label" for="asesor">Asesor</h:outputLabel>
+						</h:panelGroup>
+						<h:panelGroup layout="block" class="mdl-selectfield mdl-js-selectfield mdl-selectfield--floating-label">
+							<select class="mdl-selectfield__select" id="estado">
+								<option value="1">Todas</option>
+								<option value="2">En proceso</option>
+								<option value="3">Finalizadas</option>
+							</select>
+							<h:outputLabel class="mdl-selectfield__label" for="estado">Estado</h:outputLabel>
+						</h:panelGroup>
+						<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" type="submit">Filtrar</button>
+					</h:form>
+					<h:panelGroup layout="block" class="fullWidth" p:data-dataTable="">
+						<table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+							<thead>
+								<tr>
+									<th class="mdl-data-table__cell--non-numeric">CLIENTE</th>
+									<th class="mdl-data-table__cell--non-numeric">ASESOR</th>
+									<th class="mdl-data-table__cell--non-numeric">FECHA OC</th>
+									<th class="mdl-data-table__cell--non-numeric">FECHA ANTICIPO</th>
+									<th class="mdl-data-table__cell--non-numeric"># OP</th>
+									<th class="mdl-data-table__cell--non-numeric">FECHA DE ENVIO OP</th>
+									<th class="mdl-data-table__cell--non-numeric">F ENTREGA 1</th>
+									<th class="mdl-data-table__cell--non-numeric">F ENTREGA 2</th>
+									<th class="mdl-data-table__cell--non-numeric"> Valor contrato ANTES DE IVA </th>
+									<th class="mdl-data-table__cell--non-numeric">Facturado</th>
+									<th class="mdl-data-table__cell--non-numeric">DETALLE OP</th>
+									<th class="mdl-data-table__cell--non-numeric">Estado</th>
+									<th class="mdl-data-table__cell--non-numeric">FECHA DE ENTREGA</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td class="mdl-data-table__cell--non-numeric">TEXTILES   VICUÑA</td>
+									<td class="mdl-data-table__cell--non-numeric">Asdrubal</td>
+									<td class="mdl-data-table__cell--non-numeric">10-mar</td>
+									<td class="mdl-data-table__cell--non-numeric">pago  anticipado</td>
+									<td class="mdl-data-table__cell--non-numeric">1901</td>
+									<td class="mdl-data-table__cell--non-numeric">10-mar</td>
+									<td class="mdl-data-table__cell--non-numeric">30-mar</td>
+									<td class="mdl-data-table__cell--non-numeric">01-abr</td>
+									<td class="mdl-data-table__cell--non-numeric">$549.144</td>
+									<td class="mdl-data-table__cell--non-numeric">MES D E MARZO</td>
+									<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver Detalles</a></td>
+									<td class="mdl-data-table__cell--non-numeric">Finalizada</td>
+									<td class="mdl-data-table__cell--non-numeric">01-abr</td>
+								</tr>
+								<tr>
+									<td class="mdl-data-table__cell--non-numeric">ejecutiva  seguridad y salud en el trabajo</td>
+									<td class="mdl-data-table__cell--non-numeric">YEIMITH</td>
+									<td class="mdl-data-table__cell--non-numeric">09-mar</td>
+									<td class="mdl-data-table__cell--non-numeric">50%</td>
+									<td class="mdl-data-table__cell--non-numeric">1905</td>
+									<td class="mdl-data-table__cell--non-numeric">10-mar</td>
+									<td class="mdl-data-table__cell--non-numeric">25-mar</td>
+									<td class="mdl-data-table__cell--non-numeric">26-mar</td>
+									<td class="mdl-data-table__cell--non-numeric">$95.000</td>
+									<td class="mdl-data-table__cell--non-numeric">hasta la  entrega</td>
+									<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver Detalles</a></td>
+									<td class="mdl-data-table__cell--non-numeric">En proceso</td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+								</tr>
+								<tr>
+									<td class="mdl-data-table__cell--non-numeric">INTERMARKETING</td>
+									<td class="mdl-data-table__cell--non-numeric">ANGEL</td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric">hasta la  entrega</td>
+									<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver Detalles</a></td>
+									<td class="mdl-data-table__cell--non-numeric">Finalizada</td>
+									<td class="mdl-data-table__cell--non-numeric">28-mar</td>
+								</tr>
+								<tr>
+									<td class="mdl-data-table__cell--non-numeric">URBANISM+SURFACE= PROFIT</td>
+									<td class="mdl-data-table__cell--non-numeric">YEIMITH</td>
+									<td class="mdl-data-table__cell--non-numeric">09-mar</td>
+									<td class="mdl-data-table__cell--non-numeric">50%</td>
+									<td class="mdl-data-table__cell--non-numeric">1911</td>
+									<td class="mdl-data-table__cell--non-numeric">15-mar</td>
+									<td class="mdl-data-table__cell--non-numeric">28-mar</td>
+									<td class="mdl-data-table__cell--non-numeric">30-mar</td>
+									<td class="mdl-data-table__cell--non-numeric">$1.042.200</td>
+									<td class="mdl-data-table__cell--non-numeric">HASTA LA ENTREGA </td>
+									<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver Detalles</a></td>
+									<td class="mdl-data-table__cell--non-numeric">En proceso</td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+								</tr>
+								<tr>
+									<td class="mdl-data-table__cell--non-numeric">fusasab</td>
+									<td class="mdl-data-table__cell--non-numeric">CAROLINA</td>
+									<td class="mdl-data-table__cell--non-numeric">17-mar</td>
+									<td class="mdl-data-table__cell--non-numeric">50%</td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+								</tr>
+								<tr>
+									<td class="mdl-data-table__cell--non-numeric">1914</td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+								</tr>
+								<tr>
+									<td class="mdl-data-table__cell--non-numeric">Monitoreos Ambientales High Tecnology Ltda</td>
+									<td class="mdl-data-table__cell--non-numeric">YEIMITH</td>
+									<td class="mdl-data-table__cell--non-numeric">16-mar</td>
+									<td class="mdl-data-table__cell--non-numeric">PAGO ANTICIPADO</td>
+									<td class="mdl-data-table__cell--non-numeric">n/a</td>
+									<td class="mdl-data-table__cell--non-numeric">16-mar</td>
+									<td class="mdl-data-table__cell--non-numeric">28-mar</td>
+									<td class="mdl-data-table__cell--non-numeric">29-mar</td>
+									<td class="mdl-data-table__cell--non-numeric">$338.916</td>
+									<td class="mdl-data-table__cell--non-numeric">si</td>
+									<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver Detalles</a></td>
+									<td class="mdl-data-table__cell--non-numeric">Finalizada</td>
+									<td class="mdl-data-table__cell--non-numeric">01-abr</td>
+								</tr>
+								<tr>
+									<td class="mdl-data-table__cell--non-numeric">ANDERSON  OREJUELA</td>
+									<td class="mdl-data-table__cell--non-numeric">Asdrubal</td>
+									<td class="mdl-data-table__cell--non-numeric">17-mar</td>
+									<td class="mdl-data-table__cell--non-numeric">50%</td>
+									<td class="mdl-data-table__cell--non-numeric">1912</td>
+									<td class="mdl-data-table__cell--non-numeric">23-mar</td>
+									<td class="mdl-data-table__cell--non-numeric">13-abr</td>
+									<td class="mdl-data-table__cell--non-numeric">15-abr</td>
+									<td class="mdl-data-table__cell--non-numeric">$1.680.000</td>
+									<td class="mdl-data-table__cell--non-numeric">HASTA  ENTREGA</td>
+									<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver Detalles</a></td>
+									<td class="mdl-data-table__cell--non-numeric">En proceso</td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+								</tr>
+								<tr>
+									<td class="mdl-data-table__cell--non-numeric">elster solucioines sas</td>
+									<td class="mdl-data-table__cell--non-numeric">CAROLINA</td>
+									<td class="mdl-data-table__cell--non-numeric">30-mar</td>
+									<td class="mdl-data-table__cell--non-numeric">credito 30 dias</td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+								</tr>
+								<tr>
+									<td class="mdl-data-table__cell--non-numeric">1917</td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+								</tr>
+								<tr>
+									<td class="mdl-data-table__cell--non-numeric">1918</td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+								</tr>
+								<tr>
+									<td class="mdl-data-table__cell--non-numeric">simplexity</td>
+									<td class="mdl-data-table__cell--non-numeric">YEIMITH</td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver Detalles</a></td>
+									<td class="mdl-data-table__cell--non-numeric">En proceso</td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+								</tr>
+								<tr>
+									<td class="mdl-data-table__cell--non-numeric">croco sas</td>
+									<td class="mdl-data-table__cell--non-numeric">CAROLINA</td>
+									<td class="mdl-data-table__cell--non-numeric">04-abr</td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+								</tr>
+								<tr>
+									<td class="mdl-data-table__cell--non-numeric">50%  anticipo</td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+								</tr>
+								<tr>
+									<td class="mdl-data-table__cell--non-numeric">50% contra  entrega</td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+									<td class="mdl-data-table__cell--non-numeric"></td>
+								</tr>
+							</tbody>
+						</table>
+					</h:panelGroup>
+					<aside id="subForm">
+						<h:form class="mdl-dialog" id="viewReport">
+							<h:panelGroup layout="block" class="mdl-dialog__title">Detalles de la cotización XX-XXXX</h:panelGroup>
+							<h:panelGroup layout="block" class="mdl-dialog__content">
+								<h:panelGroup layout="block" class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
+									<h:panelGroup layout="block" class="mdl-tabs__tab-bar">
+										<a href="#OP-panel" class="mdl-tabs__tab is-active">OP</a>
+										<a href="#Seguimiento-panel" class="mdl-tabs__tab">Seguimiento</a>
+									</h:panelGroup>
+
+									<h:panelGroup layout="block" class="mdl-tabs__panel is-active" id="OP-panel">
+										<iframe class="iframe" src="/pdfjs/web/viewer.html?file=/reportes/Cotizacion.pdf"></iframe>
+									</h:panelGroup>
+									<h:panelGroup layout="block" class="mdl-tabs__panel" id="Seguimiento-panel">
+										<table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+											<thead>
+												<tr>
+													<th class="mdl-data-table__cell--non-numeric">Fecha</th>
+													<th class="mdl-data-table__cell--non-numeric">Proeso realizado</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td class="mdl-data-table__cell--non-numeric">2016/03/23</td>
+													<td class="mdl-data-table__cell--non-numeric">LAS  ORDENES DE  COMPRA  YA  SE REALIZARON ANTICIPOS Y  ESTAN EN PROCESO D E FABRICACION</td>
+												</tr>
+												<tr>
+													<td class="mdl-data-table__cell--non-numeric">2016/04/04</td>
+													<td class="mdl-data-table__cell--non-numeric">el  corte   fue  realizado  desde el  1 de  abril al  3 de  abril  y la  tela   estaba  en planta  desde el  18 de marzo pero por  cuestiones de  corte no  fue  cortada  hasta  la  el primero  del presente mes, la  satelite  se compromete a  entregar el  12 de  abril</td>
+												</tr>
+												<tr>
+													<td class="mdl-data-table__cell--non-numeric">2016/04/04</td>
+													<td class="mdl-data-table__cell--non-numeric">la dotacion esta lista para entrega, pero no se ha podido despachar por pago</td>
+												</tr>
+											</tbody>
+										</table>
+									</h:panelGroup>
+								</h:panelGroup>
+								<h:panelGroup layout="block" class="mdl-dialog__actions">
+									<button type="button" class="mdl-button toggleSubForm close">Cerrar</button>
+								</h:panelGroup>
+						</h:form>
+					</aside>
+				</div>
+			</main>
+		</div>
+	</h:body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+	<h:head>
+		<title>Devoluciones | SEA</title>
+		<ui:composition template="/templates/resources.xhtml" />
+	</h:head>
+	<h:body>
+        <div class="mdl-layout mdl-js-layout">
+			<ui:composition template="/templates/header.xhtml" />
+			<main class="mdl-layout__content">
+				<div class="page-content">
+					<h:form>
+						<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+							<h:inputText class="mdl-textfield__input" id="numeroOP" p:list="OP" required="required">
+								<h:outputLabel class="mdl-textfield__label" for="numeroOP">Número de OP</h:outputLabel>
+						</h:panelGroup>
+						<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+							<h:inputText class="mdl-textfield__input" id="numeroOC" disabled="disabled" value="05-125">
+								<h:outputLabel class="mdl-textfield__label" for="numeroOC">Número de cotización</h:outputLabel>
+						</h:panelGroup>
+						<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+							<h:inputTextarea class="mdl-textfield__input" id="motivoDevolucion" required="required" />
+							<h:outputLabel class="mdl-textfield__label" for="motivoDevolucion">Motivo de la devolución</h:outputLabel>
+						</h:panelGroup>
+						<table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+							<thead>
+								<tr>
+									<th class="mdl-data-table__cell--non-numeric">Nombre</th>
+									<th class="mdl-data-table__cell--non-numeric">Descripción</th>
+									<th class="mdl-data-table__cell--non-numeric">Cumple</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td class="mdl-data-table__cell--non-numeric">Póliza alterada</td>
+									<td class="mdl-data-table__cell--non-numeric">Cuando esta póliza manifestara claros signos de haber sido alterada en los datos originales consignados en ella.</td>
+									<td class="mdl-data-table__cell--non-numeric">
+										<h:outputLabel for="garantia1" class="mdl-switch mdl-js-switch mdl-js-ripple-effect">
+											<h:selectBooleanCheckbox id="garantia1" class="mdl-switch__input" />
+											<h:panelGroup class="mdl-switch__label"></h:panelGroup>
+										</h:outputLabel>
+									</td>
+								</tr>
+								<tr>
+									<td class="mdl-data-table__cell--non-numeric">Uso del producto</td>
+									<td class="mdl-data-table__cell--non-numeric">Cuando el producto haya sido usado fuera de su capacidad, maltratado, rasgado, expuesto a excesiva humedad, molado por algún líquido o substancia corrosiva, así como por cualquiera otra falla atribuible al consumidor.</td>
+									<td class="mdl-data-table__cell--non-numeric">
+										<h:outputLabel for="garantia2" class="mdl-switch mdl-js-switch mdl-js-ripple-effect">
+											<h:selectBooleanCheckbox id="garantia2" class="mdl-switch__input" />
+											<h:panelGroup class="mdl-switch__label"></h:panelGroup>
+										</h:outputLabel>
+									</td>
+								</tr>
+								<tr>
+									<td class="mdl-data-table__cell--non-numeric">Producto alterado</td>
+									<td class="mdl-data-table__cell--non-numeric">Cuando el producto haya sido desbaratado, modificado o reparado por personas no autorizadas full dotaciones SAS.</td>
+									<td class="mdl-data-table__cell--non-numeric">
+										<h:outputLabel for="garantia3" class="mdl-switch mdl-js-switch mdl-js-ripple-effect">
+											<h:selectBooleanCheckbox id="garantia3" class="mdl-switch__input" />
+											<h:panelGroup class="mdl-switch__label"></h:panelGroup>
+										</h:outputLabel>
+									</td>
+								</tr>
+								<tr>
+									<td class="mdl-data-table__cell--non-numeric">Uso</td>
+									<td class="mdl-data-table__cell--non-numeric">Cuando el defecto sea originado por el desgaste normal de las prendas debido al uso.</td>
+									<td class="mdl-data-table__cell--non-numeric">
+										<h:outputLabel for="garantia4" class="mdl-switch mdl-js-switch mdl-js-ripple-effect">
+											<h:selectBooleanCheckbox id="garantia4" class="mdl-switch__input" />
+											<h:panelGroup class="mdl-switch__label"></h:panelGroup>
+										</h:outputLabel>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+							<h:inputTextarea class="mdl-textfield__input" id="comentariosDevolucion" p:maxlength="1024" required="required" />
+							<h:outputLabel class="mdl-textfield__label" for="comentariosDevolucion">Comentarios</h:outputLabel>
+						</h:panelGroup>
+						<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" type="submit">Aprobar devolución</button>
+						<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" type="submit">Rechazar devolución</button>
+					</h:form>
+					<datalist id="OP">
+						<option value="1497">1497</option>
+						<option value="1498">1498</option>
+						<option value="1413">1413</option>
+						<option value="1416">1416</option>
+						<option value="1501">1501</option>
+						<option value="1415">1415</option>
+						<option value="1515">1515</option>
+						<option value="1512">1512</option>
+						<option value="1501">1501</option>
+						<option value="1413">1413</option>
+						<option value="1500">1500</option>
+						<option value="1502">1502</option>
+						<option value="1504">1504</option>
+						<option value="1516">1516</option>
+						<option value="1513">1513</option>
+						<option value="1514">1514</option>
+						<option value="1519">1519</option>
+						<option value="1520">1520</option>
+						<option value="1517">1517</option>
+						<option value="1536">1536</option>
+						<option value="1531">1531</option>
+						<option value="1539">1539</option>
+						<option value="1540">1540</option>
+						<option value="1538">1538</option>
+						<option value="1533">1533</option>
+						<option value="1532">1532</option>
+						<option value="1529">1529</option>
+						<option value="1528">1528</option>
+						<option value="1542">1542</option>
+						<option value="1546">1546</option>
+						<option value="1547">1547</option>
+						<option value="1550">1550</option>
+						<option value="1552">1552</option>
+						<option value="1466">1466</option>
+						<option value="1510">1510</option>
+						<option value="1508">1508</option>
+						<option value="1507">1507</option>
+						<option value="1505">1505</option>
+						<option value="1560">1560</option>
+						<option value="1553">1553</option>
+						<option value="1548">1548</option>
+						<option value="1565">1565</option>
+						<option value="1566">1566</option>
+						<option value="1567">1567</option>
+						<option value="1506">1506</option>
+						<option value="1524">1524</option>
+						<option value="1527">1527</option>
+						<option value="1523">1523</option>
+						<option value="1522">1522</option>
+						<option value="1522">1522</option>
+						<option value="1554">1554</option>
+						<option value="1572">1572</option>
+						<option value="1465">1465</option>
+					</datalist>
+				</div>
+			</main>
+		</div>
+	</h:body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+	<h:head>
+		<title>Histórico de ventas | SEA</title>
+		<ui:composition template="/templates/resources.xhtml" />
+		<h:outputStylesheet library="css" name="reportes.css" />
+	</h:head>
+	<h:body>
+        <div class="mdl-layout mdl-js-layout">
+			<ui:composition template="/templates/header.xhtml" />
+			<main class="mdl-layout__content" id="historco">
+				<div class="page-content">
+					<h:form>
+						<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+							<h:inputText class="mdl-textfield__input" pt:type="date" id="fechaInicial">
+								<h:outputLabel class="mdl-textfield__label" for="fechaInicial">Fecha inicial</h:outputLabel>
+						</h:panelGroup>
+						<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+							<h:inputText class="mdl-textfield__input" pt:type="date" id="fechaFinal">
+								<h:outputLabel class="mdl-textfield__label" for="fechaFinal">Fecha final</h:outputLabel>
+						</h:panelGroup>
+						<h:panelGroup layout="block" class="mdl-selectfield mdl-js-selectfield mdl-selectfield--floating-label">
+							<select class="mdl-selectfield__select" id="asesor" required="required">
+								<option value=""></option>
+								<option value="1">Asdrubal</option>
+								<option value="2">Carolina</option>
+								<option value="3">Yeimith</option>
+								<option value="4">Ángel</option>
+							</select>
+							<h:outputLabel class="mdl-selectfield__label" for="asesor">Asesor</h:outputLabel>
+						</h:panelGroup>
+						<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+							<h:inputText class="mdl-textfield__input" pt:type="date" id="cliente">
+								<h:outputLabel class="mdl-textfield__label" for="cliente">Cliente</h:outputLabel>
+						</h:panelGroup>
+						<h:panelGroup layout="block" class="buttons fullWidth">
+							<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" type="submit">Filtrar</button>
+						</h:panelGroup>
+					</h:form>
+					<table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+						<thead>
+							<tr>
+								<th class="mdl-data-table__cell--non-numeric">Cliente</th>
+								<th class="mdl-data-table__cell--non-numeric">No. Documento</th>
+								<th class="mdl-data-table__cell--non-numeric">ASESOR</th>
+								<th class="mdl-data-table__cell--non-numeric">FECHA ENVIO OC</th>
+								<th class="mdl-data-table__cell--non-numeric"># OP</th>
+								<th class="mdl-data-table__cell--non-numeric"> Valor contrato ANTES DE IVA </th>
+								<th class="mdl-data-table__cell--non-numeric">Fecha de entrega</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">RECEPCION DYM</td>
+								<td class="mdl-data-table__cell--non-numeric">12456789</td>
+								<td class="mdl-data-table__cell--non-numeric">AMERICA</td>
+								<td class="mdl-data-table__cell--non-numeric">02/03/2016</td>
+								<td class="mdl-data-table__cell--non-numeric">1497</td>
+								<td class="mdl-data-table__cell--non-numeric">$549.144</td>
+								<td class="mdl-data-table__cell--non-numeric">26-ene</td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">coexingenieria</td>
+								<td class="mdl-data-table__cell--non-numeric">12456789</td>
+								<td class="mdl-data-table__cell--non-numeric">AMERICA</td>
+								<td class="mdl-data-table__cell--non-numeric">02/03/2016</td>
+								<td class="mdl-data-table__cell--non-numeric">1498</td>
+								<td class="mdl-data-table__cell--non-numeric">$95.000</td>
+								<td class="mdl-data-table__cell--non-numeric">08-feb</td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">Nuevainc</td>
+								<td class="mdl-data-table__cell--non-numeric">12456789</td>
+								<td class="mdl-data-table__cell--non-numeric">AMERICA</td>
+								<td class="mdl-data-table__cell--non-numeric">02/03/2016</td>
+								<td class="mdl-data-table__cell--non-numeric">1413</td>
+								<td class="mdl-data-table__cell--non-numeric">$1.042.200</td>
+								<td class="mdl-data-table__cell--non-numeric">08-feb</td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">Mario Rojas</td>
+								<td class="mdl-data-table__cell--non-numeric">12456789</td>
+								<td class="mdl-data-table__cell--non-numeric">AMERICA</td>
+								<td class="mdl-data-table__cell--non-numeric">02/03/2016</td>
+								<td class="mdl-data-table__cell--non-numeric">1416</td>
+								<td class="mdl-data-table__cell--non-numeric">$1.427.116</td>
+								<td class="mdl-data-table__cell--non-numeric">08-feb</td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">TROUT CO SAS</td>
+								<td class="mdl-data-table__cell--non-numeric">12456789</td>
+								<td class="mdl-data-table__cell--non-numeric">AMERICA</td>
+								<td class="mdl-data-table__cell--non-numeric">02/03/2016</td>
+								<td class="mdl-data-table__cell--non-numeric">1501</td>
+								<td class="mdl-data-table__cell--non-numeric">$338.916</td>
+								<td class="mdl-data-table__cell--non-numeric">08-feb</td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">Stor Ingal</td>
+								<td class="mdl-data-table__cell--non-numeric">12456789</td>
+								<td class="mdl-data-table__cell--non-numeric">AMERICA</td>
+								<td class="mdl-data-table__cell--non-numeric">02/03/2016</td>
+								<td class="mdl-data-table__cell--non-numeric">1415</td>
+								<td class="mdl-data-table__cell--non-numeric">$1.680.000</td>
+								<td class="mdl-data-table__cell--non-numeric">08-feb</td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">TEXMODAS</td>
+								<td class="mdl-data-table__cell--non-numeric">12456789</td>
+								<td class="mdl-data-table__cell--non-numeric">AMERICA</td>
+								<td class="mdl-data-table__cell--non-numeric">02/03/2016</td>
+								<td class="mdl-data-table__cell--non-numeric">1515</td>
+								<td class="mdl-data-table__cell--non-numeric">$1.692.400</td>
+								<td class="mdl-data-table__cell--non-numeric">08-feb</td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">INDUSTRIAS GASINOX MYT SAS</td>
+								<td class="mdl-data-table__cell--non-numeric">12456789</td>
+								<td class="mdl-data-table__cell--non-numeric">AMERICA</td>
+								<td class="mdl-data-table__cell--non-numeric">02/03/2016</td>
+								<td class="mdl-data-table__cell--non-numeric">1512</td>
+								<td class="mdl-data-table__cell--non-numeric">$3.978.600</td>
+								<td class="mdl-data-table__cell--non-numeric">08-feb</td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">D&amp;S Distribuciones y Subestaciones S.A.S.</td>
+								<td class="mdl-data-table__cell--non-numeric">12456789</td>
+								<td class="mdl-data-table__cell--non-numeric">AMERICA</td>
+								<td class="mdl-data-table__cell--non-numeric">02/03/2016</td>
+								<td class="mdl-data-table__cell--non-numeric">1501</td>
+								<td class="mdl-data-table__cell--non-numeric">$549.144</td>
+								<td class="mdl-data-table__cell--non-numeric">03-feb</td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">E&amp;S MBL Y CÍA S.A.S</td>
+								<td class="mdl-data-table__cell--non-numeric">12456789</td>
+								<td class="mdl-data-table__cell--non-numeric">AMERICA</td>
+								<td class="mdl-data-table__cell--non-numeric">02/03/2016</td>
+								<td class="mdl-data-table__cell--non-numeric">1413</td>
+								<td class="mdl-data-table__cell--non-numeric">$95.000</td>
+								<td class="mdl-data-table__cell--non-numeric">09-feb</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</main>
+		</div>
+	</h:body>
+</html>

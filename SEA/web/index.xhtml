@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://xmlns.jcp.org/jsf/html"
+	  xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Inicio | SEA</title>
+		<ui:composition template="/templates/resources.xhtml" />
+    </h:head>
+	<h:body>
+		<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+			<header class="mdl-layout__header">
+				<div class="mdl-layout__header-row">
+					<!-- Title -->
+					<span class="mdl-layout-title">
+						<nav id="navBreadcrumbs">
+							<ul id="breadcrumbs"></ul>
+						</nav>
+					</span>
+				</div>
+				<!-- Tabs -->
+				<div class="mdl-layout__tab-bar mdl-js-ripple-effect">
+					<a href="#scroll-tab-1" class="mdl-layout__tab is-active">Cotizaciones abiertas</a>
+					<a href="#scroll-tab-2" class="mdl-layout__tab">OP por generar</a>
+					<a href="#scroll-tab-3" class="mdl-layout__tab">OP por corregir</a>
+					<a href="#scroll-tab-4" class="mdl-layout__tab">OP por aprobar</a>
+					<a href="#scroll-tab-5" class="mdl-layout__tab">OP en seguimiento</a>
+					<a href="#scroll-tab-6" class="mdl-layout__tab">Articulos sin actualizar</a>
+				</div>
+			</header>
+			<ui:composition template="/templates/navGeneral.xhtml" />
+			<main class="mdl-layout__content">
+				<section class="mdl-layout__tab-panel is-active" id="scroll-tab-1">
+					<div class="page-content">
+						<div class="mdl-grid">
+							<div class="mdl-cell mdl-cell--12-col">
+								<h2 class="mdl-typography--display-2">Cotizaciones abiertas</h2>
+							</div>
+							<div class="mdl-cell mdl-cell--12-col">
+								<p>A continuación se listan todas las cotizaciones activas y los días restantes antes de que sean canceladas por el sistema. Diríjase al <h:outputLink value="/SEA/cotizaciones/seguimiento/">módulo de ventas</h:outputLink> para poder actualizarlas.</p>
+							</div>
+							<div class="mdl-cell mdl-cell--12-col">	
+								<p:dataTable var="cotizacion" emptyMessage="Usted no tiene cotizaciones activas" value="#{indexController.listaSeguimientoCotizaciones}" styleClass="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+									<p:column headerText="No. Cotización" styleClass="mdl-data-table__cell--non-numeric">
+										<h:outputText value="#{cotizacion.numeroCotizacion}"/>
+									</p:column>
+									<p:column headerText="Cliente" styleClass="mdl-data-table__cell--non-numeric">
+										<h:outputText value="#{cotizacion.cliente}"/>
+									</p:column>
+									<p:column headerText="No. Documento" styleClass="mdl-data-table__cell--non-numeric">
+										<h:outputText value="#{cotizacion.documento}"/>
+									</p:column>
+									<p:column headerText="Contacto" styleClass="mdl-data-table__cell--non-numeric">
+										<h:outputText value="#{cotizacion.contacto}"/>
+									</p:column>
+									<p:column headerText="Teléfono contacto" styleClass="mdl-data-table__cell--non-numeric">
+										<h:outputText value="#{cotizacion.telefonoContacto}"/>
+									</p:column>
+									<p:column headerText="Días restantes">
+										<h:outputText value="#{cotizacion.diasRestantes}"/>
+									</p:column>
+								</p:dataTable>
+							</div>
+						</div>
+					</div>
+				</section>
+				<section class="mdl-layout__tab-panel" id="scroll-tab-2">
+					<div class="page-content">
+						<div class="mdl-grid">
+							<div class="mdl-cell mdl-cell--12-col">
+								<h2 class="mdl-typography--display-2">Órdenes de producción pendientes por generar</h2>
+							</div>
+							<div class="mdl-cell mdl-cell--12-col">
+								<p>A continuación se listan todas las cotizaciones a las que debe generar la orden de producción. Diríjase al <h:outputLink value="/SEA/cotizaciones/seguimiento/">módulo de producción</h:outputLink> para poder generarlas.</p>
+							</div>
+							<div class="mdl-cell mdl-cell--12-col">
+								<p:dataTable var="op" emptyMessage="Usted no tiene órdenes de producción pendientes por generar" value="#{indexController.listaOpPorGenerar}" styleClass="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+									<p:column headerText="No. Cotización" styleClass="mdl-data-table__cell--non-numeric">
+										<h:outputText value="#{op.numeroCotizacion}"/>
+									</p:column>
+									<p:column headerText="Cliente" styleClass="mdl-data-table__cell--non-numeric">
+										<h:outputText value="#{op.cliente}"/>
+									</p:column>
+									<p:column headerText="No. Documento" styleClass="mdl-data-table__cell--non-numeric">
+										<h:outputText value="#{op.documento}"/>
+									</p:column>
+									<p:column headerText="Fecha de cierre efectivo" styleClass="mdl-data-table__cell--non-numeric">
+										<h:outputText value="#{op.fechaCierreEfectivo}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</h:outputText>
+									</p:column>
+								</p:dataTable>
+							</div>
+						</div>
+					</div>
+				</section>
+				<section class="mdl-layout__tab-panel" id="scroll-tab-3">
+					<div class="page-content">
+						<div class="mdl-grid">
+							<div class="mdl-cell mdl-cell--12-col">
+								<h2 class="mdl-typography--display-2">Órdenes de producción pendientes por corregir</h2>
+							</div>
+							<div class="mdl-cell mdl-cell--12-col">
+								<p>A continuación se listan todas las órdenes de producción que requieren ser correjidas. Diríjase al <h:outputLink value="/SEA/cotizaciones/seguimiento/">módulo de producción</h:outputLink> para realizar las correcciones solicitadas.</p>
+							</div>
+							<div class="mdl-cell mdl-cell--12-col">
+								<p:dataTable var="opc" emptyMessage="Usted no tiene órdenes de producción pendientes por corregir" value="#{indexController.listaOpPorCorregir}" styleClass="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+									<p:column headerText="No. OP" styleClass="mdl-data-table__cell--non-numeric">
+										<h:outputText value="#{opc.ordenProduccion}"/>
+									</p:column>
+									<p:column headerText="Cliente" styleClass="mdl-data-table__cell--non-numeric">
+										<h:outputText value="#{opc.cliente}"/>
+									</p:column>
+									<p:column headerText="No. Documento" styleClass="mdl-data-table__cell--non-numeric">
+										<h:outputText value="#{opc.documento}"/>
+									</p:column>
+									<p:column headerText="Fecha de emisión" styleClass="mdl-data-table__cell--non-numeric">
+										<h:outputText value="#{opc.fechaExpedicion}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</h:outputText>
+									</p:column>
+								</p:dataTable>
+							</div>
+						</div>
+					</div>
+				</section>
+				<section class="mdl-layout__tab-panel" id="scroll-tab-4">
+					<div class="page-content">
+						<div class="mdl-grid">
+							<div class="mdl-cell mdl-cell--12-col">
+								<h2 class="mdl-typography--display-2">Órdenes de producción pendientes por aprobar</h2>
+							</div>
+							<div class="mdl-cell mdl-cell--12-col">
+								<p>A continuación se listan todas las órdenes de producción que requieren ser aprobadas. Diríjase al <h:outputLink value="/SEA/cotizaciones/seguimiento/">módulo de producción</h:outputLink> para realizar las revisiones y aprobar o rechazar las órdenes de producción.</p>
+							</div>
+							<div class="mdl-cell mdl-cell--12-col">
+								<p:dataTable var="opa" emptyMessage="Usted no tiene órdenes de producción pendientes por aprobar" value="#{indexController.listaOpPorAprobar}" styleClass="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+									<p:column headerText="No. OP" styleClass="mdl-data-table__cell--non-numeric">
+										<h:outputText value="#{opa.ordenProduccion}"/>
+									</p:column>
+									<p:column headerText="Cliente" styleClass="mdl-data-table__cell--non-numeric">
+										<h:outputText value="#{opa.cliente}"/>
+									</p:column>
+									<p:column headerText="No. Documento" styleClass="mdl-data-table__cell--non-numeric">
+										<h:outputText value="#{opa.documento}"/>
+									</p:column>
+									<p:column headerText="Fecha de emisión" styleClass="mdl-data-table__cell--non-numeric">
+										<h:outputText value="#{opa.fechaExpedicion}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</h:outputText>
+									</p:column>
+								</p:dataTable>
+							</div>
+						</div>
+					</div>
+				</section>
+				<section class="mdl-layout__tab-panel" id="scroll-tab-5">
+					<div class="page-content">
+						<div class="mdl-grid">
+							<div class="mdl-cell mdl-cell--12-col">
+								<h2 class="mdl-typography--display-2">Órdenes de producción en seguimiento</h2>
+							</div>
+							<div class="mdl-cell mdl-cell--12-col">
+								<p>A continuación se listan todas las órdenes de producción que están en proceso de producción. Diríjase al <h:outputLink value="/SEA/cotizaciones/seguimiento/">módulo de producción</h:outputLink> para realizar las actualizaciones necesarias.</p>
+							</div>
+							<div class="mdl-cell mdl-cell--12-col">
+								<p:dataTable var="ops" emptyMessage="No existen órdenes de producción en seguimiento" value="#{indexController.listaOpEnSeguimiento}" styleClass="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+									<p:column headerText="No. OP" styleClass="mdl-data-table__cell--non-numeric">
+										<h:outputText value="#{ops.ordenProduccion}"/>
+									</p:column>
+									<p:column headerText="Cliente" styleClass="mdl-data-table__cell--non-numeric">
+										<h:outputText value="#{ops.cliente}"/>
+									</p:column>
+									<p:column headerText="No. Documento" styleClass="mdl-data-table__cell--non-numeric">
+										<h:outputText value="#{ops.documento}"/>
+									</p:column>
+									<p:column headerText="Fecha de emisión" styleClass="mdl-data-table__cell--non-numeric">
+										<h:outputText value="#{ops.fechaExpedicion}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</h:outputText>
+									</p:column>
+									<p:column headerText="Fecha de entrega 1" styleClass="mdl-data-table__cell--non-numeric">
+										<h:outputText value="#{ops.fechaEntrega1}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</h:outputText>
+									</p:column>
+									<p:column headerText="Fecha de entrega 2" styleClass="mdl-data-table__cell--non-numeric">
+										<h:outputText value="#{ops.fechaEntrega2}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</h:outputText>
+									</p:column>
+									<p:column headerText="Fecha de entrega final" styleClass="mdl-data-table__cell--non-numeric">
+										<h:outputText value="#{ops.fechaEntregaFinal}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</h:outputText>
+									</p:column>
+								</p:dataTable>
+							</div>
+						</div>
+					</div>
+				</section>
+				<section class="mdl-layout__tab-panel" id="scroll-tab-6">
+					<div class="page-content">
+						<div class="mdl-grid">
+							<div class="mdl-cell mdl-cell--12-col">
+								<h2 class="mdl-typography--display-2">Artículos sin actualizar</h2>
+							</div>
+							<div class="mdl-cell mdl-cell--12-col">
+								<p>A continuación se listan todos los artículos que no han sido actualizados en los últimos 6 meses. Diríjase al <h:outputLink value="/SEA/administracion/articulos.xhtml">módulo de administración</h:outputLink> para realizar las actualizaciones necesarias.</p>
+							</div>
+							<div class="mdl-cell mdl-cell--12-col">
+								<p:dataTable var="articulo" emptyMessage="Todos los artículos se encuentran actualizados." value="#{indexController.listaArticulosPorActualizar}" styleClass="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+									<p:column headerText="Referencia" styleClass="mdl-data-table__cell--non-numeric">
+										<h:outputText value="#{articulo.referencia}"/>
+									</p:column>
+									<p:column headerText="Descripción" styleClass="mdl-data-table__cell--non-numeric">
+										<h:outputText value="#{articulo.descripcion}"/>
+									</p:column>
+									<p:column headerText="Fabricante" styleClass="mdl-data-table__cell--non-numeric">
+										<h:outputText value="#{articulo.fabricante}"/>
+									</p:column>
+									<p:column headerText="Costo" styleClass="mdl-data-table__cell--non-numeric">
+										<h:outputText value="#{articulo.costo}">
+											<f:convertNumber type="currency" currencySymbol="$" locale="es_CO" />
+										</h:outputText>
+									</p:column>
+									<p:column headerText="Precio" styleClass="mdl-data-table__cell--non-numeric">
+										<h:outputText value="#{articulo.precio}">
+											<f:convertNumber type="currency" currencySymbol="$" locale="es_CO" />
+										</h:outputText>
+									</p:column>
+									<p:column headerText="Última actualizacion" styleClass="mdl-data-table__cell--non-numeric">
+										<h:outputText value="#{articulo.fechaActualizacion}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</h:outputText>
+									</p:column>
+								</p:dataTable>
+							</div>
+						</div>
+					</div>
+				</section>
+			</main>
+		</div>
+    </h:body>
+</html>

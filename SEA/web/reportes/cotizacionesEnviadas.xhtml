@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+	<h:head>
+		<title>Cotizaciones enviadas | SEA</title>
+		<ui:composition template="/templates/resources.xhtml" />
+	</h:head>
+	<h:body>
+        <div class="mdl-layout mdl-js-layout">
+			<ui:composition template="/templates/header.xhtml" />
+			<main class="mdl-layout__content">
+				<div class="page-content">
+					<table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+						<thead>
+							<tr>
+								<th class="mdl-data-table__cell--non-numeric"># Cotización</th>
+								<th class="mdl-data-table__cell--non-numeric">Cliente</th>
+								<th class="mdl-data-table__cell--non-numeric">Contacto</th>
+								<th class="mdl-data-table__cell--non-numeric">Teléfono contacto</th>
+								<th class="mdl-data-table__cell--non-numeric">Acciones</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">05-0721</td>
+								<td class="mdl-data-table__cell--non-numeric">IPSE</td>
+								<td class="mdl-data-table__cell--non-numeric">ELIZABETH TORRES</td>
+								<td class="mdl-data-table__cell--non-numeric">6397888 EXT 203</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver cotización</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">05-0722</td>
+								<td class="mdl-data-table__cell--non-numeric">Rayco Ltda.</td>
+								<td class="mdl-data-table__cell--non-numeric">Natalia Zarate</td>
+								<td class="mdl-data-table__cell--non-numeric">6497444</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver cotización</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">05-0723</td>
+								<td class="mdl-data-table__cell--non-numeric">Monitoreos Ambientales High Tecnology Ltda.</td>
+								<td class="mdl-data-table__cell--non-numeric">Johana Borda</td>
+								<td class="mdl-data-table__cell--non-numeric">8053444</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver cotización</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">05-0725</td>
+								<td class="mdl-data-table__cell--non-numeric">Juliana Carrero</td>
+								<td class="mdl-data-table__cell--non-numeric">Juliana Carrero</td>
+								<td class="mdl-data-table__cell--non-numeric">3057636114</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver cotización</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">05-0726</td>
+								<td class="mdl-data-table__cell--non-numeric">jonathan bruges</td>
+								<td class="mdl-data-table__cell--non-numeric">jonathan bruges</td>
+								<td class="mdl-data-table__cell--non-numeric">0123456789</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver cotización</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">05-0730</td>
+								<td class="mdl-data-table__cell--non-numeric">Claudia Cepeda</td>
+								<td class="mdl-data-table__cell--non-numeric">Claudia Cepeda</td>
+								<td class="mdl-data-table__cell--non-numeric">0123456789</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver cotización</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">05-0731</td>
+								<td class="mdl-data-table__cell--non-numeric">Natalia Diaz Cardona</td>
+								<td class="mdl-data-table__cell--non-numeric">Natalia Diaz Cardona</td>
+								<td class="mdl-data-table__cell--non-numeric">0123456789</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver cotización</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">05-0732</td>
+								<td class="mdl-data-table__cell--non-numeric">IPRORTOM</td>
+								<td class="mdl-data-table__cell--non-numeric">IPRORTOM</td>
+								<td class="mdl-data-table__cell--non-numeric">0123456789</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver cotización</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">05-0765</td>
+								<td class="mdl-data-table__cell--non-numeric">Sonda de Colombia S.A.</td>
+								<td class="mdl-data-table__cell--non-numeric">Mireya Céspedes Cubillos</td>
+								<td class="mdl-data-table__cell--non-numeric">6466565 Ext. 3485</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver cotización</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">05-0768</td>
+								<td class="mdl-data-table__cell--non-numeric">ITT</td>
+								<td class="mdl-data-table__cell--non-numeric">Claudia E. Malagon Barinas</td>
+								<td class="mdl-data-table__cell--non-numeric">7432168</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver cotización</a></td>
+							</tr>
+						</tbody>
+					</table>
+					<aside id="subForm">
+						<h:form class="mdl-dialog" id="viewReport">
+							<h:panelGroup layout="block" class="mdl-dialog__title">Detalles de la cotización XX-XXXX</h:panelGroup>
+							<h:panelGroup layout="block" class="mdl-dialog__content">
+								<iframe class="iframe" src="/pdfjs/web/viewer.html?file=/reportes/Cotizacion.pdf"></iframe>
+							</h:panelGroup>
+							<h:panelGroup layout="block" class="mdl-dialog__actions">
+								<button type="button" class="mdl-button toggleSubForm close">Cerrar</button>
+							</h:panelGroup>
+						</h:form>
+					</aside>
+				</div>
+			</main>
+		</div>
+	</h:body>
+</html>

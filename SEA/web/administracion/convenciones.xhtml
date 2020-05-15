@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:head>
+        <title>Conveniones | SEA</title>
+		<ui:composition template="/templates/resources.xhtml" />
+        <h:outputStylesheet library="css" name="administracion.css" />
+    </h:head>
+	<h:body>
+        <div class="mdl-layout mdl-js-layout">
+			<ui:composition template="/templates/header.xhtml" />
+			<main class="mdl-layout__content" id="convenciones">
+				<div class="page-content">
+					<h:panelGroup layout="block" class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect mdl-shadow--4dp">
+						<h:panelGroup layout="block" class="mdl-tabs__tab-bar">
+							<a href="#categorias-panel" class="mdl-tabs__tab is-active">Categorías</a>
+							<a href="#subcategorias-panel" class="mdl-tabs__tab">Subcategorías</a>
+							<a href="#materiales-panel" class="mdl-tabs__tab">Materiales</a>
+							<a href="#sufijos-panel" class="mdl-tabs__tab">Sufijos</a>
+						</h:panelGroup>
+						<h:panelGroup layout="block" class="mdl-tabs__panel is-active" id="categorias-panel">
+							<h:form id="catg">
+								<p:dataTable value="#{categoriaController.listaCategoria}" var="cat" styleClass="mdl-data-table mdl-js-data-table  mdl-shadow--2dp" rowStyleClass="mdl-data-table__cell--non-numeric" id="Table">
+									<p:column>
+										<f:facet name="header">
+											<h:outputLabel value="Nombre"/>
+										</f:facet>
+										<h:outputText value="#{cat.nombre}"/>
+									</p:column>
+									<p:column>
+										<f:facet name="header">
+											<h:outputLabel value="Acciones"/>
+										</f:facet>
+										<h:panelGroup layout="block">
+											<p:commandButton actionListener="#{categoriaController.eliminar(cat)}" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm" value="Eliminar" update="Table"/>
+											<p:commandButton actionListener="#{categoriaController.leerId(cat)}" ajax="true" immediate="true" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm" value="Modificar" oncomplete="PF('dlg1').show();" update="categoria"/>
+										</h:panelGroup>
+									</p:column>
+								</p:dataTable>
+								<p:commandLink type="button" onclick="PF('dlg1').show();" styleClass="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored button-bottom_right toggleSubForm" actionListener="#{categoriaController.setAccion('Nuevo')}" update="addCategoria" action="#{categoriaController.limpiar()}">
+									<i class="material-icons">add</i>
+								</p:commandLink>
+							</h:form>
+						</h:panelGroup>
+						<h:panelGroup layout="block" class="mdl-tabs__panel" id="subcategorias-panel">
+							<h:form id="subcat">
+								<p:dataTable value="#{subcategoriaController.listaSubcategoria}" var="sub" styleClass="mdl-data-table mdl-js-data-table  mdl-shadow--2dp" rowStyleClass="mdl-data-table__cell--non-numeric" id="subTable">
+									<p:column>
+										<f:facet name="header">
+											<h:outputLabel value="Codigo"/>
+										</f:facet>
+										<h:outputText value="#{sub.codigo}"/>
+									</p:column>
+									<p:column>
+										<f:facet name="header">
+											<h:outputLabel value="Nombre"/>
+										</f:facet>
+										<h:outputText value="#{sub.nombre}"/>
+									</p:column>
+									<p:column>
+										<f:facet name="header">
+											<h:outputLabel value="Clasificada en: "/>
+										</f:facet>
+										<h:outputText value="#{sub.tblCategoriaIdCategoria.nombre}"/>
+									</p:column>
+									<p:column>
+										<f:facet name="header">
+											<h:outputLabel value="Acciones"/>
+										</f:facet>
+										<h:panelGroup layout="block">
+											<p:commandButton actionListener="#{subcategoriaController.eliminar(sub)}" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm" value="Eliminar" update="subTable"/>
+											<p:commandButton actionListener="#{subcategoriaController.leerId(sub)}" ajax="true" immediate="true" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm" value="Modificar" oncomplete="PF('dlg2').show();" update="subcategoria"/>
+										</h:panelGroup>
+									</p:column>
+								</p:dataTable>
+								<p:commandLink type="button" onclick="PF('dlg2').show();" styleClass="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored button-bottom_right toggleSubForm" actionListener="#{subcategoriaController.setAccion('Nuevo')}" update="addSubcategoria" action="#{subcategoriaController.limpiar()}">
+									<i class="material-icons">add</i>
+								</p:commandLink>
+							</h:form>
+						</h:panelGroup>
+						<h:panelGroup layout="block" class="mdl-tabs__panel" id="materiales-panel">
+							<h:form id="mater">
+								<p:dataTable value="#{materialController.listaMateriales}" var="mat" styleClass="mdl-data-table mdl-js-data-table  mdl-shadow--2dp" rowStyleClass="mdl-data-table__cell--non-numeric" id="matable">
+									<p:column>
+										<f:facet name="header">
+											<h:outputLabel value="Codigo"/>
+										</f:facet>
+										<h:outputText value="#{mat.codigo}"/>
+									</p:column>
+									<p:column>
+										<f:facet name="header">
+											<h:outputLabel value="Nombre"/>
+										</f:facet>
+										<h:outputText value="#{mat.nombre}"/>
+									</p:column>
+									<p:column>
+										<f:facet name="header">
+											<h:outputLabel value="Acciones"/>
+										</f:facet>
+										<h:panelGroup layout="block">
+											<p:commandButton actionListener="#{materialController.eliminar(mat)}" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm" value="Eliminar" update="matable"/>
+											<p:commandButton actionListener="#{materialController.leerId(mat)}" ajax="true" immediate="true" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm" value="Modificar" oncomplete="PF('dlg3').show();" update="material"/>
+										</h:panelGroup>
+									</p:column>
+								</p:dataTable>
+								<p:commandLink type="button" onclick="PF('dlg3').show();" styleClass="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored button-bottom_right toggleSubForm" actionListener="#{materialController.setAccion('Nuevo')}" update="addMaterial" action="#{materialController.limpiar()}">
+									<i class="material-icons">add</i>
+								</p:commandLink>
+							</h:form>
+						</h:panelGroup>
+						<h:panelGroup layout="block" class="mdl-tabs__panel" id="sufijos-panel">
+							<h:form id="sufij">
+								<p:dataTable value="#{sufijoController.listaSufijos}" var="suf" styleClass="mdl-data-table mdl-js-data-table  mdl-shadow--2dp" rowStyleClass="mdl-data-table__cell--non-numeric" id="suftable">
+									<p:column>
+										<f:facet name="header">
+											<h:outputLabel value="Sufijo"/>
+										</f:facet>
+										<h:outputText value="#{suf.codigo}"/>
+									</p:column>
+									<p:column>
+										<f:facet name="header">
+											<h:outputLabel value="Descripcion del fabricante"/>
+										</f:facet>
+										<h:outputText value="#{suf.descripcionFabricante}"/>
+									</p:column>
+									<p:column>
+										<f:facet name="header">
+											<h:outputLabel value="Acciones"/>
+										</f:facet>
+										<h:panelGroup layout="block">
+											<p:commandButton actionListener="#{sufijoController.eliminar(suf)}" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm" value="Eliminar" update="suftable"/>
+											<p:commandButton actionListener="#{sufijoController.leerId(suf)}" ajax="true" immediate="true" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm" value="Modificar" oncomplete="PF('dlg4').show();" update="sufijo"/>
+										</h:panelGroup>
+									</p:column>
+								</p:dataTable>
+								<p:commandLink type="button" onclick="PF('dlg4').show();" styleClass="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored button-bottom_right toggleSubForm" actionListener="#{sufijoController.setAccion('Nuevo')}" update="addSufijo" action="#{sufijoController.limpiar()}">
+									<i class="material-icons">add</i>
+								</p:commandLink>
+							</h:form>
+						</h:panelGroup>
+
+					</h:panelGroup>
+					<p:dialog widgetVar="dlg1" id="categoria">
+						<h:form id="addCategoria" class="mdl-dialog">
+							<h3 class="mdl-dialog__title">Categoría</h3>
+							<h:panelGroup layout="block" class="mdl-dialog__content ">
+								<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+									<p:inputText value="#{categoriaController.categoria.nombre}" styleClass="mdl-textfield__input" p:maxlength="32" required="required" id="nombreCategoria" />
+									<p:outputLabel styleClass="mdl-textfield__label" for="nombreCategoria" value="Nombre" />
+								</h:panelGroup>
+							</h:panelGroup>
+							<h:panelGroup layout="block" class="mdl-dialog__actions">
+								<p:commandButton actionListener="#{categoriaController.registrar()}" value="Registrar" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm" oncomplete="PF('dlg1').hide();" update=":catg:Table" rendered="${categoriaController.accion == 'Nuevo'}"/>
+								<p:commandButton actionListener="#{categoriaController.modificar()}" value="Modificar" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm" oncomplete="PF('dlg1').hide();" update=":catg:Table" rendered="${categoriaController.accion == 'Modificar'}"/>
+								<p:commandButton styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect toggleSubForm" value="Cancelar" onclick="PF('dlg1').hide();" actionListener="#{categoriaController.limpiar()}"/>
+							</h:panelGroup>
+						</h:form>
+					</p:dialog>
+					<p:dialog widgetVar="dlg2" id="subcategoria">
+						<h:form id="addSubcategoria" class="mdl-dialog">
+							<h3 class="mdl-dialog__title">Registrar subcategoría</h3>
+							<h:panelGroup layout="block" class="mdl-dialog__content">
+								<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+									<h:inputText class="mdl-textfield__input" disabled="disabled" value="#{subcategoriaController.subcategoria.nombre}" p:maxlength="32" required="required" id="nombreSubcategoria" />
+									<h:outputLabel class="mdl-textfield__label" for="nombreSubcategoria">Nombre</h:outputLabel>
+								</h:panelGroup>
+								<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+									<h:inputText value="#{subcategoriaController.subcategoria.codigo}" class="mdl-textfield__input" p:maxlength="5" required="required" id="codigoSubcategoria" />
+									<h:outputLabel class="mdl-textfield__label" for="codigoSubcategoria">Código</h:outputLabel>
+								</h:panelGroup>
+								<div class="mdl-selectfield mdl-js-selectfield mdl-selectfield--floating-label">
+									<h:selectOneMenu id="categoriaIdCategoria" value="#{subcategoriaController.idCategoria.idCategoria}" styleClass="mdl-selectfield__select" title="Categorias" required="true" requiredMessage="Categoria creada">
+										<f:selectItem itemValue="" itemLabel="" />
+										<f:selectItems value="${categoriaController.listaCategoria}" var="cats" itemLabel="#{cats.nombre}" itemValue="#{cats.idCategoria}" />
+									</h:selectOneMenu>
+									<h:outputLabel class="mdl-selectfield__label" for="categoriaIdCategoria">Categorias</h:outputLabel>
+								</div>
+							</h:panelGroup>
+							<h:panelGroup layout="block" class="mdl-dialog__actions">
+								<p:commandButton actionListener="#{subcategoriaController.registrar()}" value="Registrar" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSub	Form" oncomplete="PF('dlg2').hide();" update=":subcat:subTable" rendered="${subcategoriaController.accion == 'Nuevo'}"/>
+								<p:commandButton actionListener="#{subcategoriaController.modificar()}" value="Modificar" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm" oncomplete="PF('dlg2').hide();" update=":subcat:subTable" rendered="${subcategoriaController.accion == 'Modificar'}"/>
+								<p:commandButton styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect toggleSubForm" value="Cancelar" onclick="PF('dlg2').hide();"/>
+							</h:panelGroup>
+						</h:form>
+					</p:dialog>
+					<p:dialog widgetVar="dlg3" id="material">
+						<h:form id="addMaterial" class="mdl-dialog">
+							<h3 class="mdl-dialog__title">Registrar material</h3>
+							<h:panelGroup layout="block" class="mdl-dialog__content">
+								<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+									<h:inputText class="mdl-textfield__input" value="#{materialController.material.codigo}" p:maxlength="5" required="required" id="codigoMaterial" />
+									<h:outputLabel class="mdl-textfield__label" for="codigoMaterial">Código</h:outputLabel>
+								</h:panelGroup>
+								<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+									<h:inputText class="mdl-textfield__input" value="#{materialController.material.nombre}" p:maxlength="64" required="required" id="nombreMaterial" />
+									<h:outputLabel class="mdl-textfield__label" for="nombreMaterial">Nombre</h:outputLabel>
+								</h:panelGroup>
+							</h:panelGroup>
+							<h:panelGroup layout="block" class="mdl-dialog__actions">
+								<p:commandButton actionListener="#{materialController.registrar()}" value="Registrar" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm" oncomplete="PF('dlg3').hide();" update=":mater:matable" rendered="${materialController.accion == 'Nuevo'}"/>
+								<p:commandButton actionListener="#{materialController.modificar()}" value="Modificar" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm" oncomplete="PF('dlg3').hide();" update=":mater:matable" rendered="${materialController.accion == 'Modificar'}"/>
+								<p:commandButton styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect toggleSubForm" value="Cancelar" onclick="PF('dlg3').hide();"/>
+							</h:panelGroup>
+						</h:form>
+					</p:dialog>
+					<p:dialog widgetVar="dlg4" id="sufijo">
+						<h:form id="addSufijo" class="mdl-dialog">
+							<h3 class="mdl-dialog__title">Registrar sufijo</h3>
+							<h:panelGroup layout="block" class="mdl-dialog__content">
+								<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+									<h:inputText class="mdl-textfield__input" value="#{sufijoController.sufijo.codigo}" p:maxlength="10" required="required" id="sufijo" />
+									<h:outputLabel class="mdl-textfield__label" for="sufijo">Sufijo</h:outputLabel>
+								</h:panelGroup>
+								<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+									<h:inputText class="mdl-textfield__input" value="#{sufijoController.sufijo.descripcionFabricante}" p:maxlength="500" required="required" id="descripcionFabricante" />
+									<h:outputLabel class="mdl-textfield__label" for="descripcionFabricante">Descripcion</h:outputLabel>
+								</h:panelGroup>
+							</h:panelGroup>
+							<h:panelGroup layout="block" class="mdl-dialog__actions">
+								<p:commandButton actionListener="#{sufijoController.registrar()}" value="Registrar" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm" oncomplete="PF('dlg4').hide();" update=":sufij:suftable" rendered="${sufijoController.accion == 'Nuevo'}"/>
+								<p:commandButton actionListener="#{sufijoController.modificar()}" value="Modificar" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm" oncomplete="PF('dlg4').hide();" update=":sufij:suftable" rendered="${sufijoController.accion == 'Modificar'}"/>
+								<p:commandButton styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect toggleSubForm" value="Cancelar" onclick="PF('dlg4').hide();"/>
+							</h:panelGroup>
+						</h:form>
+					</p:dialog>
+				</div>
+			</main>
+		</div>
+    </h:body>
+</html>

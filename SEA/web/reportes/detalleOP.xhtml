@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+	<h:head>
+		<title>Órdenes de producción | SEA</title>
+		<ui:composition template="/templates/resources.xhtml" />
+	</h:head>
+	<h:body>
+        <div class="mdl-layout mdl-js-layout">
+			<ui:composition template="/templates/header.xhtml" />
+			<main class="mdl-layout__content">
+				<div class="page-content">
+					<table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+						<thead>
+							<tr>
+								<th class="mdl-data-table__cell--non-numeric">Cliente</th>
+								<th class="mdl-data-table__cell--non-numeric">Asesor</th>
+								<th class="mdl-data-table__cell--non-numeric"># OP</th>
+								<th class="mdl-data-table__cell--non-numeric">Fecha de entrega</th>
+								<th class="mdl-data-table__cell--non-numeric">Acciones</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">SIMILOA</td>
+								<td class="mdl-data-table__cell--non-numeric">AMERICA</td>
+								<td class="mdl-data-table__cell--non-numeric">1497</td>
+								<td class="mdl-data-table__cell--non-numeric">OK</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">GAIA VITARE</td>
+								<td class="mdl-data-table__cell--non-numeric">AMERICA</td>
+								<td class="mdl-data-table__cell--non-numeric">1498</td>
+								<td class="mdl-data-table__cell--non-numeric">OK</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">GAIA VITARE</td>
+								<td class="mdl-data-table__cell--non-numeric">AMERICA</td>
+								<td class="mdl-data-table__cell--non-numeric">1413</td>
+								<td class="mdl-data-table__cell--non-numeric">OK</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">GAIA VITARE</td>
+								<td class="mdl-data-table__cell--non-numeric">AMERICA</td>
+								<td class="mdl-data-table__cell--non-numeric">1416</td>
+								<td class="mdl-data-table__cell--non-numeric">OK</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">GAIA VITARE</td>
+								<td class="mdl-data-table__cell--non-numeric">AMERICA</td>
+								<td class="mdl-data-table__cell--non-numeric">1501</td>
+								<td class="mdl-data-table__cell--non-numeric">OK</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">GAIA VITARE</td>
+								<td class="mdl-data-table__cell--non-numeric">AMERICA</td>
+								<td class="mdl-data-table__cell--non-numeric">1415</td>
+								<td class="mdl-data-table__cell--non-numeric">OK</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">GAIA VITARE</td>
+								<td class="mdl-data-table__cell--non-numeric">AMERICA</td>
+								<td class="mdl-data-table__cell--non-numeric">1515</td>
+								<td class="mdl-data-table__cell--non-numeric">OK</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">GAIA VITARE</td>
+								<td class="mdl-data-table__cell--non-numeric">AMERICA</td>
+								<td class="mdl-data-table__cell--non-numeric">1512</td>
+								<td class="mdl-data-table__cell--non-numeric">OK</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">KASAI</td>
+								<td class="mdl-data-table__cell--non-numeric">AMERICA</td>
+								<td class="mdl-data-table__cell--non-numeric">1501</td>
+								<td class="mdl-data-table__cell--non-numeric">OK</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">KASAI</td>
+								<td class="mdl-data-table__cell--non-numeric">AMERICA</td>
+								<td class="mdl-data-table__cell--non-numeric">1413</td>
+								<td class="mdl-data-table__cell--non-numeric">OK</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">KASAI</td>
+								<td class="mdl-data-table__cell--non-numeric">AMERICA</td>
+								<td class="mdl-data-table__cell--non-numeric">1500</td>
+								<td class="mdl-data-table__cell--non-numeric">OK</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">BAKATA GROUP</td>
+								<td class="mdl-data-table__cell--non-numeric">AMERICA</td>
+								<td class="mdl-data-table__cell--non-numeric">1502</td>
+								<td class="mdl-data-table__cell--non-numeric">OK</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">BAKATA GROUP</td>
+								<td class="mdl-data-table__cell--non-numeric">AMERICA</td>
+								<td class="mdl-data-table__cell--non-numeric">1504</td>
+								<td class="mdl-data-table__cell--non-numeric">OK</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">PORTO 100</td>
+								<td class="mdl-data-table__cell--non-numeric">AMERICA</td>
+								<td class="mdl-data-table__cell--non-numeric">1516</td>
+								<td class="mdl-data-table__cell--non-numeric">OK</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">PANAMERICAN RENTACAR</td>
+								<td class="mdl-data-table__cell--non-numeric">AMERICA</td>
+								<td class="mdl-data-table__cell--non-numeric">1513</td>
+								<td class="mdl-data-table__cell--non-numeric">OK</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">GTRUPO RECORDAR</td>
+								<td class="mdl-data-table__cell--non-numeric">AMERICA</td>
+								<td class="mdl-data-table__cell--non-numeric">1514</td>
+								<td class="mdl-data-table__cell--non-numeric">OK</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">GTRUPO RECORDAR</td>
+								<td class="mdl-data-table__cell--non-numeric">AMERICA</td>
+								<td class="mdl-data-table__cell--non-numeric">1519</td>
+								<td class="mdl-data-table__cell--non-numeric">09/03/2016</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">GTRUPO RECORDAR</td>
+								<td class="mdl-data-table__cell--non-numeric">AMERICA</td>
+								<td class="mdl-data-table__cell--non-numeric">1520</td>
+								<td class="mdl-data-table__cell--non-numeric">09/03/2017</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">GCS - ALFA</td>
+								<td class="mdl-data-table__cell--non-numeric">ANGEL</td>
+								<td class="mdl-data-table__cell--non-numeric">1517</td>
+								<td class="mdl-data-table__cell--non-numeric">17/03/2018</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">ARBO </td>
+								<td class="mdl-data-table__cell--non-numeric">BRAYAN</td>
+								<td class="mdl-data-table__cell--non-numeric">1536</td>
+								<td class="mdl-data-table__cell--non-numeric">ENTREGADO 24/03</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">PORTATIL</td>
+								<td class="mdl-data-table__cell--non-numeric">BRAYAN</td>
+								<td class="mdl-data-table__cell--non-numeric">1531</td>
+								<td class="mdl-data-table__cell--non-numeric">OK</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">LA QUINTANA</td>
+								<td class="mdl-data-table__cell--non-numeric">BRAYAN</td>
+								<td class="mdl-data-table__cell--non-numeric">OC-1422</td>
+								<td class="mdl-data-table__cell--non-numeric">ENVIDAO VIERNES 20/03</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">AXXA</td>
+								<td class="mdl-data-table__cell--non-numeric">BRAYAN</td>
+								<td class="mdl-data-table__cell--non-numeric">42067</td>
+								<td class="mdl-data-table__cell--non-numeric">ENTREGADOS Y DEVUELTOS</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">AXXA</td>
+								<td class="mdl-data-table__cell--non-numeric">BRAYAN</td>
+								<td class="mdl-data-table__cell--non-numeric">42060</td>
+								<td class="mdl-data-table__cell--non-numeric"></td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">MECANIZADOS Y MANTENIMIENTO </td>
+								<td class="mdl-data-table__cell--non-numeric">BRAYAN</td>
+								<td class="mdl-data-table__cell--non-numeric">1539</td>
+								<td class="mdl-data-table__cell--non-numeric"></td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">MECANIZADOS Y MANTENIMIENTO </td>
+								<td class="mdl-data-table__cell--non-numeric">BRAYAN</td>
+								<td class="mdl-data-table__cell--non-numeric"></td>
+								<td class="mdl-data-table__cell--non-numeric"></td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">MECANIZADOS Y MANTENIMIENTO </td>
+								<td class="mdl-data-table__cell--non-numeric">BRAYAN</td>
+								<td class="mdl-data-table__cell--non-numeric"></td>
+								<td class="mdl-data-table__cell--non-numeric">ENTREGAGO 06/04</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">MECANIZADOS Y MANTENIMIENTO </td>
+								<td class="mdl-data-table__cell--non-numeric">BRAYAN</td>
+								<td class="mdl-data-table__cell--non-numeric">1540</td>
+								<td class="mdl-data-table__cell--non-numeric">ENTREGAGO 06/04</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">ARENA BOGOTA</td>
+								<td class="mdl-data-table__cell--non-numeric">ROXANNA</td>
+								<td class="mdl-data-table__cell--non-numeric"></td>
+								<td class="mdl-data-table__cell--non-numeric">OK</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">FULL DOTACIONES</td>
+								<td class="mdl-data-table__cell--non-numeric">FULL</td>
+								<td class="mdl-data-table__cell--non-numeric">1538</td>
+								<td class="mdl-data-table__cell--non-numeric"></td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">INTELLIGENT TRAINING</td>
+								<td class="mdl-data-table__cell--non-numeric">AMERICA</td>
+								<td class="mdl-data-table__cell--non-numeric">1533</td>
+								<td class="mdl-data-table__cell--non-numeric">OK ENTEGADO</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">MAZDEL</td>
+								<td class="mdl-data-table__cell--non-numeric">ANGEL</td>
+								<td class="mdl-data-table__cell--non-numeric">1532</td>
+								<td class="mdl-data-table__cell--non-numeric">ENTREGADO 27/03</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">PISO LIMPIO</td>
+								<td class="mdl-data-table__cell--non-numeric">ANGEL</td>
+								<td class="mdl-data-table__cell--non-numeric">1529</td>
+								<td class="mdl-data-table__cell--non-numeric">NO HAN RECOGIDO / RECOGIERON EL 10/04</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">VITAL</td>
+								<td class="mdl-data-table__cell--non-numeric">AMERICA</td>
+								<td class="mdl-data-table__cell--non-numeric">1528</td>
+								<td class="mdl-data-table__cell--non-numeric">OK</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">MAZDEL</td>
+								<td class="mdl-data-table__cell--non-numeric"></td>
+								<td class="mdl-data-table__cell--non-numeric"></td>
+								<td class="mdl-data-table__cell--non-numeric">ENTREGADO 27/03</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">MAZDEL</td>
+								<td class="mdl-data-table__cell--non-numeric"></td>
+								<td class="mdl-data-table__cell--non-numeric"></td>
+								<td class="mdl-data-table__cell--non-numeric">ENTREGADO 27/03</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">GAMACU / GOPA</td>
+								<td class="mdl-data-table__cell--non-numeric">AMERICA</td>
+								<td class="mdl-data-table__cell--non-numeric"></td>
+								<td class="mdl-data-table__cell--non-numeric">entregado 19/03</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">HERNAN ZAJAR</td>
+								<td class="mdl-data-table__cell--non-numeric">BRAYAN</td>
+								<td class="mdl-data-table__cell--non-numeric">1542</td>
+								<td class="mdl-data-table__cell--non-numeric">ENTREGADO 10/04</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">LARES</td>
+								<td class="mdl-data-table__cell--non-numeric"></td>
+								<td class="mdl-data-table__cell--non-numeric"></td>
+								<td class="mdl-data-table__cell--non-numeric"></td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">CONALTRA </td>
+								<td class="mdl-data-table__cell--non-numeric">BRAYAN</td>
+								<td class="mdl-data-table__cell--non-numeric">1546</td>
+								<td class="mdl-data-table__cell--non-numeric">entregado 19/03</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">XUE </td>
+								<td class="mdl-data-table__cell--non-numeric">BRAYAN</td>
+								<td class="mdl-data-table__cell--non-numeric">1547</td>
+								<td class="mdl-data-table__cell--non-numeric">15/</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">CLUB ROTARIO NEIVA</td>
+								<td class="mdl-data-table__cell--non-numeric">ROXANNA</td>
+								<td class="mdl-data-table__cell--non-numeric">1550</td>
+								<td class="mdl-data-table__cell--non-numeric">13/04/2015 QUEDA PENDIENTE ENTREGA EN LA TARDE</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">CONALTRA </td>
+								<td class="mdl-data-table__cell--non-numeric">BRAYAN</td>
+								<td class="mdl-data-table__cell--non-numeric">1552</td>
+								<td class="mdl-data-table__cell--non-numeric">ENTREGA REALIZADA EL DIA MIERCOLES 8 DE ABRIL</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">PARCHES </td>
+								<td class="mdl-data-table__cell--non-numeric">BRAYAN</td>
+								<td class="mdl-data-table__cell--non-numeric">1466-1465</td>
+								<td class="mdl-data-table__cell--non-numeric"></td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">INVERSIONES MONTE SACRO</td>
+								<td class="mdl-data-table__cell--non-numeric">BRAYAN</td>
+								<td class="mdl-data-table__cell--non-numeric"></td>
+								<td class="mdl-data-table__cell--non-numeric">ENTREGADO</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">ESCUELA PEDAGOGICA </td>
+								<td class="mdl-data-table__cell--non-numeric">BRAYAN</td>
+								<td class="mdl-data-table__cell--non-numeric">1510</td>
+								<td class="mdl-data-table__cell--non-numeric">OK</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">POLLO BRUJO</td>
+								<td class="mdl-data-table__cell--non-numeric">BRAYAN</td>
+								<td class="mdl-data-table__cell--non-numeric">1508</td>
+								<td class="mdl-data-table__cell--non-numeric">OK</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">POLLO BRUJO</td>
+								<td class="mdl-data-table__cell--non-numeric">BRAYAN</td>
+								<td class="mdl-data-table__cell--non-numeric">1507</td>
+								<td class="mdl-data-table__cell--non-numeric">OK</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">BURRITO CAPITAL</td>
+								<td class="mdl-data-table__cell--non-numeric">BRAYAN</td>
+								<td class="mdl-data-table__cell--non-numeric">1505</td>
+								<td class="mdl-data-table__cell--non-numeric">OK</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">CLUB ROTARIO NEIVA</td>
+								<td class="mdl-data-table__cell--non-numeric">ROXANNA</td>
+								<td class="mdl-data-table__cell--non-numeric">1560</td>
+								<td class="mdl-data-table__cell--non-numeric">13/04/2015 QUEDA PENDIENTE ENTREGA EN LA TARDE</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">CENTRO COMERCIAL SANTA ANA </td>
+								<td class="mdl-data-table__cell--non-numeric">BRAYAN</td>
+								<td class="mdl-data-table__cell--non-numeric">1553</td>
+								<td class="mdl-data-table__cell--non-numeric">15/04/2016</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">CENTRO COMERCIAL SANTA ANA </td>
+								<td class="mdl-data-table__cell--non-numeric">BRAYAN</td>
+								<td class="mdl-data-table__cell--non-numeric">1548</td>
+								<td class="mdl-data-table__cell--non-numeric">15/04/2016</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">ARBO </td>
+								<td class="mdl-data-table__cell--non-numeric">BRAYAN</td>
+								<td class="mdl-data-table__cell--non-numeric"></td>
+								<td class="mdl-data-table__cell--non-numeric">14/03/2016</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">MIGUEL ANGEL GUZMAN </td>
+								<td class="mdl-data-table__cell--non-numeric">BRAYAN</td>
+								<td class="mdl-data-table__cell--non-numeric"></td>
+								<td class="mdl-data-table__cell--non-numeric">ENVIADO 08/04</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">C & M Consultores S.A. </td>
+								<td class="mdl-data-table__cell--non-numeric">BRAYAN</td>
+								<td class="mdl-data-table__cell--non-numeric">1565</td>
+								<td class="mdl-data-table__cell--non-numeric">13/04/2016</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">C & M Consultores S.A. </td>
+								<td class="mdl-data-table__cell--non-numeric">BRAYAN</td>
+								<td class="mdl-data-table__cell--non-numeric">1566</td>
+								<td class="mdl-data-table__cell--non-numeric">13/04/2017</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">LUIS JAVIER CAMPOS </td>
+								<td class="mdl-data-table__cell--non-numeric">BRAYAN</td>
+								<td class="mdl-data-table__cell--non-numeric">1567</td>
+								<td class="mdl-data-table__cell--non-numeric">01/04/2016</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">MAZDEL</td>
+								<td class="mdl-data-table__cell--non-numeric">ANGEL</td>
+								<td class="mdl-data-table__cell--non-numeric">1506</td>
+								<td class="mdl-data-table__cell--non-numeric">OK</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">QUIBI</td>
+								<td class="mdl-data-table__cell--non-numeric">AMERICA</td>
+								<td class="mdl-data-table__cell--non-numeric">1524</td>
+								<td class="mdl-data-table__cell--non-numeric">OK</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">UNIDAD SANITARIA</td>
+								<td class="mdl-data-table__cell--non-numeric">AMERICA</td>
+								<td class="mdl-data-table__cell--non-numeric">1527</td>
+								<td class="mdl-data-table__cell--non-numeric">OK</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">UNIDAD NACIONAL DE PROTECCION</td>
+								<td class="mdl-data-table__cell--non-numeric">AMERICA</td>
+								<td class="mdl-data-table__cell--non-numeric">1523</td>
+								<td class="mdl-data-table__cell--non-numeric"></td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">UNIDAD NACIONAL DE PROTECCION</td>
+								<td class="mdl-data-table__cell--non-numeric">AMERICA</td>
+								<td class="mdl-data-table__cell--non-numeric"></td>
+								<td class="mdl-data-table__cell--non-numeric"></td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">INTELLIGENT TRAINING</td>
+								<td class="mdl-data-table__cell--non-numeric">AMERICA</td>
+								<td class="mdl-data-table__cell--non-numeric">1522</td>
+								<td class="mdl-data-table__cell--non-numeric">LISTOA TIEMPO PERO EL CLIENTE SE DEMORO EN RECOGER</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">INTELLIGENT TRAINING</td>
+								<td class="mdl-data-table__cell--non-numeric">AMERICA</td>
+								<td class="mdl-data-table__cell--non-numeric">1522</td>
+								<td class="mdl-data-table__cell--non-numeric">LISTOA TIEMPO PERO EL CLIENTE SE DEMORO EN RECOGER</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">GESELL</td>
+								<td class="mdl-data-table__cell--non-numeric">ANGEL</td>
+								<td class="mdl-data-table__cell--non-numeric">1554</td>
+								<td class="mdl-data-table__cell--non-numeric">ENVIADO JUEVES 16/*04</td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">GMA</td>
+								<td class="mdl-data-table__cell--non-numeric">ANGEL</td>
+								<td class="mdl-data-table__cell--non-numeric">1572</td>
+								<td class="mdl-data-table__cell--non-numeric"></td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+							<tr>
+								<td class="mdl-data-table__cell--non-numeric">TERCEZA</td>
+								<td class="mdl-data-table__cell--non-numeric">ROXANNA</td>
+								<td class="mdl-data-table__cell--non-numeric"></td>
+								<td class="mdl-data-table__cell--non-numeric"></td>
+								<td class="mdl-data-table__cell--non-numeric"><a href="#viewReport" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm">Ver orden</a></td>
+							</tr>
+						</tbody>
+					</table>
+					<aside id="subForm">
+						<h:form class="mdl-dialog" id="viewReport">
+							<h:panelGroup layout="block" class="mdl-dialog__title">Detalles de la OP 1912</h:panelGroup>
+							<h:panelGroup layout="block" class="mdl-dialog__content">
+								<iframe class="iframe" src="/pdfjs/web/viewer.html?file=/reportes/OP_1912.pdf"></iframe>
+							</h:panelGroup>
+							<h:panelGroup layout="block" class="mdl-dialog__actions">
+								<button type="button" class="mdl-button toggleSubForm close">Cerrar</button>
+							</h:panelGroup>
+						</h:form>
+					</aside>
+				</div>
+			</main>
+		</div>
+	</h:body>
+</html>

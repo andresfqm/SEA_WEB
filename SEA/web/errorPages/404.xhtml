@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="es"
+	  xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Página no encontrada | SEA</title>
+		<ui:composition template="/templates/resources.xhtml" />
+    </h:head>
+	<h:body>
+        <div class="mdl-layout mdl-js-layout">
+			<ui:composition template="/templates/header.xhtml" />
+			<main class="mdl-layout__content">
+				<div class="page-content">
+					<figure id="errorPage"><h:graphicImage library="img" name="404.png" alt="404" /></figure>
+				</div>
+			</main>
+		</div>
+    </h:body>
+</html>

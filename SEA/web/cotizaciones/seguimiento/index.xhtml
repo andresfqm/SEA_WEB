@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:f="http://xmlns.jcp.org/jsf/core"
+	  xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Seguimiento comercial | SEA</title>
+		<ui:composition template="/templates/resources.xhtml" />
+        <h:outputStylesheet library="css" name="cotizaciones.css" />
+    </h:head>
+    <h:body>
+        <div class="mdl-layout mdl-js-layout">
+			<ui:composition template="/templates/header.xhtml" />
+			<main class="mdl-layout__content">
+				<div class="page-content">
+					<p:dataTable id="tablaC" var="cotS" emptyMessage="No se encontraron registros"
+								 value="#{cotizacionController.listaCotizacionesPorEstados}" 
+								 styleClass="mdl-data-table mdl-js-data-table  mdl-shadow--2dp" rowStyleClass="mdl-data-table__cell--non-numeric">
+						<p:column headerText="# Cotización">
+							<h:outputText value="#{cotS.numeroCotizacion}"/>
+
+						</p:column>
+
+						<p:column headerText="Cliente">
+							<h:outputText value="#{cotS.cliente}"/>
+						</p:column>
+
+						<p:column headerText="Contacto">
+							<h:outputText value="#{cotS.contacto}"/>
+						</p:column>
+						<p:column headerText="Teléfono contacto">
+							<h:outputText value="#{cotS.telefonoContacto}"/>
+						</p:column>
+						<p:column>
+							<h:panelGroup layout="block">
+								<h:link outcome="actualizarCotizacion.xhtml">
+									<f:param name="numeroCotizacion" value="#{cotS.numeroCotizacion}"/>
+									<h:commandButton  actionListener="#{cotizacionController.leerId(cotS.numeroCotizacion)}" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm" value="ACTUALIZAR"/>
+								</h:link>
+							</h:panelGroup>
+						</p:column>
+					</p:dataTable>
+				</div>
+			</main>
+		</div>
+    </h:body>
+</html>
+
+
+

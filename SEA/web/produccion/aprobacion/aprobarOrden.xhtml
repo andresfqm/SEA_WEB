@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+	<h:head>
+		<title>Aprobar orden de producción | SEA</title>
+		<ui:composition template="/templates/resources.xhtml" />
+	</h:head>
+	<h:body>
+        <div class="mdl-layout mdl-js-layout">
+			<ui:composition template="/templates/header.xhtml" />
+			<main class="mdl-layout__content">
+				<div class="page-content">
+					<h:form class="stepForm ordenProduccion">
+						<section class="step">
+							<h3 class="mdl-typography--headline">Datos de la orden</h3>
+							<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+								<h:inputText class="mdl-textfield__input" id="numeroDevolucion" value="0000" disabled="disabled" />
+								<h:outputLabel class="mdl-textfield__label" for="numeroDevolucion">Devolución No.</h:outputLabel>
+							</h:panelGroup>
+							<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+								<h:inputText class="mdl-textfield__input" id="numeroOP" value="0000" disabled="disabled" />
+								<h:outputLabel class="mdl-textfield__label" for="numeroOP">Orden de producción No.</h:outputLabel>
+							</h:panelGroup>
+							<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+								<h:inputText class="mdl-textfield__input" id="ciudadEmision" value="Bogotá D.C." disabled="disabled" />
+								<h:outputLabel class="mdl-textfield__label" for="ciudadEmision">Ciudad de emisión</h:outputLabel>
+							</h:panelGroup>
+							<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+								<h:inputText class="mdl-textfield__input" id="fechaEmision" value="15/05/2016" disabled="disabled" />
+								<h:outputLabel class="mdl-textfield__label" for="fechaEmision">Fecha de emisión</h:outputLabel>
+							</h:panelGroup>
+							<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+								<h:inputText class="mdl-textfield__input" id="cliente" value="DIMAI DOTACIONES" disabled="disabled" />
+								<h:outputLabel class="mdl-textfield__label" for="cliente">Empresa</h:outputLabel>
+							</h:panelGroup>
+							<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+								<h:inputText class="mdl-textfield__input" p:type="email" id="e-mail" value="info@dotacionesindustriales.net" disabled="disabled" />
+								<h:outputLabel class="mdl-textfield__label" for="e-mail1">e-mail</h:outputLabel>
+							</h:panelGroup>
+							<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+								<h:inputText class="mdl-textfield__input" id="direccionCliente" value="CR 999 Ñ bis Ñ norte No. 999 Ñ bis Ñ - 999 sur edificio 999 apartamento 999" disabled="disabled" />
+								<h:outputLabel class="mdl-textfield__label" for="direccionCliente">Dirección</h:outputLabel>
+							</h:panelGroup>
+							<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+								<h:inputText class="mdl-textfield__input" id="asesor" value="Ángel Torres" disabled="disabled" />
+								<h:outputLabel class="mdl-textfield__label" for="asesor">Asesor</h:outputLabel>
+							</h:panelGroup>
+						</section>
+						<section class="step">
+							<h3 class="mdl-typography--headline">Artículos a solicitar</h3>
+							<h5 class="mdl-typography--title fullWidth">Prenda 1</h5>
+							<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+								<h:inputTextarea class="mdl-textfield__input" disabled="disabled">C001L</h:inputTextarea>
+								<h:outputLabel class="mdl-textfield__label" for="referencia">Referencia</h:outputLabel>
+							</h:panelGroup>
+							<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+								<h:inputTextarea class="mdl-textfield__input" disabled="disabled">Camisa formal cierre botones manga larga para dama y caballero</h:inputTextarea>
+								<h:outputLabel class="mdl-textfield__label" for="descripción">Descripción</h:outputLabel>
+							</h:panelGroup>
+							<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+								<h:inputTextarea class="mdl-textfield__input" disabled="disabled">LINO FLEX</h:inputTextarea>
+								<h:outputLabel class="mdl-textfield__label" for="material">Material</h:outputLabel>
+							</h:panelGroup>
+							<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+								<h:inputTextarea class="mdl-textfield__input" disabled="disabled">Full Dotaciones</h:inputTextarea>
+								<h:outputLabel class="mdl-textfield__label" for="fabricante">Fabricante</h:outputLabel>
+							</h:panelGroup>
+							<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+								<h:inputTextarea class="mdl-textfield__input" id="descripcionColor" disabled="disabled">FABRILAR , COLOR 1 VINOTINTO 2313, COLOR 2 BEIGE 6413, COLOR 3 GRIS 7155, COLOR 4 NEGRO 7328.</h:inputTextarea>
+								<h:outputLabel class="mdl-textfield__label" for="descripcionColor">Color</h:outputLabel>
+							</h:panelGroup>
+							<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+								<h:inputTextarea class="mdl-textfield__input" id="descripcionCuello" disabled="disabled">Cuello Tipo informal. Mas pequeño (Corto) que el clásico, similar al de la camiseta Polo</h:inputTextarea>
+								<h:outputLabel class="mdl-textfield__label" for="descripcionCuello">Cuello</h:outputLabel>
+							</h:panelGroup>
+							<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+								<h:inputTextarea class="mdl-textfield__input" id="descripcionBotones" disabled="disabled">COLOR MADERA, MARRON- BEIGE FRONTALES Y 1 DE ADORNO EN EL BORDE DEL BOLSILLO.</h:inputTextarea>
+								<h:outputLabel class="mdl-textfield__label" for="descripcionBotones">Botones</h:outputLabel>
+							</h:panelGroup>
+							<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+								<h:inputTextarea class="mdl-textfield__input" id="observacionAdicional" disabled="disabled">Camisa formal cierre botones manga larga Bicolor, favor tener en cuenta diseños planos.</h:inputTextarea>
+								<h:outputLabel class="mdl-textfield__label" for="observacionAdicional">Observaciones adicionales</h:outputLabel>
+							</h:panelGroup>
+							<h3 class="mdl-typography--title">Cantidad por tallas</h3>
+							<h:panelGroup layout="block" class="fullWidth">
+								<table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+									<thead>
+										<tr>
+											<th class="mdl-data-table__cell--non-numeric">Diseño</th>
+											<th class="mdl-data-table__cell--non-numeric">Descripción</th>
+											<th class="mdl-data-table__cell--non-numeric">Logotipo</th>
+											<th>S</th>
+											<th>M</th>
+											<th>L</th>
+											<th>XL</th>
+											<th>Total</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td class="mdl-data-table__cell--non-numeric">Mujer Beige</td>
+											<td class="mdl-data-table__cell--non-numeric">BASE DE LA CAMISA, MANGAS, Y BOLSILLO BEIGE. CUELLO, PECHERA, PUÑOS Y BORDE DE BOLSILLO EN VINOTINTO</td>
+											<td class="mdl-data-table__cell--non-numeric">N/A</td>
+											<td>10</td>
+											<td>4</td>
+											<td>2</td>
+											<td>1</td>
+											<td>17</td>
+										</tr>
+										<tr>
+											<td class="mdl-data-table__cell--non-numeric">Hombre Beige</td>
+											<td class="mdl-data-table__cell--non-numeric">BASE DE LA CAMISA, MANGAS, Y BOLSILLO BEIGE. CUELLO, PECHERA, PUÑOS Y BORDE DE BOLSILLO EN VINOTINTO</td>
+											<td class="mdl-data-table__cell--non-numeric">N/A</td>
+											<td>0</td>
+											<td>7</td>
+											<td>1</td>
+											<td>0</td>
+											<td>8</td>
+										</tr>
+										<tr>
+											<td class="mdl-data-table__cell--non-numeric">Mujer Gris</td>
+											<td class="mdl-data-table__cell--non-numeric">BASE DE LA CAMISA, CUELLO, PECHERA Y PUÑO GRIS. MANGAS Y BOLSILLO COMPLETO EN NEGRO</td>
+											<td class="mdl-data-table__cell--non-numeric">N/A</td>
+											<td>10</td>
+											<td>4</td>
+											<td>4</td>
+											<td>2</td>
+											<td>20</td>
+										</tr>
+										<tr>
+											<td class="mdl-data-table__cell--non-numeric">Hombre Gris</td>
+											<td class="mdl-data-table__cell--non-numeric">BASE DE LA CAMISA, CUELLO, PECHERA Y PUÑO GRIS. MANGAS Y BOLSILLO COMPLETO EN NEGRO</td>
+											<td class="mdl-data-table__cell--non-numeric">N/A</td>
+											<td>0</td>
+											<td>11</td>
+											<td>2</td>
+											<td>0</td>
+											<td>13</td>
+										</tr>
+									</tbody>
+								</table>
+							</h:panelGroup>
+							<!-- input file-->
+							<h3 class="mdl-typography--headline">Diagrama de diseño</h3>
+							<img src="/img/diagramaDiseno.png" alt="">
+								<h:panelGroup layout="block">
+									<h:inputFile id="diagramaDiseno" class="fileInput" />
+									<h:outputLabel for="diagramaDiseno" class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored">
+										<i class="material-icons">file_upload</i>
+									</h:outputLabel>
+								</h:panelGroup>
+						</section>
+						<section class="step">
+							<h3 class="mdl-typography--headline">Condiciones comerciales</h3>
+							<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+								<h:inputText class="mdl-textfield__input" id="lugarEntrega" disabled="disabled" value="En sus instalaciones" />
+								<h:outputLabel class="mdl-textfield__label" for="lugarEntrega">Lugar de entrega</h:outputLabel>
+							</h:panelGroup>
+							<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+								<h:inputText class="mdl-textfield__input" id="tiempoEntrega" disabled="disabled" value="1 días hábiles enviada orden de compra y validado anticipo" />
+								<h:outputLabel class="mdl-textfield__label" for="tiempoEntrega">Tiempo de entrega</h:outputLabel>
+							</h:panelGroup>
+							<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label fullWidth">
+								<h:inputTextarea class="mdl-textfield__input" id="observaciones" disabled="disabled" />POR ORDEN DE ANGEL: En esta Orden de producción van dos camisas de Muestra para full dotaciones. MUJER BEIGE TALLA M y HOMBRE GRIS TALLA M. POR FAVOR TENER EN CUENTA AL MOMENTO DE ENTREGA.</h:inputTextarea>
+								<h:outputLabel class="mdl-textfield__label" for="observaciones">Observaciones</h:outputLabel>
+							</h:panelGroup>
+						</section>
+						<section class="step">
+							<h3 class="mdl-typography--headline">Aprobar orden de producción</h3>
+							<h:outputLabel class="mdl-switch mdl-js-switch" for="aprobarOrden">
+								<h:selectBooleanCheckbox id="aprobarOrden" class="mdl-switch__input" />
+								<h:panelGroup class="mdl-switch__label">Aprobar orden de producción</h:panelGroup>
+							</h:outputLabel>
+							<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label fullWidth">
+								<h:inputTextarea class="mdl-textfield__input" id="observacionesAlAsesor" p:maxlength="1024" required="required" / />
+												 <h:outputLabel class="mdl-textfield__label" for="observacionesAlAsesor">Observaciones a enviar al asesor</h:outputLabel>
+							</h:panelGroup>
+							<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" type="submit">Aprobar orden de producción</button>
+							<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" type="submit">Rechazar orden de producción</button>
+						</section>
+					</h:form>
+				</div>
+			</main>
+		</div>
+	</h:body>
+</html>

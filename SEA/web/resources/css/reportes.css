@@ -1,0 +1,63 @@
+/******************************************************************************************
+Seguimiento comercial
+******************************************************************************************/
+#seguimientoComercial{
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-template-rows: repeat(4, auto);
+	grid-gap: 15px;
+	max-width: 100vw;
+}
+#seguimientoComercial form{
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	grid-gap: 15px;
+}
+#seguimientoComercial #consolidado{
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	padding: 0 15px;
+	border: 1px solid rgba(0,0,0,.12);
+	background-color: #fff;
+}
+/******************************************************************************************
+Control OP
+******************************************************************************************/
+#controlOP{
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-template-rows: repeat(2, auto);
+	grid-gap: 15px;
+	max-width: 100vw;
+}
+#controlOP form{
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	grid-gap: 15px;
+}
+/******************************************************************************************
+Histórico de ventas
+******************************************************************************************/
+#historco{
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-template-rows: repeat(2, auto);
+	grid-gap: 15px;
+	max-width: 100vw;
+}
+#historco form{
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	grid-gap: 15px;
+}
+/******************************************************************************************
+Tablas
+******************************************************************************************/
+table a.mdl-button--accent.mdl-button--accent.mdl-button--raised{
+	white-space: pre;
+}
+[data-dataTable]{
+	max-width: 100%;
+	max-height: calc(100vh - var(--altoHeader) - 30px);
+	overflow: auto;
+}

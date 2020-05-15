@@ -1,0 +1,116 @@
+/********************************************************************************
+Estilos generales
+********************************************************************************/
+*, *::before, *::after{
+	box-sizing: border-box;
+}
+*{
+	margin: 0;
+	padding: 0;
+}
+body{
+	display: grid;
+	grid-template-columns: 416px calc(100% - 416px);
+	grid-template-rows: auto;
+	grid-template-areas: "main .";
+	height: 100vh;
+	background: #fff url('#{resource['/img/fondoLogin.png']}') no-repeat fixed left top / cover;
+}
+main{
+	grid-area: main;
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-template-rows: auto 90px auto auto;
+	grid-template-areas: "logo" "titulo" "formulario";
+	align-items: center;
+	background: #FFF;
+}
+main h1{
+	grid-area: titulo;
+	text-align: center;
+}
+/**********************************************************************
+Logo
+**********************************************************************/
+#logoSEA{
+	grid-area: logo;
+	width: 50%;
+	margin: 0 auto;
+}
+/**********************************************************************
+Formulario
+**********************************************************************/
+form{
+	grid-area: formulario;
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-template-rows: repeat(4, auto);
+	grid-template-areas: "usuario" "contrasena" "opciones" "submit";
+	grid-gap: 10px;
+	align-content: center;
+	padding: 0 40px;
+}
+form > div:nth-child-of-type(1){
+	grid-area: usuario;
+}
+form > div:nth-child-of-type(2){
+	grid-area: contrasena;
+}
+form > div:nth-child-of-type(3){
+	grid-area: opciones;
+}
+form > div:nth-child-of-type(3) > *{
+	width: 50%;
+}
+form > div:nth-child-of-type(3) a{
+	color: #448aff;
+	text-decoration: none;
+	vertical-align: middle;
+}
+.mdl-switch{
+	width: 50%;
+}
+form > button[type="submit"]{
+	grid-area: submit;
+}
+.mdl-button.mdl-button--raised.ui-button-text-only .ui-button-text{
+	width: 100%;
+	margin: 16px 0;
+}
+
+.mdl-textfield__input[required] + .mdl-textfield__label::before, .mdl-selectfield__select[required] + .mdl-selectfield__label::before{
+	content: "(*) ";
+	color: #d50000;
+}
+.ui-button .ui-button-text{
+	display: initial !important;
+	line-height: initial !important;
+
+}
+.ui-button-text-only .ui-button-text{
+	padding: 0 !important;
+}
+@media all and (max-width: 360px){
+	body{
+		grid-template-areas: "main main";
+	}
+	form{
+		padding: 0 10px;
+	}
+	form > div:nth-child(3) > *{
+		display: block;
+	}
+	form > div:nth-child(3) > a{
+		padding-top: 15px;
+		width: 100%;
+	}
+}
+/***********************************************************
+Dialogos
+***********************************************************/
+#dialogExceptions{
+	width: 420px;
+}
+#dialogExceptions > .mdl-dialog__title{
+	font-size: 2rem;
+}

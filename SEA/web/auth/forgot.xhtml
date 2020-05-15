@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es"
+	  xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Recuperar contraseña | SEA</title>
+		<ui:composition template="/templates/loginResources.xhtml" />
+    </h:head>
+	<h:body>
+		<main class="mdl-shadow--4dp">
+			<h:graphicImage library="img" name="LogoSEA.svg" id="logoSEA" />
+			<h1 class="mdl-typography--display-1">Recuperar contraseña</h1>
+			<h:form id="frmRecuperarPass">
+				<p:growl showDetail="true"/>
+				<p:panel style="width:400px">
+					<h:panelGrid columns="2" cellpadding="5">
+						<h:outputLabel for="userName" value="Nombre de usuario : "/>
+						<p:inputText id="userName" value="#{loginController.usuario.nombreUsuario}" pt:required="required" pt:maxlength="45" required="true"/>
+						<h:outputLabel for="IDInterno" value="ID interno : "/>
+						<p:inputText id="IDInterno" value="#{loginController.usuario.idInterno}" pt:required="required" pt:maxlength="32" required="true" />
+						<h:outputLink  value="/SEA/auth/">Autenticarme</h:outputLink>
+						<p:commandButton styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" value="Recuperar contraseña" actionListener="#{loginController.recuperarContraseña()}" update=":frmRecuperarPass"/>
+					</h:panelGrid>
+				</p:panel>
+			</h:form>
+		</main>
+	</h:body>
+</html>

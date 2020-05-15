@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+	<h:head>
+		<title>Condiciones de garantía | SEA</title>
+		<ui:composition template="/templates/resources.xhtml" />
+        <h:outputStylesheet library="css" name="administracion.css" />
+	</h:head>
+	<h:body>
+        <div class="mdl-layout mdl-js-layout">
+			<ui:composition template="/templates/header.xhtml" />
+			<main class="mdl-layout__content">
+				<div class="page-content">
+					<section id="garantiaDashboard">
+						<h:form>
+							<table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+								<thead>
+									<tr>
+										<th class="mdl-data-table__cell--non-numeric">Nombre</th>
+										<th class="mdl-data-table__cell--non-numeric">Descripción</th>
+										<th class="mdl-data-table__cell--non-numeric">Activo</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td class="mdl-data-table__cell--non-numeric">Póliza alterada</td>
+										<td class="mdl-data-table__cell--non-numeric">Cuando esta póliza manifestara claros signos de haber sido alterada en los datos originales consignados en ella.</td>
+										<td class="mdl-data-table__cell--non-numeric">
+											<h:outputLabel for="garantia1" class="mdl-switch mdl-js-switch mdl-js-ripple-effect">
+												<h:selectBooleanCheckbox id="garantia1" class="mdl-switch__input">
+													<h:panelGroup class="mdl-switch__label"></h:panelGroup>
+											</h:outputLabel>
+										</td>
+									</tr>
+									<tr>
+										<td class="mdl-data-table__cell--non-numeric">Uso del producto</td>
+										<td class="mdl-data-table__cell--non-numeric">Cuando el producto haya sido usado fuera de su capacidad, maltratado, rasgado, expuesto a excesiva humedad, molado por algún líquido o substancia corrosiva, así como por cualquiera otra falla atribuible al consumidor.</td>
+										<td class="mdl-data-table__cell--non-numeric">
+											<h:outputLabel for="garantia2" class="mdl-switch mdl-js-switch mdl-js-ripple-effect">
+												<h:selectBooleanCheckbox id="garantia2" class="mdl-switch__input">
+													<h:panelGroup class="mdl-switch__label"></h:panelGroup>
+											</h:outputLabel>
+										</td>
+									</tr>
+									<tr>
+										<td class="mdl-data-table__cell--non-numeric">Producto alterado</td>
+										<td class="mdl-data-table__cell--non-numeric">Cuando el producto haya sido desbaratado, modificado o reparado por personas no autorizadas full dotaciones SAS.</td>
+										<td class="mdl-data-table__cell--non-numeric">
+											<h:outputLabel for="garantia3" class="mdl-switch mdl-js-switch mdl-js-ripple-effect">
+												<h:selectBooleanCheckbox id="garantia3" class="mdl-switch__input">
+													<h:panelGroup class="mdl-switch__label"></h:panelGroup>
+											</h:outputLabel>
+										</td>
+									</tr>
+									<tr>
+										<td class="mdl-data-table__cell--non-numeric">Uso</td>
+										<td class="mdl-data-table__cell--non-numeric">Cuando el defecto sea originado por el desgaste normal de las prendas debido al uso.</td>
+										<td class="mdl-data-table__cell--non-numeric">
+											<h:outputLabel for="garantia4" class="mdl-switch mdl-js-switch mdl-js-ripple-effect">
+												<h:selectBooleanCheckbox id="garantia4" class="mdl-switch__input">
+													<h:panelGroup class="mdl-switch__label"></h:panelGroup>
+											</h:outputLabel>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</h:form>
+						<a href="#addGarantia" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored button-bottom_right toggleSubForm">
+							<i class="material-icons">add</i>
+						</a>
+					</section>
+					<aside id="subForm">
+						<h:form id="addGarantia" class="mdl-dialog">
+							<h3 class="mdl-dialog__title">Registrar condición de garantía</h3>
+							<h:panelGroup layout="block" class="mdl-dialog__content">
+								<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+									<h:inputText class="mdl-textfield__input" p:maxlength="128" required="required" id="nombreGarantia">
+										<h:outputLabel class="mdl-textfield__label" for="nombreGarantia">Nombre de la condición garantía</h:outputLabel>
+								</h:panelGroup>
+								<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+									<h:inputTextarea class="mdl-textfield__input" p:maxlength="500" required="required" id="sample3" />
+									<h:outputLabel class="mdl-textfield__label" for="sample3">Descripción de la condición de garantía</h:outputLabel>
+								</h:panelGroup>
+								<h:outputLabel class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="condicionActiva">
+									<h:selectBooleanCheckbox id="condicionActiva" class="mdl-switch__input">
+										<h:panelGroup class="mdl-switch__label">Activo</h:panelGroup>
+								</h:outputLabel>
+							</h:panelGroup>
+							<h:panelGroup layout="block" class="mdl-dialog__actions">
+								<h:commandButton id="mostrarGarantia" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm" value="Crear origen" />
+								<h:commandButton type="reset" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect toggleSubForm" value="Cancelar" />
+							</h:panelGroup>
+						</h:form>
+					</aside>
+				</div>
+			</main>
+		</div>
+	</h:body>
+</html>

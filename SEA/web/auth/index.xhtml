@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es"
+	  xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Ingreso | SEA</title>
+		<ui:composition template="/templates/loginResources.xhtml" />
+    </h:head>
+	<h:body>
+		<main class="mdl-shadow--4dp">
+			<h:graphicImage library="img" name="LogoSEA.svg" id="logoSEA" />
+            <h1 class="mdl-typography--display-1">Bienvenido a SEA</h1>
+			<h:form id="frmLogin">
+				<p:growl showDetail="true"/>
+				<p:panel style="width:400px">
+					<h:panelGrid columns="2" cellpadding="5">
+						<h:outputLabel for="name" value="Nombre de usuario :" />
+						<p:inputText id="name" value="#{loginController.usuario.nombreUsuario}" required="true"/>
+						<h:outputLabel for="name" value="Contraseña :" />
+						<p:password id="pass" value="#{loginController.usuario.contrasena}" required="true"/>
+						<p:commandButton styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" value="Ingresar" actionListener="#{loginController.iniciarSesion()}" update=":frmLogin"/>
+						<h:outputLink  value="/SEA/auth/forgot.xhtml">¿Olvidó su contraseña?</h:outputLink>
+
+					</h:panelGrid>
+				</p:panel>
+			</h:form>
+		</main>
+    </h:body>
+</html>

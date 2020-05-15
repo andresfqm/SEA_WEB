@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es"
+	  xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	  xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Reestablecer contraseña | SEA</title>
+		<ui:composition template="/templates/loginResources.xhtml" />
+    </h:head>
+	<h:body>
+		<main class="mdl-shadow--4dp">
+			<h:graphicImage library="img" name="LogoSEA.svg" id="logoSEA" />
+			<h1 class="mdl-typography--display-1">Reestablecer contraseña</h1>
+			<h:form>
+				<div class="mdl-textfield mdl-textfield--floating-label mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+					<h:inputSecret class="mdl-textfield__input" id="newPassword" pt:required="required" pt:maxlength="32" />
+					<h:outputLabel class="mdl-textfield__label" for="newPassword">Nueva contraseña</h:outputLabel>
+				</div>
+				<div class="mdl-textfield mdl-textfield--floating-label mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+					<h:inputSecret class="mdl-textfield__input" id="passwordRepeat" pt:required="required" pt:maxlength="32" />
+					<h:outputLabel class="mdl-textfield__label" for="passwordRepeat">Confirme su contraseña</h:outputLabel>
+				</div>
+				<button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Cambiar contraseña</button>
+			</h:form>
+		</main>
+	</h:body>
+</html>

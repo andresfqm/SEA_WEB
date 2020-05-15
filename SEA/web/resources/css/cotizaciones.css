@@ -1,0 +1,38 @@
+/******************************
+Envío de cotizaciones
+******************************/
+.step{
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	grid-gap: 15px;
+	margin-bottom: 10px;
+}
+.stepForm .step:nth-child(3){
+	grid-template-columns: repeat(2, 1fr);
+}
+.step h3{
+	grid-column: 1 / -1;
+}
+output::before{
+	content: "$";
+}
+/***************************************************
+Órdenes de producción
+***************************************************/
+.ordenProduccion .step:first-child, .ordenProduccionC .step:nth-child(2){
+	grid-template-columns: repeat(2, 1fr);
+}
+/***************************************************
+Subformulario para agregar/modificar artículos
+***************************************************/
+@media all and (max-width: 768px){
+	.step{
+		grid-template-columns: repeat(2,1fr);
+	}
+}
+@media all and (max-width: 640px){
+	.step, #Paso_3 .step{
+		grid-template-columns: 1fr;
+	}
+}
+

@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:body>
+
+		<aside id="taskList" class="fixed-nav" data-active="false">
+            <h:panelGroup layout="block" class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
+                <h:panelGroup layout="block" class="mdl-tabs__tab-bar">
+                    <a href="#taskEventos" class="mdl-tabs__tab is-active">Eventos</a>
+                    <a href="#taskNotificaciones" class="mdl-tabs__tab">Notificaciones</a>
+                    <a href="#taskTareas" class="mdl-tabs__tab">Tareas</a>
+                </h:panelGroup>
+                <h:panelGroup layout="block" class="mdl-tabs__panel is-active" id="taskEventos"></h:panelGroup>
+                <h:panelGroup layout="block" class="mdl-tabs__panel" id="taskNotificaciones"></h:panelGroup>
+                <h:panelGroup layout="block" class="mdl-tabs__panel" id="taskTareas"></h:panelGroup>
+            </h:panelGroup>
+        </aside>
+
+        <br />
+
+
+
+    </h:body>
+
+</html>

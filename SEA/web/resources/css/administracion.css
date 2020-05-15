@@ -1,0 +1,91 @@
+#usuariosDashboard table, #clientesDashboard table, #convenciones table, #origenes table, #garantiaDashboard table{
+	width: calc(100% - 60px);
+	margin: 0;
+}
+/********************************************************************************
+Administración de clientes y usuarios
+********************************************************************************/
+#addUser .mdl-dialog__content, #addCliente .mdl-dialog__content{
+	grid-template-columns: repeat(2, 1fr);
+}
+/********************************************************************************
+Sección de configuración
+********************************************************************************/
+#configuracion form{
+	display: grid;
+	min-height: auto;
+	padding: 40px 15px;
+}
+/**********************************************************************
+Cambio de contraseña
+**********************************************************************/
+#personalInfo-panel form{
+	grid-template-columns: repeat(3, 1fr);
+}
+#contrasena-panel form{
+	grid-template-columns: 1fr;
+}
+/**********************************************************************
+Convenciones
+**********************************************************************/
+#convenciones .mdl-tabs{
+	background-color: #fff;
+	min-height: calc(100vh - var(--altoHeader) - 30px);
+	padding-bottom: 15px;
+}
+#convenciones table{
+	margin-top: 15px;
+}
+#convenciones .button-bottom_right{
+	display: none;
+}
+#convenciones .mdl-tabs__panel.is-active .button-bottom_right{
+	display: block;
+}
+/**********************************************************************
+Condiciones comerciales y de garantía
+**********************************************************************/
+#adminCondiciones form{
+	display: grid;
+	padding: 10px;
+	grid-gap: 10px;
+	min-height: auto;
+	grid-template-columns: 1fr;
+}
+[id$="-panel"] table td, #garantiaDashboard table td:nth-child(3){
+	white-space: nowrap;
+}
+/******************************************************************************************
+Tablas
+******************************************************************************************/
+[data-dataTable]{
+	max-width: 100%;
+	max-height: calc(100vh - var(--altoHeader) - 30px);
+	overflow: auto;
+}
+main{
+	min-height: calc(100vh - var(--altoHeader) - 30px);
+}
+/******************************************************************************************
+Tablas
+******************************************************************************************/
+#DBLoadData form{
+	display: grid;
+	grid-template-columns: calc(100% / 3) calc(100% / 3) calc(100% / 3);
+	grid-template-rows: auto auto auto auto;
+	grid-template-areas:". tablas ." ". mensaje." ". cargue ." ". enviar .";
+	grid-gap: 15px;
+	padding-bottom: 15px;
+}
+#DBLoadData form .mdl-selectfield{
+	grid-area: tablas;
+}
+#DBLoadData form p{
+	grid-area: mensaje;
+}
+#DBLoadData form .mdl-textfield--file{
+	grid-area: cargue;
+}
+#DBLoadData form .mdl-button{
+	grid-area: enviar;
+}

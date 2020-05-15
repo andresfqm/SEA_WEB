@@ -1,0 +1,820 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2fced5fa-a27f-4972-b8db-46e396da827c">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<topPen lineWidth="1.0" lineColor="#000000"/>
+			<bottomPen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<topPen lineWidth="1.0" lineColor="#000000"/>
+			<bottomPen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2">
+		<box>
+			<topPen lineWidth="1.0" lineColor="#000000"/>
+			<bottomPen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3">
+		<box>
+			<topPen lineWidth="1.0" lineColor="#000000"/>
+			<bottomPen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 4">
+		<box>
+			<topPen lineWidth="1.0" lineColor="#000000"/>
+			<bottomPen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 4_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 4_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 4_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="cotizacion_producto" uuid="eb1304d2-4773-4087-948a-21c7b11a63aa">
+		<parameter name="cotizacion_tabla" class="java.lang.String"/>
+		<queryString language="SQL">
+			<![CDATA[SELECT
+     tbl_cotizacion.`NUMERO_COTIZACION` AS tbl_cotizacion_NUMERO_COTIZACION,
+     tbl_cotizacion.`FECHA_EMISION` AS tbl_cotizacion_FECHA_EMISION,
+     tbl_cotizacion.`LUGAR_EMISION` AS tbl_cotizacion_LUGAR_EMISION,
+     tbl_cotizacion.`VALIDEZ_OFERTA` AS tbl_cotizacion_VALIDEZ_OFERTA,
+     tbl_cotizacion.`DESCUENTO` AS tbl_cotizacion_DESCUENTO,
+     tbl_cotizacion.`IVA` AS tbl_cotizacion_IVA,
+     tbl_cotizacion.`FECHA_CIERRE_EFECTIVO` AS tbl_cotizacion_FECHA_CIERRE_EFECTIVO,
+     tbl_cotizacion.`CANCELADA` AS tbl_cotizacion_CANCELADA,
+     tbl_cotizacion.`VISITA` AS tbl_cotizacion_VISITA,
+     tbl_cotizacion.`PRESTAMO_MUESTRA` AS tbl_cotizacion_PRESTAMO_MUESTRA,
+     tbl_cotizacion.`RELACION_MUESTRA` AS tbl_cotizacion_RELACION_MUESTRA,
+     tbl_cotizacion.`NUMERO_REMISION` AS tbl_cotizacion_NUMERO_REMISION,
+     tbl_cotizacion.`ESTADO` AS tbl_cotizacion_ESTADO,
+     tbl_cotizacion.`FECHA_FACTURACION` AS tbl_cotizacion_FECHA_FACTURACION,
+     tbl_cotizacion.`TBL_CLIENTE_ID_CLIENTE` AS tbl_cotizacion_TBL_CLIENTE_ID_CLIENTE,
+     tbl_cotizacion.`TBL_PROPUESTA_NO_INCLUYE_ID_PROPUESTA_NO_INCLUYE` AS tbl_cotizacion_TBL_PROPUESTA_NO_INCLUYE_ID_PROPUESTA_NO_INCLUYE,
+     tbl_cotizacion.`TBL_TIEMPO_ENTREGA_ID_TIEMPO_ENTREGA` AS tbl_cotizacion_TBL_TIEMPO_ENTREGA_ID_TIEMPO_ENTREGA,
+     tbl_cotizacion.`TBL_DESCUENTO_VOLUMEN_ID_DESCUENTO_VOLUMEN` AS tbl_cotizacion_TBL_DESCUENTO_VOLUMEN_ID_DESCUENTO_VOLUMEN,
+     tbl_cotizacion.`TBL_MODALIDAD_DE_PAGO_ID_MODALIDAD_DE_PAGO` AS tbl_cotizacion_TBL_MODALIDAD_DE_PAGO_ID_MODALIDAD_DE_PAGO,
+     tbl_cotizacion.`TBL_LUGARES_ENTREGA_ID_LUGARES_ENTREGA` AS tbl_cotizacion_TBL_LUGARES_ENTREGA_ID_LUGARES_ENTREGA,
+     tbl_cotizacion_producto.`ID_COTIZACION_PRODUCTO` AS tbl_cotizacion_producto_ID_COTIZACION_PRODUCTO,
+     tbl_cotizacion_producto.`TBL_PRODUCTO_ID_PRODUCTO` AS tbl_cotizacion_producto_TBL_PRODUCTO_ID_PRODUCTO,
+     tbl_cotizacion_producto.`TBL_COTIZACION_NUMERO_COTIZACION` AS tbl_cotizacion_producto_TBL_COTIZACION_NUMERO_COTIZACION,
+     tbl_cotizacion_producto.`PRECIO_PARA_CLIENTE` AS tbl_cotizacion_producto_PRECIO_PARA_CLIENTE,
+     tbl_cotizacion_producto.`PRECIO_BASE` AS tbl_cotizacion_producto_PRECIO_BASE,
+     tbl_cotizacion_producto.`CANTIDAD` AS tbl_cotizacion_producto_CANTIDAD,
+     tbl_producto.`ID_PRODUCTO` AS tbl_producto_ID_PRODUCTO,
+     tbl_producto.`REFERENCIA` AS tbl_producto_REFERENCIA,
+     tbl_producto.`DESCRIPCION` AS tbl_producto_DESCRIPCION,
+     tbl_producto.`FECHA_ACTUALIZACION` AS tbl_producto_FECHA_ACTUALIZACION,
+     tbl_producto.`PRECIO` AS tbl_producto_PRECIO,
+     tbl_producto.`TBL_FABRICANTE_ID_FABRICANTE` AS tbl_producto_TBL_FABRICANTE_ID_FABRICANTE,
+     tbl_producto.`TBL_SUBCATEGORIA_ID_SUBCATEGORIA` AS tbl_producto_TBL_SUBCATEGORIA_ID_SUBCATEGORIA,
+     tbl_producto.`PERSONALIZADO` AS tbl_producto_PERSONALIZADO
+FROM
+     `tbl_cotizacion` tbl_cotizacion INNER JOIN `tbl_cotizacion_producto` tbl_cotizacion_producto ON tbl_cotizacion.`NUMERO_COTIZACION` = tbl_cotizacion_producto.`TBL_COTIZACION_NUMERO_COTIZACION`
+     INNER JOIN `tbl_producto` tbl_producto ON tbl_cotizacion_producto.`TBL_PRODUCTO_ID_PRODUCTO` = tbl_producto.`ID_PRODUCTO`
+	where TBL_COTIZACION_NUMERO_COTIZACION = $P{cotizacion_tabla}]]>
+		</queryString>
+		<field name="tbl_cotizacion_producto_TBL_COTIZACION_NUMERO_COTIZACION" class="java.lang.String"/>
+		<field name="tbl_cotizacion_producto_PRECIO_PARA_CLIENTE" class="java.lang.Float"/>
+		<field name="tbl_cotizacion_producto_CANTIDAD" class="java.lang.Integer"/>
+		<field name="tbl_producto_REFERENCIA" class="java.lang.String"/>
+		<field name="tbl_producto_DESCRIPCION" class="java.lang.String"/>
+	</subDataset>
+	<parameter name="numero_cotizacion" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select *, de.nombre as NOMBRE_DEPARTAMENTO, u.nombre as nombre_us, tie.descripcion as des_tiempo, dv.descripcion as des_descripcion, le.descripcion as lug_descripcion, pni.descripcion as propuesta_descripcion from tbl_cotizacion as c
+inner join tbl_cotizacion_producto as cp
+on c.numero_cotizacion = cp.tbl_cotizacion_numero_cotizacion
+inner join tbl_cliente as cl
+on c.tbl_cliente_id_cliente = cl.id_cliente
+inner join tbl_direccion as d
+on cl.id_cliente = d.tbl_cliente_id_cliente
+inner join tbl_ciudad as ci
+on d.tbl_ciudad_id_ciudad = ci.id_ciudad
+inner join tbl_departamento as de
+on ci.tbl_departamento_id_departamento = de.id_departamento
+inner join tbl_email as e
+on cl.id_cliente = e.tbl_cliente_id_cliente
+inner join tbl_telefono as t
+on cl.id_cliente = t.tbl_cliente_id_cliente
+inner join tbl_usuario as u
+on cl.tbl_usuario_id_usuario = u.id_usuario
+inner join tbl_modalidad_de_pago as mp
+on c.tbl_modalidad_de_pago_id_modalidad_de_pago = mp.id_modalidad_de_pago
+inner join tbl_tiempo_entrega as te
+on c.tbl_tiempo_entrega_id_tiempo_entrega = te.id_tiempo_entrega
+inner join tbl_lugares_entrega as le
+on c.tbl_lugares_entrega_id_lugares_entrega = le.id_lugares_entrega
+inner join tbl_descuento_volumen as dv
+on c.tbl_descuento_volumen_id_descuento_volumen = dv.id_descuento_volumen
+inner join tbl_tiempo_entrega as tie
+on c.tbl_tiempo_entrega_id_tiempo_entrega = tie.id_tiempo_entrega
+inner join tbl_propuesta_no_incluye as pni
+on c.tbl_propuesta_no_incluye_id_propuesta_no_incluye = pni.id_propuesta_no_incluye
+where numero_cotizacion = $P{numero_cotizacion}
+group by numero_cotizacion]]>
+	</queryString>
+	<field name="NUMERO_COTIZACION" class="java.lang.String">
+		<fieldDescription><![CDATA[Convertir en llave compuesta]]></fieldDescription>
+	</field>
+	<field name="FECHA_EMISION" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="LUGAR_EMISION" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="VALIDEZ_OFERTA" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="DESCUENTO" class="java.lang.Float">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="IVA" class="java.lang.Float">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="FECHA_CIERRE_EFECTIVO" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="CANCELADA" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="VISITA" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="PRESTAMO_MUESTRA" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="RELACION_MUESTRA" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="NUMERO_REMISION" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ESTADO" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="FECHA_FACTURACION" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="TBL_CLIENTE_ID_CLIENTE" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="TBL_PROPUESTA_NO_INCLUYE_ID_PROPUESTA_NO_INCLUYE" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="TBL_TIEMPO_ENTREGA_ID_TIEMPO_ENTREGA" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="TBL_DESCUENTO_VOLUMEN_ID_DESCUENTO_VOLUMEN" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="TBL_MODALIDAD_DE_PAGO_ID_MODALIDAD_DE_PAGO" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="TBL_LUGARES_ENTREGA_ID_LUGARES_ENTREGA" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ID_COTIZACION_PRODUCTO" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="TBL_PRODUCTO_ID_PRODUCTO" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="TBL_COTIZACION_NUMERO_COTIZACION" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="PRECIO_PARA_CLIENTE" class="java.lang.Float">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="PRECIO_BASE" class="java.lang.Float">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="CANTIDAD" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ID_CLIENTE" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Convertir en llave compuesta]]></fieldDescription>
+	</field>
+	<field name="TBL_TIPO_DOCUMENTO_ID_TIPO_DOCUMENTO" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="NUMERO_DOCUMENTO" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="DIGITO_VERIFICACION" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="NOMBRE_O_RAZON_SOCIAL" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="APELLIDO" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="NOMBRE_CONTACTO" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="TBL_USUARIO_ID_USUARIO" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="TBL_ORIGEN_ID_ORIGEN" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="TBL_COMENTARIO_CAMBIO_ASESOR_ID_COMENTARIO_CAMBIO_ASESOR" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ID_DIRECCION" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="DIRECCION" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="TBL_TIPO_DIRECCION_ID_TIPO_DIRECCION" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="TBL_CIUDAD_ID_CIUDAD" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ID_CIUDAD" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="NOMBRE" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="TBL_DEPARTAMENTO_ID_DEPARTAMENTO" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ID_DEPARTAMENTO" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ID_EMAIL" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="EMAIL" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="TBL_TIPO_EMAIL_ID_TIPO_EMAIL" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ID_TELEFONO" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="NUMERO_TELEFONO" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="TBL_TIPO_TELEFONO_ID_TIPO_TELEFONO" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ID_USUARIO" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Convertir en llave compuesta]]></fieldDescription>
+	</field>
+	<field name="ID_INTERNO" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="CONSECUTIVO_COTIZACION" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="NOMBRE_USUARIO" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="CONTRASENA" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="HABILITADO" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="AUTENTICADO" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ID_MODALIDAD_DE_PAGO" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="DESCRIPCION" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ACTIVO" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ID_TIEMPO_ENTREGA" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ID_LUGARES_ENTREGA" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ID_DESCUENTO_VOLUMEN" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ID_PROPUESTA_NO_INCLUYE" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="NOMBRE_DEPARTAMENTO" class="java.lang.String"/>
+	<field name="nombre_us" class="java.lang.String"/>
+	<field name="des_tiempo" class="java.lang.String"/>
+	<field name="des_descripcion" class="java.lang.String"/>
+	<field name="lug_descripcion" class="java.lang.String"/>
+	<field name="propuesta_descripcion" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="108" splitType="Stretch">
+			<staticText>
+				<reportElement x="409" y="17" width="83" height="21" forecolor="#3F51B5" uuid="2faf17da-a877-4662-bea0-63e9beaffece"/>
+				<textElement>
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<text><![CDATA[Cotización No.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="480" y="11" width="63" height="21" uuid="01aa93a5-cb16-462b-bc0b-12b7abdd5770"/>
+				<textElement textAlignment="Right">
+					<font size="16"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NUMERO_COTIZACION}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="316" y="48" width="239" height="20" forecolor="#3F51B5" uuid="e8e0d835-e9ac-424b-aadb-9f1e0be3a985"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<text><![CDATA[FULL DOTACIONES SAS   |    Nit. 900.530.172 - 7]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="250" y="68" width="314" height="20" forecolor="#3F51B5" uuid="74842670-bc68-4ce3-97fc-0e8e33a0a3e6"/>
+				<text><![CDATA[Carrera 21 # 49 - 11  |  Palermo - Teusaquillo | Bogotá | Colombia]]></text>
+			</staticText>
+			<image>
+				<reportElement x="22" y="11" width="176" height="37" uuid="8b0eb2fb-b242-4b5d-b932-f92a1a34d7e9"/>
+				<imageExpression><![CDATA["C:\\Users\\rpc\\Documents\\Proyecto_Sena _SEA\\SEA\\web\\resources\\img\\full.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<detail>
+		<band height="544" splitType="Stretch">
+			<staticText>
+				<reportElement x="11" y="10" width="327" height="38" uuid="81dc1e9e-a9e3-48bc-a48e-359e6d33fdc0"/>
+				<textElement>
+					<font size="24" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Datos de la cotización
+
+]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="11" y="81" width="158" height="30" uuid="0843b18c-9475-4334-a339-595a3169c75c"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LUGAR_EMISION}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="11" y="58" width="158" height="23" forecolor="#3F51B5" uuid="f32af85a-bd3b-4088-be68-57ad3f60caa1"/>
+				<box>
+					<pen lineColor="#3399FF"/>
+					<topPen lineColor="#3399FF"/>
+					<leftPen lineColor="#3399FF"/>
+					<bottomPen lineColor="#3399FF"/>
+					<rightPen lineColor="#3399FF"/>
+				</box>
+				<textElement>
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<text><![CDATA[Ciudad de emisión]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="198" y="58" width="183" height="20" forecolor="#3F51B5" uuid="83b5c15d-7db4-481a-9e52-56b4171dd0c3"/>
+				<textElement>
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<text><![CDATA[Fecha de emisión]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="198" y="78" width="183" height="30" uuid="c87b6ad9-0627-4f63-be41-bc76a7df3cc4"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FECHA_EMISION}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="11" y="119" width="158" height="20" forecolor="#3F51B5" uuid="5e605b97-54f2-49e9-9870-9e495e9c098a"/>
+				<textElement>
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<text><![CDATA[Empresa]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="11" y="139" width="158" height="30" uuid="f25a000b-e61b-4477-ad72-00ef7cbe6513"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NOMBRE_O_RAZON_SOCIAL}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="198" y="119" width="183" height="20" forecolor="#3F51B5" uuid="96749866-879e-42c9-946b-1cde74670ad8"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Ciudad]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="198" y="139" width="183" height="30" uuid="1de9b90f-4a32-40ad-928f-c01d6f96d7ab"/>
+				<textElement>
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NOMBRE}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="401" y="119" width="133" height="20" forecolor="#3F51B5" uuid="bad752ee-31ed-4090-a35d-5a72cbdf504c"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Departamento]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="401" y="139" width="133" height="30" uuid="c1f4fe0d-49d9-4149-ba7a-7eca214f12cf"/>
+				<textElement>
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NOMBRE_DEPARTAMENTO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="11" y="179" width="158" height="20" forecolor="#3F51B5" uuid="a57538b1-e404-4a1d-a93b-7981d351ac8f"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[E-mail]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="11" y="199" width="158" height="30" uuid="f7f7458f-36aa-40b8-a91b-7e6db763e6c7"/>
+				<textElement>
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{EMAIL}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="198" y="179" width="183" height="20" forecolor="#3F51B5" uuid="c8333550-94f7-493f-884f-d067a379a17d"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Teléfono]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="198" y="199" width="183" height="30" uuid="5d685469-3d3f-445c-bbe3-6232619354af"/>
+				<textElement>
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NUMERO_TELEFONO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="401" y="61" width="133" height="20" forecolor="#3F51B5" uuid="bb05ae45-ca52-490c-9256-38aa25a2db97"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Asesor]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="401" y="179" width="133" height="20" forecolor="#3F51B5" uuid="59d8d1a3-459c-4700-88fc-3fc83dee85a0"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Número de remisión]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="401" y="199" width="133" height="30" uuid="ecdac203-1842-4c56-a505-d9c8a3e656ac"/>
+				<textElement>
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NUMERO_REMISION}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="11" y="243" width="223" height="33" uuid="dec851f9-93ac-4de7-8f91-fbcb5fbb3f65"/>
+				<textElement>
+					<font size="24" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Articulos a cotizar]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="401" y="81" width="133" height="27" uuid="cd9685e6-1ac3-445b-848d-3e65afce4ff6"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombre_us}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="11" y="360" width="523" height="36" uuid="578b677f-fdcb-420e-9c6b-11b89e3e4a6a"/>
+				<textElement>
+					<font size="24" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Condiciones comerciales
+
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="11" y="405" width="158" height="20" forecolor="#3F51B5" uuid="024ce9a1-5e61-42d9-8324-e87fed72797a"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Forma de pago]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="11" y="425" width="158" height="30" uuid="fa7013b7-cc6d-4ed3-a2cc-3574fbcbf2df"/>
+				<textElement>
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DESCRIPCION}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="198" y="405" width="183" height="20" forecolor="#3F51B5" uuid="de9c48de-c943-4534-bc71-df4d44cc88a3"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Lugar de entrega]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="198" y="425" width="183" height="30" uuid="46b25af8-f8e9-4336-9408-f480b29ec93d"/>
+				<textElement>
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{lug_descripcion}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="401" y="405" width="133" height="20" forecolor="#3F51B5" uuid="4b13b829-a5ee-4be2-9849-9c4829b69be6"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Descuento por volumen]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="401" y="425" width="133" height="30" uuid="af179c17-8269-45ff-bacd-e37c6392c6c7"/>
+				<textElement>
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{des_descripcion}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="11" y="472" width="158" height="20" forecolor="#3F51B5" uuid="154f1d5f-b642-4a25-8751-4bec62418915"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Validez de la oferta: ]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="11" y="492" width="158" height="30" uuid="63f73de1-dd82-4b5a-9a9d-91d79b5dedce"/>
+				<textElement>
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{VALIDEZ_OFERTA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="198" y="472" width="183" height="20" forecolor="#3F51B5" uuid="0f60b439-3fc4-4419-b65f-8aa2dedecd29"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Tiempo de entrega: ]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="198" y="492" width="183" height="30" uuid="54e4dd3b-a5c6-4766-9b91-56f29fdec399"/>
+				<textElement>
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{des_tiempo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="401" y="472" width="133" height="20" forecolor="#3F51B5" uuid="d6e7f3c1-6a3c-4527-b817-c03c74b60b73"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[La oferta no incluye: ]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="401" y="492" width="133" height="30" uuid="28329c3e-b780-486b-a5a8-753e7ec7a66b"/>
+				<textElement>
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{propuesta_descripcion}]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement key="table 4" style="table 4" x="11" y="288" width="523" height="62" uuid="8673cdd9-c866-4f6c-ab49-ac77ed9c33b7"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="cotizacion_producto" uuid="c20063a4-654a-4de6-967c-dbc708883645">
+						<datasetParameter name="cotizacion_tabla">
+							<datasetParameterExpression><![CDATA[$P{numero_cotizacion}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="67" uuid="4e3fadb5-dc89-4962-b651-e3148a5a618c">
+						<jr:columnHeader style="table 4_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="67" height="30" uuid="1be19936-726e-47de-8a65-f162921d13b7"/>
+								<textElement textAlignment="Center">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Referencia]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="table 4_CH" height="0" rowSpan="1"/>
+						<jr:detailCell style="table 4_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="67" height="20" uuid="9bdcfaa2-f4b1-4c19-9773-afc176b97838"/>
+								<textElement textAlignment="Center"/>
+								<textFieldExpression><![CDATA[$F{tbl_producto_REFERENCIA}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="155" uuid="c34349de-a4a7-4430-885c-f926393dfc4b">
+						<jr:columnHeader style="table 4_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="155" height="30" uuid="3dc23ff4-e5bb-473f-b5de-147bfb08cf1d"/>
+								<textElement textAlignment="Center">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Descripcion]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="table 4_CH" height="0" rowSpan="1"/>
+						<jr:detailCell style="table 4_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="155" height="20" uuid="af26a40a-538b-4e64-83e7-b5df1f0e1110"/>
+								<textElement textAlignment="Center"/>
+								<textFieldExpression><![CDATA[$F{tbl_producto_DESCRIPCION}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="104" uuid="718c949b-e5d7-4fb8-b453-3a195151cb6a">
+						<jr:columnHeader style="table 4_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="104" height="30" uuid="baaf54f8-7a00-4c74-bcfd-deb26c5c11ec"/>
+								<textElement textAlignment="Center">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Cantidad]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="table 4_CH" height="0" rowSpan="1"/>
+						<jr:detailCell style="table 4_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="104" height="20" uuid="e1e08ef4-2a05-4771-8cc6-53b20345743f"/>
+								<textElement textAlignment="Center"/>
+								<textFieldExpression><![CDATA[$F{tbl_cotizacion_producto_CANTIDAD}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="185" uuid="8171032d-a018-4e60-94d0-2528fed7093e">
+						<jr:columnHeader style="table 4_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="185" height="30" uuid="9befbc9c-bcf3-49bb-9fcd-68c3dc65147a"/>
+								<textElement textAlignment="Center">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Precio Para Cliente]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="table 4_CH" height="0" rowSpan="1"/>
+						<jr:detailCell style="table 4_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="185" height="20" uuid="cdac7d66-d439-4973-b7a3-b7fed07d0bd0"/>
+								<textElement textAlignment="Center"/>
+								<textFieldExpression><![CDATA[$F{tbl_cotizacion_producto_PRECIO_PARA_CLIENTE}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="141">
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="38" uuid="383d758d-3d35-44fc-a1a0-cad074e6ccff"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Recuerde que la  Orden de Compra debe contener como mínimo:  No de Cotización, Tallas, Cantidades, Materiales, Colores.   ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="49" width="511" height="19" uuid="d9b5f524-3f91-4576-916e-c2bdad3bb07f"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Cualquier duda o comentario, no dude en contactarnos,]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="68" width="179" height="20" uuid="fd9bf6a0-8a6b-4022-bf55-82a69d1c5da1"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Angel Torres | Gerente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="88" width="555" height="53" uuid="99bfccf4-61d6-4e49-9529-73fdf12297ed"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[FULL DOTACIONES SAS | Carrera 21 #  49 - 11  Palermo   | PBX. 5162829 | Cel. 57- 300-7036273 | atorres@dotacionesindustriales.com | www.dotacionesindustriales.com
+]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="432" y="121" width="80" height="20" uuid="90d377f5-ebc2-4803-b53a-e2b72c9d87c2"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="512" y="121" width="40" height="20" uuid="73c3366b-209a-45f7-b5c0-1892d1e8dba7"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

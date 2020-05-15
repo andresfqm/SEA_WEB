@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es"
+	  xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://xmlns.jcp.org/jsf/html"
+	  xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:f="http://xmlns.jcp.org/jsf/core">
+	<h:head>
+		<title>Cargue masivo de datos | SEA</title>
+		<ui:composition template="/templates/resources.xhtml" />
+	</h:head>
+	<h:body>
+        <div class="mdl-layout mdl-js-layout">
+			<ui:composition template="/templates/header.xhtml" />
+			<main class="mdl-layout__content">
+				<div class="page-content">
+					<div class="mdl-grid">
+						<h2 class="mdl-typography--display-2">Cargue masivo de datos</h2>
+						<div class="mdl-cell mdl-cell--12-col">Por favor, siga las siguientes instrucciones para realizar el cargue masivo de datos:</div>
+						<div class="mdl-cell mdl-cell--12-col">
+							<ul class="demo-list-icon mdl-list">
+								<li class="mdl-list__item">
+									<span class="mdl-list__item-primary-content">
+										<i class="material-icons mdl-list__item-icon">done</i>
+										Seleccione la tabla a la cual desea cargar/actualizar datos en el campo "tabla".
+									</span>
+								</li>
+								<li class="mdl-list__item">
+									<span class="mdl-list__item-primary-content">
+										<i class="material-icons mdl-list__item-icon">file_download</i>
+										Descargue la plantilla que el sistema le indica
+									</span>
+								</li>
+								<li class="mdl-list__item">
+									<span class="mdl-list__item-primary-content">
+										<i class="material-icons mdl-list__item-icon">file_upload</i>
+										Diligencie la plantilla y seleccione el archivo correspondiente a la tabla seleccionada en el campo "Seleccione un archivo". Posteriormente haga click en el botón "cargar".
+									</span>
+								</li>
+								<li class="mdl-list__item">
+									<span class="mdl-list__item-primary-content">
+										<i class="material-icons mdl-list__item-icon">error_outline</i>
+										Tenga en cuenta que si el sistema encuentra errores, este no cargará en la base de datos dicho registro y que de encontrar un registro duplicado, el sistema lo actualizará en la base de datos.
+									</span>
+								</li>
+								<li class="mdl-list__item">
+									<span class="mdl-list__item-primary-content">
+										<i class="material-icons mdl-list__item-icon">warning</i>
+										El sistema solo reconoce archivos con la extensión *.csv separado por comas (,), por favor asegúrese que el archivo que va a cargar cumpla con esta especificación. De no ser así, el sistema no cargará ningún registro a la base de datos.
+									</span>
+								</li>
+							</ul>
+						</div>
+						<div class="mdl-cell mdl-cell--12-col">
+							<h:form enctype="multipart/form-data">
+								<div class="mdl-selectfield mdl-js-selectfield mdl-selectfield--floating-label">
+									<p:selectOneMenu styleClass="mdl-selectfield__select" value="#{loadDataController.tabla}" id="tabla" pt:required="required">
+										<p:ajax event="valueChange" listener="#{loadDataController.leerTabla()}" update="linkPlantilla" />
+										<f:selectItem itemValue="" itemLabel="Seleccione" />
+										<f:selectItem itemValue="tbl_categoria" itemLabel="tbl_categoria" />
+										<f:selectItem itemValue="tbl_ciudad" itemLabel="tbl_ciudad" />
+										<f:selectItem itemValue="tbl_cliente" itemLabel="tbl_cliente" />
+										<f:selectItem itemValue="tbl_comentario_cambio_asesor" itemLabel="tbl_comentario_cambio_asesor" />
+										<f:selectItem itemValue="tbl_condiciones_garantia" itemLabel="tbl_condiciones_garantia" />
+										<f:selectItem itemValue="tbl_cotizacion" itemLabel="tbl_cotizacion" />
+										<f:selectItem itemValue="tbl_cotizacion_producto" itemLabel="tbl_cotizacion_producto" />
+										<f:selectItem itemValue="tbl_departamento" itemLabel="tbl_departamento" />
+										<f:selectItem itemValue="tbl_descuento" itemLabel="tbl_descuento" />
+										<f:selectItem itemValue="tbl_descuento_volumen" itemLabel="tbl_descuento_volumen" />
+										<f:selectItem itemValue="tbl_devolucion" itemLabel="tbl_devolucion" />
+										<f:selectItem itemValue="tbl_devolucion_condiciones_garantia" itemLabel="tbl_devolucion_condiciones_garantia" />
+										<f:selectItem itemValue="tbl_direccion" itemLabel="tbl_direccion" />
+										<f:selectItem itemValue="tbl_email" itemLabel="tbl_email" />
+										<f:selectItem itemValue="tbl_especificacion" itemLabel="tbl_especificacion" />
+										<f:selectItem itemValue="tbl_especificacion_producto" itemLabel="tbl_especificacion_producto" />
+										<f:selectItem itemValue="tbl_fabricante" itemLabel="tbl_fabricante" />
+										<f:selectItem itemValue="tbl_lugares_entrega" itemLabel="tbl_lugares_entrega" />
+										<f:selectItem itemValue="tbl_material" itemLabel="tbl_material" />
+										<f:selectItem itemValue="tbl_menu" itemLabel="tbl_menu" />
+										<f:selectItem itemValue="tbl_modalidad_de_pago" itemLabel="tbl_modalidad_de_pago" />
+										<f:selectItem itemValue="tbl_observaciones_orden_produccion" itemLabel="tbl_observaciones_orden_produccion" />
+										<f:selectItem itemValue="tbl_orden_produccion" itemLabel="tbl_orden_produccion" />
+										<f:selectItem itemValue="tbl_origen" itemLabel="tbl_origen" />
+										<f:selectItem itemValue="tbl_pagina" itemLabel="tbl_pagina" />
+										<f:selectItem itemValue="tbl_perfil" itemLabel="tbl_perfil" />
+										<f:selectItem itemValue="tbl_perfil_pagina" itemLabel="tbl_perfil_pagina" />
+										<f:selectItem itemValue="tbl_producto" itemLabel="tbl_producto" />
+										<f:selectItem itemValue="tbl_producto_descuento" itemLabel="tbl_producto_descuento" />
+										<f:selectItem itemValue="tbl_producto_especificacion" itemLabel="tbl_producto_especificacion" />
+										<f:selectItem itemValue="tbl_producto_especificacion_talla" itemLabel="tbl_producto_especificacion_talla" />
+										<f:selectItem itemValue="tbl_producto_material" itemLabel="tbl_producto_material" />
+										<f:selectItem itemValue="tbl_producto_sufijo" itemLabel="tbl_producto_sufijo" />
+										<f:selectItem itemValue="tbl_propuesta_no_incluye" itemLabel="tbl_propuesta_no_incluye" />
+										<f:selectItem itemValue="tbl_registro_costo" itemLabel="tbl_registro_costo" />
+										<f:selectItem itemValue="tbl_registro_seguimiento" itemLabel="tbl_registro_seguimiento" />
+										<f:selectItem itemValue="tbl_subcategoria" itemLabel="tbl_subcategoria" />
+										<f:selectItem itemValue="tbl_sufijo" itemLabel="tbl_sufijo" />
+										<f:selectItem itemValue="tbl_talla" itemLabel="tbl_talla" />
+										<f:selectItem itemValue="tbl_telefono" itemLabel="tbl_telefono" />
+										<f:selectItem itemValue="tbl_tiempo_entrega" itemLabel="tbl_tiempo_entrega" />
+										<f:selectItem itemValue="tbl_tipo_direccion" itemLabel="tbl_tipo_direccion" />
+										<f:selectItem itemValue="tbl_tipo_documento" itemLabel="tbl_tipo_documento" />
+										<f:selectItem itemValue="tbl_tipo_email" itemLabel="tbl_tipo_email" />
+										<f:selectItem itemValue="tbl_tipo_telefono" itemLabel="tbl_tipo_telefono" />
+										<f:selectItem itemValue="tbl_usuario" itemLabel="tbl_usuario" />
+										<f:selectItem itemValue="tbl_usuario_perfil" itemLabel="tbl_usuario_perfil" />
+									</p:selectOneMenu>
+									<h:outputLabel class="mdl-selectfield__label" for="tabla">Tabla</h:outputLabel>
+								</div>
+								<h:outputLink id="linkPlantilla" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" value="#{loadDataController.tabla}"><i class="material-icons">file_download</i> Descargar plantilla</h:outputLink>
+								<div class="mdl-textfield mdl-js-textfield mdl-textfield--file">
+									<h:inputText class="mdl-textfield__input" pt:placeholder="Seleccione un archivo" pt:data-inputFileText="CSVBD" pt:readonly="readonly"/>
+									<div class="mdl-button mdl-button--primary mdl-button--icon mdl-button--file">
+										<i class="material-icons">attach_file</i><h:inputFile pt:data-inputFile="CSVBD" id="CSVBD" value="#{loadDataController.fileCSV}" pt:accept=".csv" pt:required="required" />
+									</div>
+								</div>
+								<h:commandButton value="Cargar" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" actionListener="#{loadDataController.uploadFile()}">
+									<f:ajax execute="@all" render="@form"/>
+								</h:commandButton>
+							</h:form>
+						</div>
+					</div>
+				</div>
+			</main>
+		</div>
+	</h:body>
+</html>

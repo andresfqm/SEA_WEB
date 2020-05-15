@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <h:body>
+		<ui:composition>
+			<div class="mdl-layout__drawer">
+				<!--span class="mdl-layout-title">Title</span-->
+				<div id="logo"></div>
+				<div id="user">
+					<div id="userName">#{loginController.mostrarNombreUsuario()}</div>
+					<div id="userPosition">
+						<span>#{loginController.mostrarCargo()}</span>
+						<button id="userActions" class="mdl-button mdl-js-button mdl-button--icon">
+							<i class="material-icons">arrow_drop_down</i>
+						</button>
+					</div>
+					<h:form>
+						<ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="userActions">
+							<li class="mdl-menu__item"><h:outputLink value="/SEA/administracion/configuracion.html">Configuración</h:outputLink></li>
+							<li class="mdl-menu__item"><h:commandLink action="#{loginController.cerrarSesion()}" value="Cerrar sesión" /></li>
+						</ul>
+					</h:form>
+				</div>
+				<nav class="mdl-navigation">
+					<ui:repeat value="#{menuController.listaMenuGeneral}" var="nav">
+						<a class="mdl-navigation__link" href="#{nav.url}"><i class="material-icons">#{nav.icono}</i> #{nav.nombre}</a>
+					</ui:repeat>
+				</nav>
+			</div>
+			<div id="snackbarMessage" class="mdl-js-snackbar mdl-snackbar">
+				<div class="mdl-snackbar__text"></div>
+				<button class="mdl-snackbar__action" type="button"></button>
+			</div>
+			<div id="loading-wrapper" class="visible">
+				<div id="loading-content">
+					<div id="loading-text" class="mdl-typography--title hidden"></div>
+					<div id="loadings">
+						<div class="mdl-progress mdl-js-progress mdl-progress__indeterminate hidden"></div>
+						<div class="mdl-spinner mdl-spinner--single-color mdl-js-spinner is-active"></div>
+					</div>
+				</div>
+			</div>
+		</ui:composition>
+    </h:body>
+</html>
