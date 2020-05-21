@@ -168,7 +168,7 @@ public class CotizacionFacade extends AbstractFacade<Cotizacion> implements Coti
 		Connection conexion = null;
 		Class.forName("com.mysql.jdbc.Driver").newInstance();
 		try {
-			
+
 			conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/fulldotaciones?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&useSSL=false", "root", "Tempo123#$");
 
 			//Se definen los parametros si es que el reporte necesita
@@ -343,9 +343,7 @@ public class CotizacionFacade extends AbstractFacade<Cotizacion> implements Coti
 	public String numeroCotizacionUsuario(int usuario) {
 		Object usu = null;
 		String numeroCotizacionUsuario = "";
-		String consulta = "SELECT max(c.numero_cotizacion)\n"
-				+ "FROM tbl_cotizacion AS c\n"
-				+ "WHERE tbl_usuario_id_usuario = ?1";
+		String consulta = "SELECT fn_obtener_consecutivo_cotizacion(?)";
 		Query query = em.createNativeQuery(consulta);
 		query.setParameter(1, usuario);
 		usu = query.getSingleResult();

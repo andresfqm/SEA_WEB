@@ -26,6 +26,7 @@ package com.sea.backend.model;
 import com.sea.backend.entities.Producto;
 import com.sea.frontend.controller.ProductoAuxiliar;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -70,32 +71,36 @@ public class ProductoFacade extends AbstractFacade<Producto> implements Producto
 	}
 
 	@Override
-	public List<Producto> productoPrecio(int idProducto) throws Exception {
-		List<Producto> listaProductoPrecio;
+	public double productoPrecio(int idProducto) throws Exception {
+		double precio = 0;
+
 		String consulta3 = "SELECT PRECIO  FROM tbl_producto WHERE ID_PRODUCTO=?1;";
 		Query query = em.createNativeQuery(consulta3);
 		query.setParameter(1, idProducto);
 
-		listaProductoPrecio = query.getResultList();
-		return listaProductoPrecio;
+		Object ls = query.getSingleResult();
+
+		precio = Float.parseFloat(ls.toString());
+
+		return precio;
 
 	}
-	
+
 	@Override
-	public List<Producto> listaProductos(){
+	public List<Producto> listaProductos() {
 		List<Producto> listaProductoPrecio;
 		String consulta = "SELECT p.referencia, p.descripcion, m.nombre, f.nombre, p.fechaActualizacion, cos.costo, p.precio FROM Producto p "
 				+ "JOIN p.materialList m\n"
 				+ "JOIN p.tblFabricanteIdFabricante f\n"
 				+ "JOIN p.registroCostoList cos\n";
-		
+
 		Query query = em.createQuery(consulta);
 
 		listaProductoPrecio = query.getResultList();
 		return listaProductoPrecio;
 
 	}
-	
+
 	@Override
 	public List<ProductoAuxiliar> datosEspecificacionProducto(String referencia) throws Exception {
 

@@ -151,7 +151,7 @@ public class OrdenProduccionController implements Serializable {
 	private int idProducto;
 	private List<Material> listaMateriales;
 	private List<Fabricante> listaFabricante;
-	private List<Producto> listaProductoPrecio;
+	private double productoPrecio;
 	private List<Producto> listaProducto;
 	private List<ProductoAuxiliar> listaDatosEspecificacionProducto;
 	private String referencia;
@@ -270,12 +270,6 @@ public class OrdenProduccionController implements Serializable {
 
 	}
 	
-
-	//Metodo para calcular el precio del producto seleccionado
-	public Double calcularPrecioProductoDescuento() {
-		return this.listaProductoPrecio.get(0).getPrecio() - (this.listaProductoPrecio.get(0).getPrecio() * this.descuentoCotizacion);
-
-	}
 
 	// Metodo para traer los productos registrados en una cotización
 	public void obtenerProductosRegistrados() throws Exception {
@@ -475,7 +469,7 @@ public class OrdenProduccionController implements Serializable {
 			producto = productoEJB.productoDescripcion(producto.getIdProducto());
 			listaMateriales = materialEJB.datosMaterial(producto.getIdProducto());
 			listaFabricante = fabricanteEJB.descripcionFabricante(producto.getIdProducto());
-			listaProductoPrecio = productoEJB.productoPrecio(producto.getIdProducto());
+			productoPrecio = productoEJB.productoPrecio(producto.getIdProducto());
 		} catch (Exception e) {
 			throw e;
 		}
@@ -506,12 +500,12 @@ public class OrdenProduccionController implements Serializable {
 		this.listaFabricante = listaFabricante;
 	}
 
-	public List<Producto> getListaProductoPrecio() {
-		return listaProductoPrecio;
+	public double getProductoPrecio() {
+		return productoPrecio;
 	}
 
-	public void setListaProductoPrecio(List<Producto> listaProductoPrecio) {
-		this.listaProductoPrecio = listaProductoPrecio;
+	public void setProductoPrecio(double productoPrecio) {
+		this.productoPrecio = productoPrecio;
 	}
 
 	public CotizacionProducto getCotizacionP() {

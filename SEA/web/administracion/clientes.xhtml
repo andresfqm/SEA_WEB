@@ -115,28 +115,46 @@
 											<h:outputLabel class="mdl-textfield__label" for="apellido" rendered="#{clienteController.tipoDocumento.tipo != 'Numero de identificación tributaria'}">Apellido</h:outputLabel>
 										</h:panelGroup>
 									</h:panelGroup>
-									<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-										<p:selectOneMenu styleClass="mdl-textfield__input" p:maxlength="64" pt:required="required" p:required="true" id="telCorporativo" value="#{clienteController.tipoTelefono.idTipoTelefono}">
-											<f:selectItem itemLabel="Seleccione" itemValue="" />
-											<f:selectItems value="#{clienteController.listaTipoTelefono}" var="tipTe" itemLabel="#{tipTe.tipo}" itemValue="#{tipTe.idTipoTelefono}" />
-										</p:selectOneMenu>
-										<h:outputLabel class="mdl-textfield__label" for="telCorporativo">Tipo de teléfono</h:outputLabel>
+									<h:panelGroup>
+										<p:commandLink type="button" actionListener="#{clienteController.abrirDialogoTelefono()}" styleClass="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored toggleSubForm" immediate="true" update="addTelefono">
+											<i class="material-icons">add_ic_call</i>
+										</p:commandLink>
 									</h:panelGroup>
-									<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-										<h:inputText class="mdl-textfield__input" p:type="tel"  p:maxlength="64" p:required="true" pt:required="required" id="telCartera" value="#{clienteController.telefono.numeroTelefono}"/>
-										<h:outputLabel class="mdl-textfield__label" for="telCartera">Teléfono</h:outputLabel>
+									<h:dataTable value="#{clienteController.addTelefono}" var="tl" cellpadding="1" class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp" id="tableTelefono">
+										<h:column>
+											<f:facet name="header">
+												<h:outputLabel value="Tipo Telefono"/>
+											</f:facet>
+											<h:outputText value="#{tl.tblTipoTelefonoIdTipoTelefono.idTipoTelefono}"/>
+										</h:column>
+										<h:column>
+											<f:facet name="header">
+												<h:outputLabel value="Número Telefono"/>
+											</f:facet>
+											<h:outputText value="#{tl.numeroTelefono}"/>
+										</h:column>
+									</h:dataTable>
+
+									<h:panelGroup>
+										<p:commandLink type="button" styleClass="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored toggleSubForm" actionListener="#{clienteController.abrirDialogoEmail()}" immediate="true" update="addEmail">
+											<i class="material-icons">email</i>
+										</p:commandLink>
 									</h:panelGroup>
-									<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-										<p:selectOneMenu styleClass="mdl-textfield__input" p:maxlength="64" p:required="true" pt:required="required" id="tipoEmail" value="#{clienteController.tipoEmail.idTipoEmail}">
-											<f:selectItem itemLabel="Seleccione" itemValue="" />
-											<f:selectItems value="#{clienteController.listaTipoEmail}" var="tipEm" itemLabel="#{tipEm.tipo}" itemValue="#{tipEm.idTipoEmail}" />
-										</p:selectOneMenu>
-										<h:outputLabel class="mdl-textfield__label" for="tipoEmail">Tipo de correo</h:outputLabel>
-									</h:panelGroup>
-									<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label fullWidth">
-										<h:inputText class="mdl-textfield__input" p:type="email"  p:maxlength="64" pt:required="required" p:required="true" id="email" value="#{clienteController.email.email}"/>
-										<h:outputLabel class="mdl-textfield__label" for="email">Correo electrónico</h:outputLabel>
-									</h:panelGroup>
+									<h:dataTable value="#{clienteController.addEmail}" var="em" cellpadding="1" class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp" id="tableEmail">
+										<h:column>
+											<f:facet name="header">
+												<h:outputLabel value="Tipo Email"/>
+											</f:facet>
+											<h:outputText value="#{em.tblTipoEmailIdTipoEmail.idTipoEmail}"/>
+										</h:column>
+										<h:column>
+											<f:facet name="header">
+												<h:outputLabel value="Email"/>
+											</f:facet>
+											<h:outputText value="#{em.email}"/>
+										</h:column>
+									</h:dataTable>
+
 									<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
 										<p:selectOneMenu id="Departamento" value="#{clienteController.departamento.idDepartamento}" filter="true" filterMatchMode="contains" style="width: 100%" pt:required="required" required="true">
 											<p:ajax listener="#{clienteController.obtenerCiudad()}" update="ciudad" />
@@ -185,6 +203,54 @@
 							<h:panelGroup layout="block" class="mdl-dialog__actions">
 								<p:commandButton actionListener="#{clienteController.registrarCliente()}" id="mostrarClienteNuevo" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm" value="Crear cliente"  update="addCliente :formClient:tableClient"/>
 								<p:commandButton type="reset" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect toggleSubForm" value="Cancelar" onclick="PF('createClient').hide();"/>
+							</h:panelGroup>
+						</h:form>
+					</p:dialog>
+
+					<p:dialog widgetVar="agregarTelefono" id="dlgTelefono">
+						<h:form id="addTelefono" class="mdl-dialog">
+							<p:growl showDetail="true"/>
+							<h3 class="mdl-dialog__title">Registrar Teléfono</h3>
+							<h:panelGroup layout="block" class="mdl-dialog__content">
+								<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+									<p:selectOneMenu styleClass="mdl-textfield__input" p:maxlength="64" pt:required="required" p:required="true" id="telCorporativo" value="#{clienteController.tipoTelefono.idTipoTelefono}">
+										<f:selectItem itemLabel="Seleccione" itemValue="" />
+										<f:selectItems value="#{clienteController.listaTipoTelefono}" var="tipTe" itemLabel="#{tipTe.tipo}" itemValue="#{tipTe.idTipoTelefono}" />
+									</p:selectOneMenu>
+									<h:outputLabel class="mdl-textfield__label" for="telCorporativo">Tipo de teléfono</h:outputLabel>
+								</h:panelGroup>
+								<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+									<h:inputText class="mdl-textfield__input" p:type="tel"  p:maxlength="64" p:required="true" pt:required="required" id="telCartera" value="#{clienteController.telefono.numeroTelefono}"/>
+									<h:outputLabel class="mdl-textfield__label" for="telCartera">Teléfono</h:outputLabel>
+								</h:panelGroup>
+								<h:panelGroup layout="block" class="mdl-dialog__actions">
+									<p:commandButton actionListener="#{clienteController.agregarTelefono()}" id="mostrarTelefonoNuevo" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm" value="Agregar Teléfono"  update="addCliente:tableTelefono"/>
+									<p:commandButton type="reset" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect toggleSubForm" value="Cancelar" onclick="PF('agregarTelefono').hide();"/>
+								</h:panelGroup>
+							</h:panelGroup>
+						</h:form>
+					</p:dialog>
+
+					<p:dialog widgetVar="agregarEmail" id="dlgEmail">
+						<h:form id="addEmail" class="mdl-dialog">
+							<p:growl showDetail="true"/>
+							<h3 class="mdl-dialog__title">Registrar Correo</h3>
+							<h:panelGroup layout="block" class="mdl-dialog__content">
+								<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+									<p:selectOneMenu styleClass="mdl-textfield__input" p:maxlength="64" p:required="true" pt:required="required" id="tipoEmail" value="#{clienteController.tipoEmail.idTipoEmail}">
+										<f:selectItem itemLabel="Seleccione" itemValue="" />
+										<f:selectItems value="#{clienteController.listaTipoEmail}" var="tipEm" itemLabel="#{tipEm.tipo}" itemValue="#{tipEm.idTipoEmail}" />
+									</p:selectOneMenu>
+									<h:outputLabel class="mdl-textfield__label" for="tipoEmail">Tipo de correo</h:outputLabel>
+								</h:panelGroup>
+								<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label fullWidth">
+									<h:inputText class="mdl-textfield__input" p:type="email"  p:maxlength="64" pt:required="required" p:required="true" id="email" value="#{clienteController.email.email}"/>
+									<h:outputLabel class="mdl-textfield__label" for="email">Correo electrónico</h:outputLabel>
+								</h:panelGroup>
+								<h:panelGroup layout="block" class="mdl-dialog__actions">
+									<p:commandButton actionListener="#{clienteController.agregarEmail()}" id="mostrarEmailNuevo" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm" value="Agregar Email"  update="addCliente:tableEmail"/>
+									<p:commandButton type="reset" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect toggleSubForm" value="Cancelar" onclick="PF('agregarEmail').hide();"/>
+								</h:panelGroup>
 							</h:panelGroup>
 						</h:form>
 					</p:dialog>

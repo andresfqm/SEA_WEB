@@ -25,6 +25,7 @@ package com.sea.backend.util;
 
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 import java.util.Properties;
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
@@ -50,7 +51,7 @@ public class EnvioEmails implements Serializable {
 
 	private String mensaje;
 
-	public void enviarEmail(String fileName, String numeroCotizacion, String rutaArchivo, String emailC, String emailU) throws UnsupportedEncodingException {
+	public void enviarEmail(String fileName, String numeroCotizacion, String rutaArchivo, List<String> emailC, String emailU) throws UnsupportedEncodingException {
 
 		//1st paso) Obtener el objeto de sesión
 		Properties props = new Properties();
@@ -82,8 +83,27 @@ public class EnvioEmails implements Serializable {
 			multiparte.addBodyPart(adjunto);
 			MimeMessage message = new MimeMessage(session);
 			message.setFrom(new InternetAddress(user, "Fulldotaciones"));
+
+			String dest1 = "";
+			String dest2 = "";
+			int count = 0;
+			if (emailC.size() > 0) {
+				for (String e : emailC) {
+					if (count == 0) {
+						dest1 = e;
+						count = count + 1;
+					} else if (count == 1) {
+						dest2 = e;
+					}
+				}
+			}
+
+			if (dest2.isEmpty()) {
+				dest2 = dest1;
+			}
 			InternetAddress[] destinatarios = {
-				new InternetAddress(emailC),
+				new InternetAddress(dest1),
+				new InternetAddress(dest2),
 				new InternetAddress(emailU)
 			};
 

@@ -25,7 +25,9 @@ import com.sea.backend.model.TipoEmailFacadeLocal;
 import com.sea.backend.model.TipoTelefonoFacadeLocal;
 import com.sea.backend.model.UsuarioFacadeLocal;
 import com.sea.backend.util.AbrirCerrarDialogos;
+import com.sea.backend.util.Validaciones;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -65,6 +67,7 @@ public class ClienteController implements Serializable {
 	private TelefonoFacadeLocal telefonoEJB;
 	private Telefono telefono;
 	private List<Telefono> listaTelefono;
+	private List<Telefono> addTelefono;
 
 	@EJB
 	private TipoDocumentoFacadeLocal tipoDocumentoEJB;
@@ -75,6 +78,7 @@ public class ClienteController implements Serializable {
 	private TipoEmailFacadeLocal tipoEmailEJB;
 	private TipoEmail tipoEmail;
 	private List<TipoEmail> listaTipoEmail;
+	private List<Email> addEmail;
 
 	@EJB
 	private TipoDireccionFacadeLocal tipoDireccionEJB;
@@ -113,11 +117,11 @@ public class ClienteController implements Serializable {
 		usuario = new Usuario();
 		listaUsuario = usuarioEJB.findAll();
 		tipoTelefono = new TipoTelefono();
-		listaTipoTelefono = tipoTelefonoEJB.findAll();
 		tipoDocumento = new TipoDocumento();
+		listaTipoTelefono = new ArrayList<>();
 		listaTipoDocumento = tipoDocumentoEJB.findAll();
 		tipoEmail = new TipoEmail();
-		listaTipoEmail = tipoEmailEJB.findAll();
+		listaTipoEmail = new ArrayList<>();
 		direccion = new Direccion();
 		listaDireccion = direccionEJB.findAll();
 		ciudad = new Ciudad();
@@ -132,6 +136,60 @@ public class ClienteController implements Serializable {
 		listaDepartamento = departamentoEJB.findAll();
 		tipoDireccion = new TipoDireccion();
 		listaTipoDireccion = tipoDireccionEJB.findAll();
+		addTelefono = new ArrayList<>();
+		addEmail = new ArrayList<>();
+	}
+
+	public void abrirDialogoTelefono() {
+		listaTipoTelefono = tipoTelefonoEJB.findAll();
+		if (addTelefono.size() == 2) {
+			snackbarData.put("message", "Solo se permite registrar 2 números de télefonos por cliente");
+			RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
+		} else {
+			AbrirCerrarDialogos.abrirCerrarDialogos("PF('agregarTelefono').show();");
+		}
+
+	}
+
+	public void agregarTelefono() {
+
+		telefono.setTblTipoTelefonoIdTipoTelefono(tipoTelefono);
+		addTelefono.add(telefono);
+		telefono = new Telefono();
+		tipoTelefono = new TipoTelefono();
+		listaTipoTelefono = new ArrayList<>();
+		snackbarData.put("message", "Se agrego el número de teléfono");
+		RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
+		AbrirCerrarDialogos.abrirCerrarDialogos("PF('agregarTelefono').hide();");
+	}
+
+	public void abrirDialogoEmail() {
+		listaTipoEmail = tipoEmailEJB.findAll();
+		if (addEmail.size() == 2) {
+			snackbarData.put("message", "Solo se permite registrar 2 correos por cliente");
+			RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
+		} else {
+			AbrirCerrarDialogos.abrirCerrarDialogos("PF('agregarEmail').show();");
+		}
+	}
+
+	public void agregarEmail() {
+
+		boolean validacionEmail = Validaciones.validarEmail(email.getEmail());
+		if (validacionEmail == true) {
+			email.setTblTipoEmailIdTipoEmail(tipoEmail);
+			addEmail.add(email);
+			email = new Email();
+			tipoEmail = new TipoEmail();
+			listaTipoEmail = new ArrayList<>();
+			snackbarData.put("message", "Se agrego email");
+			RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
+			AbrirCerrarDialogos.abrirCerrarDialogos("PF('agregarEmail').hide();");
+		} else {
+			snackbarData.put("message", "El correo ingresado no es valido");
+			RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
+		}
+
 	}
 
 	public void registrarCliente() {
@@ -151,15 +209,22 @@ public class ClienteController implements Serializable {
 				direccion.setTblClienteIdCliente(cliente);
 				direccion.setTblCiudadIdCiudad(ciudadEJB.listaCiudad(ciudad.getNombre()));
 				direccionEJB.create(direccion);
-				telefono.setTblClienteIdCliente(cliente);
-				telefono.setTblTipoTelefonoIdTipoTelefono(tipoTelefono);
-				telefonoEJB.create(telefono);
-				email.setTblClienteIdCliente(cliente);
-				email.setTblTipoEmailIdTipoEmail(tipoEmail);
-				emailEJB.create(email);
+
+				for (Telefono tel : addTelefono) {
+					tel.setTblClienteIdCliente(cliente);
+					telefonoEJB.create(tel);
+				}
+				addTelefono = new ArrayList<>();
+
+				for (Email ema : addEmail) {
+					ema.setTblClienteIdCliente(cliente);
+					emailEJB.create(ema);
+				}
+				addEmail = new ArrayList<>();
+
 				snackbarData.put("message", "Se creó al cliente'" + cliente.getNombreORazonSocial() + " " + cliente.getApellido() + "'.");
 				RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
-				
+
 				usuario = new Usuario();
 				cliente = new Cliente();
 				direccion = new Direccion();
@@ -386,6 +451,22 @@ public class ClienteController implements Serializable {
 
 	public void setListaTipoDireccion(List<TipoDireccion> listaTipoDireccion) {
 		this.listaTipoDireccion = listaTipoDireccion;
+	}
+
+	public List<Telefono> getAddTelefono() {
+		return addTelefono;
+	}
+
+	public void setAddTelefono(List<Telefono> addTelefono) {
+		this.addTelefono = addTelefono;
+	}
+
+	public List<Email> getAddEmail() {
+		return addEmail;
+	}
+
+	public void setAddEmail(List<Email> addEmail) {
+		this.addEmail = addEmail;
 	}
 
 }

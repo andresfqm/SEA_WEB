@@ -23,6 +23,7 @@
  */
 package com.sea.backend.model;
 
+import com.sea.backend.dto.ClienteDTO;
 import com.sea.backend.entities.Cliente;
 import com.sea.backend.entities.Usuario;
 import java.util.ArrayList;
@@ -53,7 +54,7 @@ public class ClienteFacade extends AbstractFacade<Cliente> implements ClienteFac
 	}
 
 	@Override
-	public Object datosCliente(int idCliente) {
+	public ClienteDTO datosCliente(int idCliente) {
 		/*
         Nomenclatura de la consulta
         c: cliente
@@ -69,6 +70,8 @@ public class ClienteFacade extends AbstractFacade<Cliente> implements ClienteFac
         ci: ciudad
         de: departamento
 		 */
+		ClienteDTO cli = new ClienteDTO();
+		List<Object[]> ls;
 
 		String consulta = "SELECT ci.NOMBRE,de.NOMBRE, e.email, t.numero_telefono FROM "
 				+ "TBL_CLIENTE c "
@@ -97,10 +100,67 @@ public class ClienteFacade extends AbstractFacade<Cliente> implements ClienteFac
 		Query query = em.createNativeQuery(consulta);
 		query.setParameter(1, idCliente);
 
-		//datosCliente = query.getResultList();
-		Object datosCliente = query.getSingleResult();
+		ls = query.getResultList();
+		int count = 0;
+		if (ls.size() > 0) {
+			for (Object[] ob : ls) {
+				if (count == 1) {
+					if (!(cli.getEmail1().equals(ob[2].toString())));
+					cli.setEmail2(ob[2].toString());
+					if (!(cli.getTelefono1().equals(ob[3].toString()))) {
+						cli.setTelefono2(ob[3].toString());
+					}
+				} else if (count == 2) {
+					if (cli.getEmail2() != null) {
+						if (!(cli.getEmail2().equals(ob[2].toString()) || cli.getEmail1().equals(ob[2].toString()))) {
+							cli.setEmail2(ob[2].toString());
+						}
+					}
 
-		return datosCliente;
+					if (cli.getTelefono2() != null) {
+						if (!(cli.getTelefono2().equals(ob[3].toString()) || cli.getTelefono1().equals(ob[3].toString()))) {
+							cli.setTelefono2(ob[3].toString());
+						}
+					}
+				} else if (count == 3) {
+					if (cli.getEmail2() != null) {
+						if (!(cli.getEmail2().equals(ob[2].toString()) || cli.getEmail1().equals(ob[2].toString()))) {
+							cli.setEmail2(ob[2].toString());
+						}
+					}
+
+					if (cli.getTelefono2() != null) {
+						if (!(cli.getTelefono2().equals(ob[3].toString()) || cli.getTelefono1().equals(ob[3].toString()))) {
+							cli.setTelefono2(ob[3].toString());
+						}
+					}
+				} else if (count == 4) {
+					if (cli.getEmail2() != null) {
+						if (!(cli.getEmail2().equals(ob[2].toString()) || cli.getEmail1().equals(ob[2].toString()))) {
+							cli.setEmail2(ob[2].toString());
+						}
+					}
+
+					if (cli.getTelefono2() != null) {
+						if (!(cli.getTelefono2().equals(ob[3].toString()) || cli.getTelefono1().equals(ob[3].toString()))) {
+							cli.setTelefono2(ob[3].toString());
+						}
+					}
+				} else {
+					cli.setCiudad(ob[0].toString());
+					cli.setDepartamento(ob[1].toString());
+					cli.setEmail1(ob[2].toString());
+					cli.setEmail2("");
+					cli.setTelefono1(ob[3].toString());
+					cli.setTelefono2("");
+					System.out.println("OK");
+				}
+				count = count + 1;
+			}
+		}
+		//Object datosCliente = query.getSingleResult();
+
+		return cli;
 	}
 
 	@Override
@@ -122,7 +182,7 @@ public class ClienteFacade extends AbstractFacade<Cliente> implements ClienteFac
 				+ "JOIN cl.direccionList d\n"
 				+ "JOIN cl.telefonoList t\n"
 				+ "JOIN cl.emailList e\n"
-				+ "JOIN cl.tblUsuarioIdUsuario u\n";
+				+ "JOIN cl.tblUsuarioIdUsuario u GROUP BY cl.numeroDocumento\n";
 		Query query = em.createQuery(jpql);
 		lista = query.getResultList();
 

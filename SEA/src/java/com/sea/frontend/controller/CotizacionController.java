@@ -5,10 +5,12 @@
  */
 package com.sea.frontend.controller;
 
+import com.sea.backend.dto.ClienteDTO;
 import com.sea.backend.entities.Ciudad;
 import com.sea.backend.entities.Cliente;
 import com.sea.backend.entities.Cotizacion;
 import com.sea.backend.entities.CotizacionProducto;
+import com.sea.backend.entities.Descuento;
 import com.sea.backend.entities.DescuentoVolumen;
 import com.sea.backend.entities.Fabricante;
 import com.sea.backend.entities.LugaresEntrega;
@@ -32,60 +34,21 @@ import com.sea.backend.model.ProductoFacadeLocal;
 import com.sea.backend.model.PropuestaNoIncluyeFacadeLocal;
 import com.sea.backend.model.TiempoEntregaFacadeLocal;
 import com.sea.backend.model.UsuarioFacadeLocal;
+import com.sea.backend.util.AbrirCerrarDialogos;
 import com.sea.backend.util.EnvioEmails;
 import com.sea.backend.util.GenerarDocumentos;
-import com.sea.frontend.servlet.PDF;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.activation.DataHandler;
-import javax.activation.FileDataSource;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
-import javax.mail.BodyPart;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRExporter;
-import net.sf.jasperreports.engine.JRExporterParameter;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.JasperRunManager;
-import net.sf.jasperreports.engine.export.JRPdfExporter;
-import net.sf.jasperreports.engine.export.JRXlsExporter;
-import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
-import net.sf.jasperreports.engine.util.JRLoader;
-import org.primefaces.context.PrimeFacesContext;
+import javax.sound.midi.Soundbank;
 import org.primefaces.context.RequestContext;
 import org.primefaces.json.JSONObject;
 
@@ -107,6 +70,7 @@ public class CotizacionController implements Serializable {
 	private Cotizacion cotizacion;
 	private Double descuentoCotizacion;
 	private List<Cotizacion> listaSeguimientoCotizacions;
+	private CotizacionProducto cot;
 
 	@EJB
 	private UsuarioFacadeLocal EJBUsuario;
@@ -117,7 +81,7 @@ public class CotizacionController implements Serializable {
 	private ClienteFacadeLocal clienteEJB;
 	private Cliente cliente;
 	private List<Cliente> listaClientes;
-	private Object datosCliente;
+	private ClienteDTO datosCliente;
 	private int idCliente;
 	private int idModalidad;
 	private List<Cliente> clientes;
@@ -129,7 +93,10 @@ public class CotizacionController implements Serializable {
 	private List<CotizacionProducto> listaCotizacionP;
 	private int cantidad;
 	private Float precioParaCliente;
-	private double precioDescuento;
+	private float precioDescuento;
+	private float valorTotalDescuentoSinIva;
+	private float precioUnitarioSinIvaConDescuento;
+	private float totalIva = 0;
 
 	@EJB
 	private CotizacionProductoFacadeLocal cotizacionpEJB;
@@ -153,14 +120,6 @@ public class CotizacionController implements Serializable {
 	private List<PropuestaNoIncluye> ListapropuestaNoIncluye;
 	private int idPropuestaNoIncluye;
 	private PropuestaNoIncluye propuestaNoIncluye;
-
-	public List<PropuestaNoIncluye> getListapropuestaNoIncluye() {
-		return ListapropuestaNoIncluye;
-	}
-
-	public void setListapropuestaNoIncluye(List<PropuestaNoIncluye> ListapropuestaNoIncluye) {
-		this.ListapropuestaNoIncluye = ListapropuestaNoIncluye;
-	}
 
 	//Ejb de la foranea TiempoEntrega
 	@EJB
@@ -194,21 +153,26 @@ public class CotizacionController implements Serializable {
 	@EJB
 	private ProductoFacadeLocal productoEJB;
 	private Producto producto;
-	private int idProducto;
 	private List<Material> listaMateriales;
 	private List<Fabricante> listaFabricante;
-	private List<Producto> listaProductoPrecio;
 	private List<Producto> listaProducto;
+	private double precioProducto;
 
 	@EJB
 	private DescuentoFacadeLocal descuentoEJB;
 	private int idDescuento;
-
+	private List<Descuento> lsDescuento;
+	private Descuento descuento;
 	private int formatoCotizacion;
-
 	private String mensaje;
-
 	private Date fechaEmision;
+	private float descuentoTotal = 0;
+	private float valorTotalSinIva = 0;
+	private float total = 0;
+	private float valorSinDescuento;
+	private float totalDescuento;
+	private int numeroRegistroArticulo = 0;
+	private boolean enviarEmail = false;
 
 	@PostConstruct
 	public void init() {
@@ -222,8 +186,9 @@ public class CotizacionController implements Serializable {
 		clientes = clienteEJB.listaClienteCotizacion(setUsuarioLogueado());
 		cliente = new Cliente();
 		producto = new Producto();
+		cot = new CotizacionProducto();
 		listaCotizacionP = new ArrayList<>();
-		listaProducto = productoEJB.findAll();
+		listaProducto = new ArrayList<>();
 		usuario = new Usuario();
 		lugaresEntrega = new LugaresEntrega();
 		tiempoEntrega = new TiempoEntrega();
@@ -235,6 +200,7 @@ public class CotizacionController implements Serializable {
 		listaModalidadDePago = modalidadPEJB.findAll();
 		listaSeguimientoCotizacions = cotizacionEJB.listaSeguimiento(idUsuario());
 		propuestaNoIncluye = new PropuestaNoIncluye();
+		descuento = new Descuento();
 	}
 
 	//Obteniendo todos los datos del cliente
@@ -248,19 +214,126 @@ public class CotizacionController implements Serializable {
 	}
 
 	public void agregarCotizacionProducto() {
-		CotizacionProducto cot = new CotizacionProducto();
-		cot.setTblProductoIdProducto(productoEJB.find(idProducto));
-		cot.setCantidad(cotizacionP.getCantidad());
-		cot.setPrecioParaCliente(cotizacionP.getPrecioParaCliente());
-		//  ven.setTblProductoIdProducto(productoEJB.find(producto.getIdProducto()));
-		listaCotizacionP.add(cot);
-		snackbarData.put("message", "Se agregó el artículo con referencia '" + cot.getTblProductoIdProducto().getReferencia() + "'.");
-		RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
+		if (producto.getIdProducto() == null) {
+			snackbarData.put("message", "Se debe seleccionar una referencia");
+			RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
+
+		} else if (cotizacionP.getCantidad() <= 0) {
+			snackbarData.put("message", "Se debe ingresar la cantidad minima");
+			RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
+
+		} else {
+			cot.setTblProductoIdProducto(productoEJB.find(producto.getIdProducto()));
+			cot.setCantidad(cotizacionP.getCantidad());
+			cot.setPrecioParaCliente((float) valorTotalDescuentoSinIva);
+			cot.setPrecioBase((float) precioUnitarioSinIvaConDescuento);
+			//  ven.setTblProductoIdProducto(productoEJB.find(producto.getIdProducto()));
+
+			numeroRegistroArticulo = numeroRegistroArticulo + 1;
+			cot.setIdAuxiliar(numeroRegistroArticulo);
+			listaCotizacionP.add(cot);
+
+			System.out.println("Lo que tiene la variable total Descuento : " + "" + totalDescuento);
+			descuentoTotal += totalDescuento;
+
+			System.out.println("Lo que tiene la variable que totaliza el total descuento : " + "" + descuentoTotal);
+
+			valorTotalSinIva += valorTotalDescuentoSinIva;
+
+			totalIva = (float) (valorTotalSinIva * 0.19);
+
+			total = totalIva + valorTotalSinIva;
+			cotizacion.setTotalDescuento(descuentoTotal);
+			cotizacion.setSubtotal(valorTotalSinIva);
+			cotizacion.setTotalIva(totalIva);
+			cotizacion.setValorTotal(total);
+
+			snackbarData.put("message", "Se agregó el artículo con referencia '" + cot.getTblProductoIdProducto().getReferencia() + "'.");
+
+			limpiarControlesDialogoAgregarArticulos();
+			RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
+			AbrirCerrarDialogos.abrirCerrarDialogos("PF('dlg2').hide();");
+		}
 	}
 
-	//Metodo para calcular el precio del producto seleccionado
-	public Double calcularPrecioProductoDescuento() {
-		return this.listaProductoPrecio.get(0).getPrecio() - (this.listaProductoPrecio.get(0).getPrecio() * this.descuentoCotizacion);
+	public void agregarArticulo() {
+		listaProducto = productoEJB.findAll();
+		lsDescuento = descuentoEJB.findAll();
+		AbrirCerrarDialogos.abrirCerrarDialogos("PF('dlg2').show();");
+	}
+
+	public void eliminarArticuloCotizacion(int idArticulo) {
+		List<CotizacionProducto> lsAux = new ArrayList<>();
+		for (CotizacionProducto cp : listaCotizacionP) {
+			if (cp.getIdAuxiliar() != idArticulo) {
+				lsAux.add(cp);
+			} else {
+
+				float precioTotalProducto = cp.getTblProductoIdProducto().getPrecio() * cp.getCantidad();
+				float precioTotalProductoDesc = cp.getPrecioBase() * cp.getCantidad();
+
+				float reclacularTotalDescuento = precioTotalProducto - precioTotalProductoDesc;
+
+				float totalDescuentoProducto = cotizacion.getTotalDescuento() - reclacularTotalDescuento;
+				cotizacion.setTotalDescuento(totalDescuentoProducto);
+
+				descuentoTotal = totalDescuentoProducto;
+
+				float recalcularSubtotal = cotizacion.getSubtotal() - cp.getPrecioParaCliente();
+				cotizacion.setSubtotal(recalcularSubtotal);
+				valorTotalSinIva = recalcularSubtotal;
+
+				float recalcularTotalIva = (float) (cotizacion.getSubtotal() * 0.19);
+				cotizacion.setTotalIva(recalcularTotalIva);
+
+				float recalcularTotal = cotizacion.getSubtotal() + cotizacion.getTotalIva();
+				cotizacion.setValorTotal(recalcularTotal);
+
+			}
+
+		}
+
+		listaCotizacionP = new ArrayList<>();
+		listaCotizacionP = lsAux;
+
+	}
+
+	public void limpiarControlesDialogoAgregarArticulos() {
+		producto = new Producto();
+		cotizacionP = new CotizacionProducto();
+		listaMateriales = new ArrayList<>();
+		listaFabricante = new ArrayList<>();
+		listaProducto = new ArrayList<>();
+		cot = new CotizacionProducto();
+		valorTotalDescuentoSinIva = 0;
+		lsDescuento = new ArrayList<>();
+		precioProducto = 0;
+		precioUnitarioSinIvaConDescuento = 0;
+		valorTotalDescuentoSinIva = 0;
+	}
+
+	public void calcularPrecioSinIva() {
+		double desAux = 0;
+		if (cotizacionP.getCantidad() > 0) {
+			if (descuento.getIdDescuento() != null) {
+
+				for (Descuento de : lsDescuento) {
+					if (de.getIdDescuento() == descuento.getIdDescuento()) {
+						desAux = de.getDescuento();
+						break;
+					}
+				}
+				valorSinDescuento = (float) (precioProducto * cotizacionP.getCantidad());
+				totalDescuento = (float) ((desAux * valorSinDescuento) / 100);
+				valorTotalDescuentoSinIva = (float) (valorSinDescuento - totalDescuento);
+
+				precioUnitarioSinIvaConDescuento = valorTotalDescuentoSinIva / cotizacionP.getCantidad();
+
+			}
+		} else {
+			snackbarData.put("message", "Por favor ingresar la cantidad mínima");
+			RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
+		}
 
 	}
 
@@ -303,20 +376,24 @@ public class CotizacionController implements Serializable {
 			EnvioEmails email = new EnvioEmails();
 			String fileName = "";
 			String rutaArchivo = "";
-			String emailC = cotizacionEJB.correoCliente(idCliente);
+			String emailC = datosCliente.getEmail1();
 			String emailU = cotizacionEJB.correoUsuario(idUsuario());
+
+			List<String> emails = new ArrayList<>();
+			emails.add(datosCliente.getEmail1());
+			emails.add(datosCliente.getEmail2());
 
 			if (formatoCotizacion == 1) {
 				generarDocumentos.generarArchivo(formatoCotizacion, cotizacion.getNumeroCotizacion());
 				fileName = "cotizacion.pdf";
 				rutaArchivo = "D:\\SEA\\Reportes\\PDF\\cotizacion_N_";
-				email.enviarEmail(fileName, cotizacion.getNumeroCotizacion(), rutaArchivo, emailC, emailU);
+				email.enviarEmail(fileName, cotizacion.getNumeroCotizacion(), rutaArchivo, emails, emailU);
 
 			} else {
 				generarDocumentos.generarArchivo(formatoCotizacion, cotizacion.getNumeroCotizacion());
 				fileName = "cotizacion.xlsx";
 				rutaArchivo = "D:\\SEA\\Reportes\\EXCEL\\cotizacion_N_";
-				email.enviarEmail(fileName, cotizacion.getNumeroCotizacion(), rutaArchivo, emailC, emailU);
+				email.enviarEmail(fileName, cotizacion.getNumeroCotizacion(), rutaArchivo, emails, emailU);
 
 			}
 
@@ -370,15 +447,25 @@ public class CotizacionController implements Serializable {
 		listaModalidadDePago = modalidadPEJB.findAll();
 		listaSeguimientoCotizacions = cotizacionEJB.listaSeguimiento(idUsuario());
 		propuestaNoIncluye = new PropuestaNoIncluye();
+		numeroRegistroArticulo = 0;
+		descuentoTotal = 0;
+		valorTotalSinIva = 0;
+		total = 0;
+		valorSinDescuento = 0;
+		totalDescuento = 0;
+		precioDescuento = 0;
+		valorTotalDescuentoSinIva = 0;
+		precioUnitarioSinIvaConDescuento = 0;
+		totalIva = 0;
 	}
-	
+
 	public void obtenerDescripcionReferencia() throws Exception {
 		try {
 
-			producto = productoEJB.productoDescripcion(idProducto);
-			listaMateriales = materialEJB.datosMaterial(idProducto);
-			listaFabricante = fabricanteEJB.descripcionFabricante(idProducto);
-			listaProductoPrecio = productoEJB.productoPrecio(idProducto);
+			producto = productoEJB.productoDescripcion(producto.getIdProducto());
+			listaMateriales = materialEJB.datosMaterial(producto.getIdProducto());
+			listaFabricante = fabricanteEJB.descripcionFabricante(producto.getIdProducto());
+			precioProducto = productoEJB.productoPrecio(producto.getIdProducto());
 		} catch (Exception e) {
 			throw e;
 		}
@@ -405,18 +492,20 @@ public class CotizacionController implements Serializable {
 		Usuario u = (Usuario) sesion.getAttribute("usuario");
 		this.usuario = u;
 		String numeroCotizacionObtenida = "";
+		int numero = 0;
 		try {
 			numeroCotizacionObtenida = cotizacionEJB.numeroCotizacionUsuario(u.getIdUsuario());
+			numero = Integer.parseInt(numeroCotizacionObtenida);
+			numero = numero + 1;
 		} catch (Exception e) {
 		}
 
-		char numeroCotizacion = numeroCotizacionObtenida.charAt(numeroCotizacionObtenida.length() - 1);
-		String numeroCotizacionentero = Character.toString(numeroCotizacion);
-		int numero = Integer.parseInt(numeroCotizacionentero);
-		numero = numero + 1;
 		return u.getIdInterno() + " -" + numero;
 	}
 
+	public void habilitarEnvioEmail() {
+		enviarEmail = true;
+	}
 
 	public PropuestaNoIncluye getPropuestaNoIncluye() {
 		return propuestaNoIncluye;
@@ -473,14 +562,6 @@ public class CotizacionController implements Serializable {
 	public void setListaClientes(List<Cliente> listaClientes) {
 		this.listaClientes = listaClientes;
 
-	}
-
-	public Object getDatosCliente() {
-		return datosCliente;
-	}
-
-	public void setDatosCliente(Object datosCliente) {
-		this.datosCliente = datosCliente;
 	}
 
 	public int getIdCliente() {
@@ -619,14 +700,6 @@ public class CotizacionController implements Serializable {
 		this.producto = producto;
 	}
 
-	public int getIdProducto() {
-		return idProducto;
-	}
-
-	public void setIdProducto(int idProducto) {
-		this.idProducto = idProducto;
-	}
-
 	public Ciudad getCiudad() {
 		return ciudad;
 	}
@@ -641,14 +714,6 @@ public class CotizacionController implements Serializable {
 
 	public void setCiudades(List<Ciudad> ciudades) {
 		this.ciudades = ciudades;
-	}
-
-	public Object getCliente() {
-		return datosCliente;
-	}
-
-	public void setCliente(Object cliente) {
-		this.datosCliente = cliente;
 	}
 
 	public int getIdDescuento() {
@@ -679,7 +744,6 @@ public class CotizacionController implements Serializable {
 		this.precioParaCliente = precioParaCliente;
 	}
 
-	
 	public List<Material> getListaMateriales() {
 		return listaMateriales;
 	}
@@ -696,14 +760,6 @@ public class CotizacionController implements Serializable {
 		this.listaFabricante = listaFabricante;
 	}
 
-	public List<Producto> getListaProductoPrecio() {
-		return listaProductoPrecio;
-	}
-
-	public void setListaProductoPrecio(List<Producto> listaProductoPrecio) {
-		this.listaProductoPrecio = listaProductoPrecio;
-	}
-
 	public CotizacionProducto getCotizacionP() {
 		return cotizacionP;
 	}
@@ -718,14 +774,6 @@ public class CotizacionController implements Serializable {
 
 	public void setListaProducto(List<Producto> listaProducto) {
 		this.listaProducto = listaProducto;
-	}
-
-	public double getPrecioDescuento() {
-		return precioDescuento;
-	}
-
-	public void setPrecioDescuento(double precioDescuento) {
-		this.precioDescuento = calcularPrecioProductoDescuento();
 	}
 
 	public Double getDescuentoCotizacion() {
@@ -762,6 +810,142 @@ public class CotizacionController implements Serializable {
 
 	public Date getFechaEmision() {
 		return fechaEmision;
+	}
+
+	public CotizacionProducto getCot() {
+		return cot;
+	}
+
+	public void setCot(CotizacionProducto cot) {
+		this.cot = cot;
+	}
+
+	public ClienteDTO getDatosCliente() {
+		return datosCliente;
+	}
+
+	public void setDatosCliente(ClienteDTO datosCliente) {
+		this.datosCliente = datosCliente;
+	}
+
+	public double getPrecioProducto() {
+		return precioProducto;
+	}
+
+	public void setPrecioProducto(double precioProducto) {
+		this.precioProducto = precioProducto;
+	}
+
+	public List<Descuento> getLsDescuento() {
+		return lsDescuento;
+	}
+
+	public void setLsDescuento(List<Descuento> lsDescuento) {
+		this.lsDescuento = lsDescuento;
+	}
+
+	public Descuento getDescuento() {
+		return descuento;
+	}
+
+	public void setDescuento(Descuento descuento) {
+		this.descuento = descuento;
+	}
+
+	public float getDescuentoTotal() {
+		return descuentoTotal;
+	}
+
+	public void setDescuentoTotal(float descuentoTotal) {
+		this.descuentoTotal = descuentoTotal;
+	}
+
+	public float getTotalIva() {
+		return totalIva;
+	}
+
+	public void setTotalIva(float totalIva) {
+		this.totalIva = totalIva;
+	}
+
+	public float getTotal() {
+		return total;
+	}
+
+	public void setTotal(float total) {
+		this.total = total;
+	}
+
+	public float getValorTotalSinIva() {
+		return valorTotalSinIva;
+	}
+
+	public void setValorTotalSinIva(float valorTotalSinIva) {
+		this.valorTotalSinIva = valorTotalSinIva;
+	}
+
+	public float getTotalDescuento() {
+		return totalDescuento;
+	}
+
+	public void setTotalDescuento(float totalDescuento) {
+		this.totalDescuento = totalDescuento;
+	}
+
+	public float getValorTotalDescuentoSinIva() {
+		return valorTotalDescuentoSinIva;
+	}
+
+	public void setValorTotalDescuentoSinIva(float valorTotalDescuentoSinIva) {
+		this.valorTotalDescuentoSinIva = valorTotalDescuentoSinIva;
+	}
+
+	public float getValorSinDescuento() {
+		return valorSinDescuento;
+	}
+
+	public void setValorSinDescuento(float valorSinDescuento) {
+		this.valorSinDescuento = valorSinDescuento;
+	}
+
+	public float getPrecioDescuento() {
+		return precioDescuento;
+	}
+
+	public void setPrecioDescuento(float precioDescuento) {
+		this.precioDescuento = precioDescuento;
+	}
+
+	public float getPrecioUnitarioSinIvaConDescuento() {
+		return precioUnitarioSinIvaConDescuento;
+	}
+
+	public void setPrecioUnitarioSinIvaConDescuento(float precioUnitarioSinIvaConDescuento) {
+		this.precioUnitarioSinIvaConDescuento = precioUnitarioSinIvaConDescuento;
+	}
+
+	public int getNumeroRegistroArticulo() {
+		return numeroRegistroArticulo;
+	}
+
+	public void setNumeroRegistroArticulo(int numeroRegistroArticulo) {
+		this.numeroRegistroArticulo = numeroRegistroArticulo;
+	}
+
+	public List<PropuestaNoIncluye> getListapropuestaNoIncluye() {
+		return ListapropuestaNoIncluye;
+	}
+
+	public void setListapropuestaNoIncluye(List<PropuestaNoIncluye> ListapropuestaNoIncluye) {
+		this.ListapropuestaNoIncluye = ListapropuestaNoIncluye;
+	}
+
+	public boolean isEnviarEmail() {
+		return enviarEmail;
+	}
+
+	public void setEnviarEmail(boolean enviarEmail) {
+		this.enviarEmail = enviarEmail;
 	}
 
 }

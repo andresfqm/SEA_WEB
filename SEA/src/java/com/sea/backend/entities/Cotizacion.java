@@ -122,6 +122,24 @@ public class Cotizacion implements Serializable {
 	@Column(name = "FECHA_FACTURACION")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date fechaFacturacion;
+
+	@Basic(optional = false)
+	@NotNull
+	@Column(name = "TOTAL_DESCUENTO")
+	private float totalDescuento;
+	@Basic(optional = false)
+	@NotNull
+	@Column(name = "SUBTOTAL")
+	private float subtotal;
+	@Basic(optional = false)
+	@NotNull
+	@Column(name = "TOTAL_IVA")
+	private float totalIva;
+	@Basic(optional = false)
+	@NotNull
+	@Column(name = "VALOR_TOTAL")
+	private float valorTotal;
+
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "tblCotizacionNumeroCotizacion")
 	private List<CotizacionProducto> cotizacionProductoList;
 	@JoinColumn(name = "TBL_CLIENTE_ID_CLIENTE", referencedColumnName = "ID_CLIENTE")
@@ -386,5 +404,39 @@ public class Cotizacion implements Serializable {
 	public void setTblUsuario(Usuario tblUsuario) {
 		this.tblUsuario = tblUsuario;
 	}
+
+	public float getTotalDescuento() {
+		return totalDescuento;
+	}
+
+	public void setTotalDescuento(float totalDescuento) {
+		this.totalDescuento = totalDescuento;
+	}
+
+	public float getSubtotal() {
+		return subtotal;
+	}
+
+	public void setSubtotal(float subtotal) {
+		this.subtotal = subtotal;
+	}
+
+	public float getTotalIva() {
+		return totalIva;
+	}
+
+	public void setTotalIva(float totalIva) {
+		this.totalIva = totalIva;
+	}
+
+	public float getValorTotal() {
+		return valorTotal;
+	}
+
+	public void setValorTotal(float valorTotal) {
+		this.valorTotal = valorTotal;
+	}
+	
+	
 
 }

@@ -129,7 +129,86 @@ Tarjetas de los menús principales
 Imagenes de los submenus
 *********************************************************************/
 .menu-card > .mdl-card__title.historicoVentas{
-	background-image: url('#{resource['img/hitoricoCentas.jpg']}') !important;
+	background-image: url('#{resource['img/hitoricoVentas.jpg']}') !important;
+}
+
+.menu-card > .mdl-card__title.reporteSeguimientoComercial{
+	background-image: url('#{resource['img/reporteSeguimientoComercial.jpg']}') !important;
+}
+
+.menu-card > .mdl-card__title.cotizacionesEnviadas{
+	background-image: url('#{resource['img/cotizacionesEnviadas.jpg']}') !important;
+}
+
+.menu-card > .mdl-card__title.controlOP{
+	background-image: url('#{resource['img/controlOP.jpg']}') !important;
+}
+
+.menu-card > .mdl-card__title.reporteOP{
+	background-image: url('#{resource['img/reporteOP.jpg']}') !important;
+}
+
+.menu-card > .mdl-card__title.listaPrecios{
+	background-image: url('#{resource['img/listaPrecios.jpg']}') !important;
+}
+
+.menu-card > .mdl-card__title.reporteDevoluciones{
+	background-image: url('#{resource['img/reporteDevoluciones.jpg']}') !important;
+}
+
+.menu-card > .mdl-card__title.usuarios{
+	background-image: url('#{resource['img/usuarios.jpg']}') !important;
+}
+
+.menu-card > .mdl-card__title.clientes{
+	background-image: url('#{resource['img/clientes.jpg']}') !important;
+}
+
+.menu-card > .mdl-card__title.articulos{
+	background-image: url('#{resource['img/articulos.jpg']}') !important;
+}
+
+.menu-card > .mdl-card__title.condicionesComerciales{
+	background-image: url('#{resource['img/condicionesComerciales.jpg']}') !important;
+}
+
+.menu-card > .mdl-card__title.convenciones{
+	background-image: url('#{resource['img/convenciones.jpg']}') !important;
+}
+
+.menu-card > .mdl-card__title.origenes{
+	background-image: url('#{resource['img/origenes.jpg']}') !important;
+}
+
+.menu-card > .mdl-card__title.condicionesGarantia{
+	background-image: url('#{resource['img/condicionesGarantia.jpg']}') !important;
+}
+
+.menu-card > .mdl-card__title.cargueBD{
+	background-image: url('#{resource['img/cargueBD.jpg']}') !important;
+}
+
+.menu-card > .mdl-card__title.enviarCotizacion{
+	background-image: url('#{resource['img/enviarCotizacion.jpg']}') !important;
+}
+
+.menu-card > .mdl-card__title.seguimientoComercial{
+	background-image: url('#{resource['img/reporteSeguimientoComercial.jpg']}') !important;
+}
+
+.menu-card > .mdl-card__title.generarOP{
+	background-image: url('#{resource['img/generarOP.jpg']}') !important;
+}
+
+.menu-card > .mdl-card__title.correccionOP{
+	background-image: url('#{resource['img/correccionOP.jpg']}') !important;
+}
+.menu-card > .mdl-card__title.aprobarOP{
+	background-image: url('#{resource['img/aprobarOP.jpg']}') !important;
+}
+
+.menu-card > .mdl-card__title.devoluciones{
+	background-image: url('#{resource['img/reporteDevoluciones.jpg']}') !important;
 }
 /*********************************************************************
 Botón ir arriba

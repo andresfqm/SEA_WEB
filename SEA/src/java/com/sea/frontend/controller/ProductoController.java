@@ -37,7 +37,7 @@ public class ProductoController implements Serializable {
 	private List<Producto> listaProducto;
 	private List<Material> listaMateriales;
 	private List<Fabricante> listaFabricante;
-	private List<Producto> listaProductoPrecio;
+	private double productoPrecio;
 	private int idProducto;
 	private int idFabricante;
 	private int idMaterial;
@@ -87,11 +87,6 @@ public class ProductoController implements Serializable {
 	public String referencia(){
 		referencia = subcategoria.getCodigo() + material.getCodigo() + sufijo.getCodigo();
 		return  referencia;
-	}
-
-	public List<Producto> getListaProductoPrecio() {
-		return listaProductoPrecio;
-
 	}
 
 	public List<Producto> getProducto() {
@@ -180,7 +175,7 @@ public class ProductoController implements Serializable {
 			productoDescripcion = productoEJB.productoDescripcion(idProducto);
 			listaMateriales = materialEJB.datosMaterial(idProducto);
 			listaFabricante = fabricanteEJB.descripcionFabricante(idProducto);
-			listaProductoPrecio = productoEJB.productoPrecio(idProducto);
+			productoPrecio = productoEJB.productoPrecio(idProducto);
 		} catch (Exception e) {
 			throw e;
 		}
@@ -295,7 +290,9 @@ public class ProductoController implements Serializable {
 	public void setReferencia(String referencia) {
 		this.referencia = referencia;
 	}
-	
-	
 
+	public double getProductoPrecio() {
+		return productoPrecio;
+	}
+	
 }

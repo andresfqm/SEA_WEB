@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2fced5fa-a27f-4972-b8db-46e396da827c">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="33"/>
 	<style name="table">
 		<box>
 			<topPen lineWidth="1.0" lineColor="#000000"/>
@@ -211,7 +211,7 @@ group by numero_cotizacion]]>
 	<field name="NUMERO_COTIZACION" class="java.lang.String">
 		<fieldDescription><![CDATA[Convertir en llave compuesta]]></fieldDescription>
 	</field>
-	<field name="FECHA_EMISION" class="java.sql.Date">
+	<field name="FECHA_EMISION" class="java.util.Date()">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="LUGAR_EMISION" class="java.lang.String">
@@ -364,9 +364,6 @@ group by numero_cotizacion]]>
 	<field name="ID_INTERNO" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="CONSECUTIVO_COTIZACION" class="java.lang.Integer">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
 	<field name="NOMBRE_USUARIO" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
@@ -438,7 +435,7 @@ group by numero_cotizacion]]>
 			</staticText>
 			<image>
 				<reportElement x="22" y="11" width="176" height="37" uuid="8b0eb2fb-b242-4b5d-b932-f92a1a34d7e9"/>
-				<imageExpression><![CDATA["C:\\Users\\rpc\\Documents\\Proyecto_Sena _SEA\\SEA\\web\\resources\\img\\full.jpg"]]></imageExpression>
+				<imageExpression><![CDATA["D:\\SEA\\img\\full.jpg"]]></imageExpression>
 			</image>
 		</band>
 	</title>

@@ -35,6 +35,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -77,6 +78,10 @@ public class CotizacionProducto implements Serializable {
 	@JoinColumn(name = "TBL_PRODUCTO_ID_PRODUCTO", referencedColumnName = "ID_PRODUCTO")
     @ManyToOne(optional = false)
 	private Producto tblProductoIdProducto;
+	//Se agrega el siguiente campo con la anotacion @Transient para que no se persista a la base de datos 
+	//Ya que lo usaremos como auxiliar para poder eliminar los articulos agregados en la cotización
+	@Transient
+	private int idAuxiliar = 0;
 
 	public CotizacionProducto() {
 	}
@@ -162,6 +167,14 @@ public class CotizacionProducto implements Serializable {
 	@Override
 	public String toString() {
 		return "com.sea.backend.entities.CotizacionProducto[ idCotizacionProducto=" + idCotizacionProducto + " ]";
+	}
+
+	public int getIdAuxiliar() {
+		return idAuxiliar;
+	}
+
+	public void setIdAuxiliar(int idAuxiliar) {
+		this.idAuxiliar = idAuxiliar;
 	}
 	
 }
