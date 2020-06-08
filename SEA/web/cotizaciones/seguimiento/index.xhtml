@@ -16,7 +16,7 @@
 			<main class="mdl-layout__content">
 				<div class="page-content">
 					<p:dataTable id="tablaC" var="cotS" emptyMessage="No se encontraron registros"
-								 value="#{cotizacionController.listaCotizacionesPorEstados}" 
+								 value="#{indexController.listaSeguimientoCotizaciones}" 
 								 styleClass="mdl-data-table mdl-js-data-table  mdl-shadow--2dp" rowStyleClass="mdl-data-table__cell--non-numeric">
 						<p:column headerText="# Cotización">
 							<h:outputText value="#{cotS.numeroCotizacion}"/>
@@ -37,7 +37,7 @@
 							<h:panelGroup layout="block">
 								<h:link outcome="actualizarCotizacion.xhtml">
 									<f:param name="numeroCotizacion" value="#{cotS.numeroCotizacion}"/>
-									<h:commandButton  actionListener="#{cotizacionController.leerId(cotS.numeroCotizacion)}" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm" value="ACTUALIZAR"/>
+									<h:commandButton actionListener="#{cotizacionController.leerId(cotS.numeroCotizacion)}" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm" value="ACTUALIZAR"/>
 								</h:link>
 							</h:panelGroup>
 						</p:column>

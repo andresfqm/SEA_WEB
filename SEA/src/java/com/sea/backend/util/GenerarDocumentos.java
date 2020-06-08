@@ -51,6 +51,7 @@ public class GenerarDocumentos implements Serializable {
 			}
 
 		} catch (Exception e) {
+			System.out.println(" Se presento la siguiente excepcion a la hora de generar el pdf o excel");
 		}
 
 	}

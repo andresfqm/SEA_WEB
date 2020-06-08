@@ -12,12 +12,15 @@ import com.sea.backend.entities.Cotizacion;
 import com.sea.backend.entities.CotizacionProducto;
 import com.sea.backend.entities.Descuento;
 import com.sea.backend.entities.DescuentoVolumen;
+import com.sea.backend.entities.Direccion;
+import com.sea.backend.entities.Email;
 import com.sea.backend.entities.Fabricante;
 import com.sea.backend.entities.LugaresEntrega;
 import com.sea.backend.entities.Material;
 import com.sea.backend.entities.ModalidadDePago;
 import com.sea.backend.entities.Producto;
 import com.sea.backend.entities.PropuestaNoIncluye;
+import com.sea.backend.entities.Telefono;
 import com.sea.backend.entities.TiempoEntrega;
 import com.sea.backend.entities.Usuario;
 import com.sea.backend.model.CiudadFacadeLocal;
@@ -37,13 +40,16 @@ import com.sea.backend.model.UsuarioFacadeLocal;
 import com.sea.backend.util.AbrirCerrarDialogos;
 import com.sea.backend.util.EnvioEmails;
 import com.sea.backend.util.GenerarDocumentos;
+import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
@@ -71,6 +77,7 @@ public class CotizacionController implements Serializable {
 	private Double descuentoCotizacion;
 	private List<Cotizacion> listaSeguimientoCotizacions;
 	private CotizacionProducto cot;
+	private CotizacionProducto cotProducModific;
 
 	@EJB
 	private UsuarioFacadeLocal EJBUsuario;
@@ -120,11 +127,13 @@ public class CotizacionController implements Serializable {
 	private List<PropuestaNoIncluye> ListapropuestaNoIncluye;
 	private int idPropuestaNoIncluye;
 	private PropuestaNoIncluye propuestaNoIncluye;
+	private int idPropuestaNoIncluyeModificacion;
 
 	//Ejb de la foranea TiempoEntrega
 	@EJB
 	private TiempoEntregaFacadeLocal tiempoEJB;
 	private int idTiempoEntrega;
+	private int idTiempoEntregaModificacion;
 	private TiempoEntrega tiempoEntrega;
 	private List<TiempoEntrega> listaTiempoEntrega;
 
@@ -132,6 +141,7 @@ public class CotizacionController implements Serializable {
 	@EJB
 	private DescuentoVolumenFacadeLocal descuentoVEJB;
 	private int idDescuentoVolumen;
+	private int idDescuentoVolumenModificacion;
 	private DescuentoVolumen descuentoVolumen;
 	private List<DescuentoVolumen> listaDescuentoVolumen;
 
@@ -139,6 +149,7 @@ public class CotizacionController implements Serializable {
 	@EJB
 	private ModalidadDePagoFacadeLocal modalidadPEJB;
 	private int idModalidadDePago;
+	private int idModalidadDePagoModificacion;
 	private List<ModalidadDePago> listaModalidadDePago;
 	private ModalidadDePago modalidadDePago;
 
@@ -146,6 +157,7 @@ public class CotizacionController implements Serializable {
 	@EJB
 	private LugaresEntregaFacadeLocal lugaresEEJB;
 	private int idLugaresEntrega;
+	private int idLugaresEntregaModificacion;
 	private LugaresEntrega lugaresEntrega;
 	private List<LugaresEntrega> listaLugaresEntrega;
 
@@ -173,9 +185,84 @@ public class CotizacionController implements Serializable {
 	private float totalDescuento;
 	private int numeroRegistroArticulo = 0;
 	private boolean enviarEmail = false;
+	private String renderForm;
+	private Cotizacion cotizacionModificacion;
+	private List<CotizacionProducto> listaProductosModificacion;
+	private List<CotizacionProducto> listaProductosModificacionEliminarBd;
+	private String ciudadModificacion;
+	private String departamentoModificacion;
+	private ClienteDTO emailCotizacionModificacion;
+
+	private String urlIndexSeguimiento = "/SEA/cotizaciones/seguimiento/index.xhtml";
+	private String urlRegistrarCotización = "/SEA/cotizaciones/enviarCotizacion.xhtml";
+
+	private int tipoOperacion = 0;
 
 	@PostConstruct
 	public void init() {
+
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		ExternalContext externalContext = facesContext.getExternalContext();
+		Map params = externalContext.getRequestParameterMap();
+		//Integer categorySelected = new Integer((String) params.get("id"));
+		String categorySelected = (String) params.get("numeroCotizacion");
+		if (categorySelected != null) {
+			tipoOperacion = 1;
+			cotizacionModificacion = new Cotizacion();
+			listaProductosModificacion = new ArrayList<>();
+			emailCotizacionModificacion = new ClienteDTO();
+			cotProducModific = new CotizacionProducto();
+			listaProductosModificacionEliminarBd = new ArrayList<>();
+			cotizacionModificacion = cotizacionEJB.find(categorySelected);
+			listaProductosModificacion = cotizacionModificacion.getCotizacionProductoList();
+			List<Direccion> ls = cotizacionModificacion.getTblClienteIdCliente().getDireccionList();
+			idPropuestaNoIncluyeModificacion = cotizacionModificacion.getTblPropuestaNoIncluyeIdPropuestaNoIncluye().getIdPropuestaNoIncluye();
+			idDescuentoVolumenModificacion = cotizacionModificacion.getTblDescuentoVolumenIdDescuentoVolumen().getIdDescuentoVolumen();
+			idModalidadDePagoModificacion = cotizacionModificacion.getTblModalidadDePagoIdModalidadDePago().getIdModalidadDePago();
+			idTiempoEntregaModificacion = cotizacionModificacion.getTblTiempoEntregaIdTiempoEntrega().getIdTiempoEntrega();
+			idLugaresEntregaModificacion = cotizacionModificacion.getTblLugaresEntregaIdLugaresEntrega().getIdLugaresEntrega();
+
+			for (Direccion dir : ls) {
+				ciudadModificacion = dir.getTblCiudadIdCiudad().getNombre();
+				departamentoModificacion = dir.getTblCiudadIdCiudad().getTblDepartamentoIdDepartamento().getNombre();
+			}
+
+			int count = 0;
+			for (Email email : cotizacionModificacion.getTblClienteIdCliente().getEmailList()) {
+				if (count < 1) {
+					emailCotizacionModificacion.setEmail1(email.getEmail());
+					count = count + 1;
+				} else if (count == 1) {
+					emailCotizacionModificacion.setEmail2(email.getEmail());
+
+				}
+
+			}
+
+			int count2 = 0;
+
+			for (Telefono tel : cotizacionModificacion.getTblClienteIdCliente().getTelefonoList()) {
+				if (count2 < 1) {
+					emailCotizacionModificacion.setTelefono1(tel.getNumeroTelefono());
+					count2 = count2 + 1;
+				} else if (count2 == 1) {
+					emailCotizacionModificacion.setTelefono2(tel.getNumeroTelefono());
+				}
+
+			}
+
+			int idCotProducAux = 0;
+			List<CotizacionProducto> listCotProductAux = new ArrayList<>();
+
+			for (CotizacionProducto cotProduc : listaProductosModificacion) {
+				idCotProducAux = idCotProducAux + 1;
+				cotProduc.setIdAuxiliar(idCotProducAux);
+				listCotProductAux.add(cotProduc);
+			}
+
+			listaProductosModificacion = listCotProductAux;
+		}
+
 		cotizacion = new Cotizacion();
 		cotizacion.setFechaEmision(new Date());
 		fechaEmision = cotizacion.getFechaEmision();
@@ -222,6 +309,9 @@ public class CotizacionController implements Serializable {
 			snackbarData.put("message", "Se debe ingresar la cantidad minima");
 			RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
 
+		} else if (descuento.getIdDescuento() == null) {
+			snackbarData.put("message", "Se debe seleccionar un descuento");
+			RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
 		} else {
 			cot.setTblProductoIdProducto(productoEJB.find(producto.getIdProducto()));
 			cot.setCantidad(cotizacionP.getCantidad());
@@ -253,6 +343,7 @@ public class CotizacionController implements Serializable {
 			limpiarControlesDialogoAgregarArticulos();
 			RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
 			AbrirCerrarDialogos.abrirCerrarDialogos("PF('dlg2').hide();");
+
 		}
 	}
 
@@ -260,9 +351,47 @@ public class CotizacionController implements Serializable {
 		listaProducto = productoEJB.findAll();
 		lsDescuento = descuentoEJB.findAll();
 		AbrirCerrarDialogos.abrirCerrarDialogos("PF('dlg2').show();");
+
+	}
+
+	public void agregarCotizacionProductoModificacion() {
+
+		if (producto.getIdProducto() == null) {
+			snackbarData.put("message", "Se debe seleccionar una referencia");
+			RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
+
+		} else if (cotizacionP.getCantidad() <= 0) {
+			snackbarData.put("message", "Se debe ingresar la cantidad minima");
+			RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
+
+		} else if (descuento.getIdDescuento() == null) {
+			snackbarData.put("message", "Se debe seleccionar un descuento");
+			RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
+		} else {
+			numeroRegistroArticulo = 1000;
+			numeroRegistroArticulo = numeroRegistroArticulo + 1;
+			cotProducModific.setTblProductoIdProducto(productoEJB.find(producto.getIdProducto()));
+			cotProducModific.setCantidad(cotizacionP.getCantidad());
+			cotProducModific.setPrecioParaCliente((float) valorTotalDescuentoSinIva);
+			cotProducModific.setPrecioBase((float) precioUnitarioSinIvaConDescuento);
+
+			cotProducModific.setIdAuxiliar(numeroRegistroArticulo);
+			listaProductosModificacion.add(cotProducModific);
+			snackbarData.put("message", "Se agregó el artículo con referencia '" + cotProducModific.getTblProductoIdProducto().getReferencia() + "'.");
+			limpiarControlesDialogoAgregarArticulos();
+			RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
+			AbrirCerrarDialogos.abrirCerrarDialogos("PF('dlgCotizacionMod').hide();");
+		}
+	}
+
+	public void agregarArticuloModificacion() {
+		listaProducto = productoEJB.findAll();
+		lsDescuento = descuentoEJB.findAll();
+		AbrirCerrarDialogos.abrirCerrarDialogos("PF('dlgCotizacionMod').show();");
 	}
 
 	public void eliminarArticuloCotizacion(int idArticulo) {
+
 		List<CotizacionProducto> lsAux = new ArrayList<>();
 		for (CotizacionProducto cp : listaCotizacionP) {
 			if (cp.getIdAuxiliar() != idArticulo) {
@@ -295,7 +424,23 @@ public class CotizacionController implements Serializable {
 
 		listaCotizacionP = new ArrayList<>();
 		listaCotizacionP = lsAux;
+	}
 
+	public void eliminarArticuloCotizacionModificacion(int idArticulo) {
+
+		List<CotizacionProducto> lsAux2 = new ArrayList<>();
+
+		for (CotizacionProducto cp : listaProductosModificacion) {
+			if (idArticulo < 1000 && cp.getIdAuxiliar() == idArticulo) {
+				listaProductosModificacionEliminarBd.add(cp);
+				System.out.println("Se debe eliminar en base de datos");
+			} else if (cp.getIdAuxiliar() != idArticulo) {
+				lsAux2.add(cp);
+			}
+
+		}
+		listaProductosModificacion = new ArrayList<>();
+		listaProductosModificacion = lsAux2;
 	}
 
 	public void limpiarControlesDialogoAgregarArticulos() {
@@ -305,11 +450,14 @@ public class CotizacionController implements Serializable {
 		listaFabricante = new ArrayList<>();
 		listaProducto = new ArrayList<>();
 		cot = new CotizacionProducto();
+		cotProducModific = new CotizacionProducto();
 		valorTotalDescuentoSinIva = 0;
 		lsDescuento = new ArrayList<>();
 		precioProducto = 0;
 		precioUnitarioSinIvaConDescuento = 0;
 		valorTotalDescuentoSinIva = 0;
+		descuento = new Descuento();
+		tipoOperacion = 0;
 	}
 
 	public void calcularPrecioSinIva() {
@@ -339,79 +487,123 @@ public class CotizacionController implements Serializable {
 
 	public void registrarCotización()
 			throws ClassNotFoundException, InstantiationException, IllegalAccessException, SQLException {
-
-		try {
-			cotizacion.setNumeroCotizacion(generarIdCotizacion());
-			cotizacion.setFechaEmision(cotizacion.getFechaEmision());
-			cotizacion.setLugarEmision(cotizacion.getLugarEmision());
-			cotizacion.setValidezOferta(cotizacion.getValidezOferta());
-			cotizacion.setDescuento(cotizacion.getDescuento());
-			cotizacion.setVisita(cotizacion.getVisita());
-			cotizacion.setPrestamoMuestra(cotizacion.getPrestamoMuestra());
-			cotizacion.setRelacionMuestra(cotizacion.getRelacionMuestra());
-			cotizacion.setEstado("En seguimiento");
-			//Se carga los objetos de las clases correspondientes a las llaves foraneas
-			cotizacion.setTblClienteIdCliente(clienteEJB.find(idCliente));
-			cotizacion.setTblUsuario(usuario);
-			cotizacion.setTblModalidadDePagoIdModalidadDePago(modalidadPEJB.find(idModalidadDePago));
-			cotizacion.setTblPropuestaNoIncluyeIdPropuestaNoIncluye(propuestaEJB.find(idPropuestaNoIncluye));
-			cotizacion.setTblTiempoEntregaIdTiempoEntrega(tiempoEJB.find(idTiempoEntrega));
-			cotizacion.setTblDescuentoVolumenIdDescuentoVolumen(descuentoVEJB.find(idDescuentoVolumen));
-			cotizacion.setTblLugaresEntregaIdLugaresEntrega(lugaresEEJB.find(idLugaresEntrega));
-			cotizacionEJB.create(cotizacion);
-			for (CotizacionProducto itemVenta : listaCotizacionP) {
-				cotizacionP.setTblCotizacionNumeroCotizacion(cotizacion);
-				cotizacionP.setTblProductoIdProducto(itemVenta.getTblProductoIdProducto());
-				cotizacionP.setPrecioBase(itemVenta.getPrecioBase());
-				if (itemVenta.getPrecioParaCliente() == null) {
-					cotizacionP.setPrecioParaCliente(itemVenta.getTblProductoIdProducto().getPrecio());
-				} else {
-					cotizacionP.setPrecioParaCliente(itemVenta.getPrecioParaCliente());
-				}
-				cotizacionP.setCantidad(itemVenta.getCantidad());
-				cotizacionProductoEJB.create(cotizacionP);
-			}
-
-			GenerarDocumentos generarDocumentos = new GenerarDocumentos();
-			EnvioEmails email = new EnvioEmails();
-			String fileName = "";
-			String rutaArchivo = "";
-			String emailC = datosCliente.getEmail1();
-			String emailU = cotizacionEJB.correoUsuario(idUsuario());
-
-			List<String> emails = new ArrayList<>();
-			emails.add(datosCliente.getEmail1());
-			emails.add(datosCliente.getEmail2());
-
-			if (formatoCotizacion == 1) {
-				generarDocumentos.generarArchivo(formatoCotizacion, cotizacion.getNumeroCotizacion());
-				fileName = "cotizacion.pdf";
-				rutaArchivo = "D:\\SEA\\Reportes\\PDF\\cotizacion_N_";
-				email.enviarEmail(fileName, cotizacion.getNumeroCotizacion(), rutaArchivo, emails, emailU);
-
-			} else {
-				generarDocumentos.generarArchivo(formatoCotizacion, cotizacion.getNumeroCotizacion());
-				fileName = "cotizacion.xlsx";
-				rutaArchivo = "D:\\SEA\\Reportes\\EXCEL\\cotizacion_N_";
-				email.enviarEmail(fileName, cotizacion.getNumeroCotizacion(), rutaArchivo, emails, emailU);
-
-			}
-
-			//FacesContext.getCurrentInstance().responseComplete();
-			limpiarControles();
-			snackbarData.put("message", "Se registro la cotización de forma correcta");
+		if (idTiempoEntrega == 0) {
+			snackbarData.put("message", "Se debe seleccionar Tiempo de entrega");
 			RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
+		} else if (idModalidadDePago == 0) {
+			snackbarData.put("message", "Se debe seleccionar Forma de pago");
+			RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
+		} else if (idPropuestaNoIncluye == 0) {
+			snackbarData.put("message", "Se debe seleccionar La oferta no incluye");
+			RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
+		} else if (idDescuentoVolumen == 0) {
+			snackbarData.put("message", "Se debe seleccionar Descuento por volumen");
+			RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
+		} else if (idLugaresEntrega == 0) {
+			snackbarData.put("message", "Se debe seleccionar Lugar de entrega");
+			RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
+		} else {
 
-		} catch (Exception e) {
-			dialogTittle = "Error no controlado";
-			dialogContent = e.getMessage();
-			RequestContext.getCurrentInstance().execute("mostrarDialogos(`" + dialogTittle + "`, `" + dialogContent + "`);");
+			try {
+				cotizacion.setNumeroCotizacion(generarIdCotizacion());
+				cotizacion.setFechaEmision(cotizacion.getFechaEmision());
+				cotizacion.setLugarEmision(cotizacion.getLugarEmision());
+				cotizacion.setValidezOferta(cotizacion.getValidezOferta());
+				cotizacion.setDescuento(cotizacion.getDescuento());
+				cotizacion.setVisita(cotizacion.getVisita());
+				cotizacion.setPrestamoMuestra(cotizacion.getPrestamoMuestra());
+				cotizacion.setRelacionMuestra(cotizacion.getRelacionMuestra());
+				cotizacion.setEstado("En seguimiento");
+				//Se carga los objetos de las clases correspondientes a las llaves foraneas
+				cotizacion.setTblClienteIdCliente(clienteEJB.find(idCliente));
+				cotizacion.setTblUsuario(usuario);
+				cotizacion.setTblModalidadDePagoIdModalidadDePago(modalidadPEJB.find(idModalidadDePago));
+				cotizacion.setTblPropuestaNoIncluyeIdPropuestaNoIncluye(propuestaEJB.find(idPropuestaNoIncluye));
+				cotizacion.setTblTiempoEntregaIdTiempoEntrega(tiempoEJB.find(idTiempoEntrega));
+				cotizacion.setTblDescuentoVolumenIdDescuentoVolumen(descuentoVEJB.find(idDescuentoVolumen));
+				cotizacion.setTblLugaresEntregaIdLugaresEntrega(lugaresEEJB.find(idLugaresEntrega));
+				cotizacionEJB.create(cotizacion);
+				for (CotizacionProducto itemVenta : listaCotizacionP) {
+					cotizacionP.setTblCotizacionNumeroCotizacion(cotizacion);
+					cotizacionP.setTblProductoIdProducto(itemVenta.getTblProductoIdProducto());
+					cotizacionP.setPrecioBase(itemVenta.getPrecioBase());
+					if (itemVenta.getPrecioParaCliente() == null) {
+						cotizacionP.setPrecioParaCliente(itemVenta.getTblProductoIdProducto().getPrecio());
+					} else {
+						cotizacionP.setPrecioParaCliente(itemVenta.getPrecioParaCliente());
+					}
+					cotizacionP.setCantidad(itemVenta.getCantidad());
+					cotizacionProductoEJB.create(cotizacionP);
+				}
+
+				snackbarData.put("message", "Se registro la cotización de forma correcta");
+				RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
+
+				if (enviarEmail == true) {
+
+					GenerarDocumentos generarDocumentos = new GenerarDocumentos();
+					EnvioEmails email = new EnvioEmails();
+					String fileName = "";
+					String rutaArchivo = "";
+					String emailC = datosCliente.getEmail1();
+					String emailU = cotizacionEJB.correoUsuario(idUsuario());
+
+					List<String> emails = new ArrayList<>();
+					emails.add(datosCliente.getEmail1());
+					emails.add(datosCliente.getEmail2());
+
+					if (formatoCotizacion == 1) {
+						generarDocumentos.generarArchivo(formatoCotizacion, cotizacion.getNumeroCotizacion());
+						fileName = "cotizacion.pdf";
+						rutaArchivo = "D:\\SEA\\Reportes\\PDF\\cotizacion_N_";
+						email.enviarEmail(fileName, cotizacion.getNumeroCotizacion(), rutaArchivo, emails, emailU, mensaje);
+
+					} else {
+						generarDocumentos.generarArchivo(formatoCotizacion, cotizacion.getNumeroCotizacion());
+						fileName = "cotizacion.xlsx";
+						rutaArchivo = "D:\\SEA\\Reportes\\EXCEL\\cotizacion_N_";
+						email.enviarEmail(fileName, cotizacion.getNumeroCotizacion(), rutaArchivo, emails, emailU, mensaje);
+
+					}
+				}
+
+				limpiarControles();
+				AbrirCerrarDialogos.abrirCerrarDialogos("PF('dlgConfirmacion').show();");
+
+			} catch (Exception e) {
+				dialogTittle = "Error no controlado";
+				dialogContent = e.getMessage();
+				RequestContext.getCurrentInstance().execute("mostrarDialogos(`" + dialogTittle + "`, `" + dialogContent + "`);");
+			}
 		}
 	}
 
 	public void modificarCotización() {
 		try {
-			cotizacionEJB.edit(cotizacion);
+			if (listaProductosModificacionEliminarBd.size() > 0) {
+				for (CotizacionProducto cotP : listaProductosModificacionEliminarBd) {
+					cotizacionProductoEJB.remove(cotP);
+				}
+			}
+			if (listaProductosModificacion.size() > 0) {
+				for (CotizacionProducto itemVenta : listaProductosModificacion) {
+					cotizacionP.setTblCotizacionNumeroCotizacion(cotizacionModificacion);
+					cotizacionP.setTblProductoIdProducto(itemVenta.getTblProductoIdProducto());
+					cotizacionP.setPrecioBase(itemVenta.getPrecioBase());
+					if (itemVenta.getPrecioParaCliente() == null) {
+						cotizacionP.setPrecioParaCliente(itemVenta.getTblProductoIdProducto().getPrecio());
+					} else {
+						cotizacionP.setPrecioParaCliente(itemVenta.getPrecioParaCliente());
+					}
+					cotizacionP.setCantidad(itemVenta.getCantidad());
+
+					if (itemVenta.getIdAuxiliar() > 1000) {
+						cotizacionProductoEJB.create(cotizacionP);
+					}
+				}
+			}
+			cotizacionEJB.edit(cotizacionModificacion);
+			limpiarControlesModificacion();
 		} catch (Exception e) {
 		}
 
@@ -421,6 +613,10 @@ public class CotizacionController implements Serializable {
 		this.cotizacion = cotizacionEJB.find(cotizacion.getNumeroCotizacion());
 		return "actualizarCotizacion.xhtml";
 
+	}
+
+	public void agregarArticulosCotizacionModificacion() {
+		System.out.println("Aqui la logica para agregar articulos a una modificacion");
 	}
 
 	private void limpiarControles() {
@@ -457,6 +653,11 @@ public class CotizacionController implements Serializable {
 		valorTotalDescuentoSinIva = 0;
 		precioUnitarioSinIvaConDescuento = 0;
 		totalIva = 0;
+		mensaje = "";
+	}
+
+	public void limpiarControlesModificacion() {
+		listaProductosModificacionEliminarBd = new ArrayList();
 	}
 
 	public void obtenerDescripcionReferencia() throws Exception {
@@ -503,8 +704,11 @@ public class CotizacionController implements Serializable {
 		return u.getIdInterno() + " -" + numero;
 	}
 
-	public void habilitarEnvioEmail() {
-		enviarEmail = true;
+	// Metodo para realizar las redirecciones a otras paginas
+	//Recibe como parametro la url a la que se va a redirigir
+	public void redireccionar(String url) throws IOException {
+		FacesContext context = FacesContext.getCurrentInstance();
+		context.getExternalContext().redirect(url);
 	}
 
 	public PropuestaNoIncluye getPropuestaNoIncluye() {
@@ -946,6 +1150,134 @@ public class CotizacionController implements Serializable {
 
 	public void setEnviarEmail(boolean enviarEmail) {
 		this.enviarEmail = enviarEmail;
+	}
+
+	public String getRenderForm() {
+		return renderForm;
+	}
+
+	public void setRenderForm(String renderForm) {
+		this.renderForm = renderForm;
+	}
+
+	public Cotizacion getCotizacionModificacion() {
+		return cotizacionModificacion;
+	}
+
+	public void setCotizacionModificacion(Cotizacion cotizacionModificacion) {
+		this.cotizacionModificacion = cotizacionModificacion;
+	}
+
+	public List<CotizacionProducto> getListaProductosModificacion() {
+		return listaProductosModificacion;
+	}
+
+	public void setListaProductosModificacion(List<CotizacionProducto> listaProductosModificacion) {
+		this.listaProductosModificacion = listaProductosModificacion;
+	}
+
+	public ClienteDTO getEmailCotizacionModificacion() {
+		return emailCotizacionModificacion;
+	}
+
+	public void setEmailCotizacionModificacion(ClienteDTO emailCotizacionModificacion) {
+		this.emailCotizacionModificacion = emailCotizacionModificacion;
+	}
+
+	public String getUrlIndexSeguimiento() {
+		return urlIndexSeguimiento;
+	}
+
+	public void setUrlIndexSeguimiento(String urlIndexSeguimiento) {
+		this.urlIndexSeguimiento = urlIndexSeguimiento;
+	}
+
+	public String getUrlRegistrarCotización() {
+		return urlRegistrarCotización;
+	}
+
+	public void setUrlRegistrarCotización(String urlRegistrarCotización) {
+		this.urlRegistrarCotización = urlRegistrarCotización;
+	}
+
+	public String getDepartamentoModificacion() {
+		return departamentoModificacion;
+	}
+
+	public void setDepartamentoModificacion(String departamentoModificacion) {
+		this.departamentoModificacion = departamentoModificacion;
+	}
+
+	public String getCiudadModificacion() {
+		return ciudadModificacion;
+	}
+
+	public void setCiudadModificacion(String ciudadModificacion) {
+		this.ciudadModificacion = ciudadModificacion;
+	}
+
+	public int getIdPropuestaNoIncluyeModificacion() {
+		return idPropuestaNoIncluyeModificacion;
+	}
+
+	public void setIdPropuestaNoIncluyeModificacion(int idPropuestaNoIncluyeModificacion) {
+		this.idPropuestaNoIncluyeModificacion = idPropuestaNoIncluyeModificacion;
+	}
+
+	public int getIdTiempoEntregaModificacion() {
+		return idTiempoEntregaModificacion;
+	}
+
+	public void setIdTiempoEntregaModificacion(int idTiempoEntregaModificacion) {
+		this.idTiempoEntregaModificacion = idTiempoEntregaModificacion;
+	}
+
+	public int getIdDescuentoVolumenModificacion() {
+		return idDescuentoVolumenModificacion;
+	}
+
+	public void setIdDescuentoVolumenModificacion(int idDescuentoVolumenModificacion) {
+		this.idDescuentoVolumenModificacion = idDescuentoVolumenModificacion;
+	}
+
+	public int getIdModalidadDePagoModificacion() {
+		return idModalidadDePagoModificacion;
+	}
+
+	public void setIdModalidadDePagoModificacion(int idModalidadDePagoModificacion) {
+		this.idModalidadDePagoModificacion = idModalidadDePagoModificacion;
+	}
+
+	public int getIdLugaresEntregaModificacion() {
+		return idLugaresEntregaModificacion;
+	}
+
+	public void setIdLugaresEntregaModificacion(int idLugaresEntregaModificacion) {
+		this.idLugaresEntregaModificacion = idLugaresEntregaModificacion;
+	}
+
+	public int getTipoOperacion() {
+		return tipoOperacion;
+	}
+
+	public void setTipoOperacion(int tipoOperacion) {
+		this.tipoOperacion = tipoOperacion;
+	}
+
+	public CotizacionProducto getCotProducModific() {
+		return cotProducModific;
+	}
+
+	public void setCotProducModific(CotizacionProducto cotProducModific) {
+		this.cotProducModific = cotProducModific;
+	}
+
+	public List<CotizacionProducto> getListaProductosModificacionEliminarBd() {
+		return listaProductosModificacionEliminarBd;
+	}
+
+	public void setListaProductosModificacionEliminarBd(List<CotizacionProducto> listaProductosModificacionEliminarBd) {
+		this.listaProductosModificacionEliminarBd = listaProductosModificacionEliminarBd;
 	}
 
 }

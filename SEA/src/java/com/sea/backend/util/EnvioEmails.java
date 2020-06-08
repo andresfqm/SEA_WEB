@@ -51,7 +51,7 @@ public class EnvioEmails implements Serializable {
 
 	private String mensaje;
 
-	public void enviarEmail(String fileName, String numeroCotizacion, String rutaArchivo, List<String> emailC, String emailU) throws UnsupportedEncodingException {
+	public void enviarEmail(String fileName, String numeroCotizacion, String rutaArchivo, List<String> emailC, String emailU, String mensaje) throws UnsupportedEncodingException {
 
 		//1st paso) Obtener el objeto de sesión
 		Properties props = new Properties();
@@ -76,7 +76,6 @@ public class EnvioEmails implements Serializable {
 			adjunto.setFileName(fileName);
 
 			BodyPart texto = new MimeBodyPart();
-			mensaje = "Se envia cotización # " + numeroCotizacion;
 			texto.setText(mensaje);
 			MimeMultipart multiparte = new MimeMultipart();
 			multiparte.addBodyPart(texto);
