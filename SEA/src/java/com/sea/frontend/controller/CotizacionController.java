@@ -234,7 +234,7 @@ public class CotizacionController implements Serializable {
 					count = count + 1;
 				} else if (count == 1) {
 					emailCotizacionModificacion.setEmail2(email.getEmail());
-
+					System.out.println("");
 				}
 
 			}
