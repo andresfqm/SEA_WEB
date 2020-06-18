@@ -222,6 +222,14 @@ public class CotizacionController implements Serializable {
 			idTiempoEntregaModificacion = cotizacionModificacion.getTblTiempoEntregaIdTiempoEntrega().getIdTiempoEntrega();
 			idLugaresEntregaModificacion = cotizacionModificacion.getTblLugaresEntregaIdLugaresEntrega().getIdLugaresEntrega();
 
+			descuentoTotal += cotizacionModificacion.getTotalDescuento();
+
+			valorTotalSinIva += cotizacionModificacion.getSubtotal();
+
+			totalIva += cotizacionModificacion.getTotalIva();
+
+			total += cotizacionModificacion.getValorTotal();
+
 			for (Direccion dir : ls) {
 				ciudadModificacion = dir.getTblCiudadIdCiudad().getNombre();
 				departamentoModificacion = dir.getTblCiudadIdCiudad().getTblDepartamentoIdDepartamento().getNombre();
@@ -377,6 +385,23 @@ public class CotizacionController implements Serializable {
 
 			cotProducModific.setIdAuxiliar(numeroRegistroArticulo);
 			listaProductosModificacion.add(cotProducModific);
+			
+			System.out.println("Lo que tiene la variable total Descuento : " + "" + totalDescuento);
+			descuentoTotal += totalDescuento;
+
+			System.out.println("Lo que tiene la variable que totaliza el total descuento : " + "" + descuentoTotal);
+
+			valorTotalSinIva += valorTotalDescuentoSinIva;
+
+			totalIva = (float) (valorTotalSinIva * 0.19);
+
+			total = totalIva + valorTotalSinIva;
+			cotizacionModificacion.setTotalDescuento(descuentoTotal);
+			cotizacionModificacion.setSubtotal(valorTotalSinIva);
+			cotizacionModificacion.setTotalIva(totalIva);
+			cotizacionModificacion.setValorTotal(total);
+
+			
 			snackbarData.put("message", "Se agregó el artículo con referencia '" + cotProducModific.getTblProductoIdProducto().getReferencia() + "'.");
 			limpiarControlesDialogoAgregarArticulos();
 			RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
@@ -430,14 +455,63 @@ public class CotizacionController implements Serializable {
 
 		List<CotizacionProducto> lsAux2 = new ArrayList<>();
 
+		float precioTotalProducto;
+		float precioTotalProductoDesc;
+		float reclacularTotalDescuento;
+		float totalDescuentoProducto;
+		float recalcularSubtotal;
+		float recalcularTotalIva;
+		float recalcularTotal;
+
 		for (CotizacionProducto cp : listaProductosModificacion) {
-			if (idArticulo < 1000 && cp.getIdAuxiliar() == idArticulo) {
+			if (cp.getIdAuxiliar() != idArticulo) {
+				lsAux2.add(cp);
+
+			} else if (idArticulo < 1000 && cp.getIdAuxiliar() == idArticulo) {
 				listaProductosModificacionEliminarBd.add(cp);
 				System.out.println("Se debe eliminar en base de datos");
-			} else if (cp.getIdAuxiliar() != idArticulo) {
-				lsAux2.add(cp);
-			}
+				precioTotalProducto = cp.getTblProductoIdProducto().getPrecio() * cp.getCantidad();
+				precioTotalProductoDesc = cp.getPrecioBase() * cp.getCantidad();
 
+				reclacularTotalDescuento = precioTotalProducto - precioTotalProductoDesc;
+
+				totalDescuentoProducto = cotizacionModificacion.getTotalDescuento() - reclacularTotalDescuento;
+				cotizacionModificacion.setTotalDescuento(totalDescuentoProducto);
+
+				descuentoTotal = totalDescuentoProducto;
+
+				recalcularSubtotal = cotizacionModificacion.getSubtotal() - cp.getPrecioParaCliente();
+				cotizacionModificacion.setSubtotal(recalcularSubtotal);
+				valorTotalSinIva = recalcularSubtotal;
+
+				recalcularTotalIva = (float) (cotizacionModificacion.getSubtotal() * 0.19);
+				cotizacionModificacion.setTotalIva(recalcularTotalIva);
+
+				recalcularTotal = cotizacionModificacion.getSubtotal() + cotizacionModificacion.getTotalIva();
+				cotizacionModificacion.setValorTotal(recalcularTotal);
+			} else {
+
+				precioTotalProducto = cp.getTblProductoIdProducto().getPrecio() * cp.getCantidad();
+				precioTotalProductoDesc = cp.getPrecioBase() * cp.getCantidad();
+
+				reclacularTotalDescuento = precioTotalProducto - precioTotalProductoDesc;
+
+				totalDescuentoProducto = cotizacionModificacion.getTotalDescuento() - reclacularTotalDescuento;
+				cotizacionModificacion.setTotalDescuento(totalDescuentoProducto);
+
+				descuentoTotal = totalDescuentoProducto;
+
+				recalcularSubtotal = cotizacionModificacion.getSubtotal() - cp.getPrecioParaCliente();
+				cotizacionModificacion.setSubtotal(recalcularSubtotal);
+				valorTotalSinIva = recalcularSubtotal;
+
+				recalcularTotalIva = (float) (cotizacionModificacion.getSubtotal() * 0.19);
+				cotizacionModificacion.setTotalIva(recalcularTotalIva);
+
+				recalcularTotal = cotizacionModificacion.getSubtotal() + cotizacionModificacion.getTotalIva();
+				cotizacionModificacion.setValorTotal(recalcularTotal);
+
+			}
 		}
 		listaProductosModificacion = new ArrayList<>();
 		listaProductosModificacion = lsAux2;
