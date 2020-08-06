@@ -1,0 +1,42 @@
+[2020-07-03 09:22:42] [ WARN ] [Main:46] un warning
+[2020-07-03 09:22:42] [ ERROR] [Main:47] un error
+[2020-07-03 09:22:42] [ INFO ] [Main:49] iniciando aplicación
+[2020-07-03 09:22:42] [ DEBUG] [Main:54] el valor de n=10.0
+[2020-07-03 09:22:42] [ DEBUG] [Main:54] el valor de n=11.0
+[2020-07-03 09:22:42] [ DEBUG] [Main:54] el valor de n=12.0
+[2020-07-03 09:22:42] [ DEBUG] [Main:54] el valor de n=14.0
+[2020-07-03 09:22:42] [ DEBUG] [Main:54] el valor de n=16.0
+[2020-07-03 09:22:42] [ DEBUG] [Main:54] el valor de n=20.0
+[2020-07-03 09:22:42] [ DEBUG] [Main:54] el valor de n=25.0
+[2020-07-03 09:22:42] [ DEBUG] [Main:54] el valor de n=33.0
+[2020-07-03 09:22:42] [ DEBUG] [Main:54] el valor de n=50.0
+[2020-07-03 09:22:42] [ DEBUG] [Main:54] el valor de n=100.0
+[2020-07-03 09:22:42] [ ERROR] [Main:56] java.lang.ArithmeticException: / by zero
+[2020-07-03 16:54:36] [ WARN ] [Main:46] un warning
+[2020-07-03 16:54:36] [ ERROR] [Main:47] un error
+[2020-07-03 16:54:36] [ INFO ] [Main:49] iniciando aplicación
+[2020-07-03 16:54:36] [ DEBUG] [Main:54] el valor de n=10.0
+[2020-07-03 16:54:36] [ DEBUG] [Main:54] el valor de n=11.0
+[2020-07-03 16:54:36] [ DEBUG] [Main:54] el valor de n=12.0
+[2020-07-03 16:54:36] [ DEBUG] [Main:54] el valor de n=14.0
+[2020-07-03 16:54:36] [ DEBUG] [Main:54] el valor de n=16.0
+[2020-07-03 16:54:36] [ DEBUG] [Main:54] el valor de n=20.0
+[2020-07-03 16:54:36] [ DEBUG] [Main:54] el valor de n=25.0
+[2020-07-03 16:54:36] [ DEBUG] [Main:54] el valor de n=33.0
+[2020-07-03 16:54:36] [ DEBUG] [Main:54] el valor de n=50.0
+[2020-07-03 16:54:36] [ DEBUG] [Main:54] el valor de n=100.0
+[2020-07-03 16:54:36] [ ERROR] [Main:56] java.lang.ArithmeticException: / by zero
+[2020-07-03 16:55:31] [ WARN ] [CotizacionController:47] un warning
+[2020-07-03 16:55:31] [ ERROR] [CotizacionController:48] un error
+[2020-07-03 16:55:31] [ INFO ] [CotizacionController:50] iniciando aplicación
+[2020-07-03 16:55:31] [ DEBUG] [CotizacionController:55] el valor de n=10.0
+[2020-07-03 16:55:31] [ DEBUG] [CotizacionController:55] el valor de n=11.0
+[2020-07-03 16:55:31] [ DEBUG] [CotizacionController:55] el valor de n=12.0
+[2020-07-03 16:55:31] [ DEBUG] [CotizacionController:55] el valor de n=14.0
+[2020-07-03 16:55:31] [ DEBUG] [CotizacionController:55] el valor de n=16.0
+[2020-07-03 16:55:31] [ DEBUG] [CotizacionController:55] el valor de n=20.0
+[2020-07-03 16:55:31] [ DEBUG] [CotizacionController:55] el valor de n=25.0
+[2020-07-03 16:55:31] [ DEBUG] [CotizacionController:55] el valor de n=33.0
+[2020-07-03 16:55:31] [ DEBUG] [CotizacionController:55] el valor de n=50.0
+[2020-07-03 16:55:31] [ DEBUG] [CotizacionController:55] el valor de n=100.0
+[2020-07-03 16:55:31] [ ERROR] [CotizacionController:57] java.lang.ArithmeticException: / by zero

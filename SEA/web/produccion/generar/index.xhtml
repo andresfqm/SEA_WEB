@@ -1,6 +1,10 @@
 <!DOCTYPE html>
-<html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://xmlns.jcp.org/jsf/html"
+	  xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:f="http://xmlns.jcp.org/jsf/core">
 	<h:head>
 		<title>Seguimiento de gestión comercial | SEA</title>
 		<ui:composition template="/templates/resources.xhtml" />
@@ -9,101 +13,33 @@
         <div class="mdl-layout mdl-js-layout">
 			<ui:composition template="/templates/header.xhtml" />
 			<main class="mdl-layout__content">
-				<div class="page-content">
-					<table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
-						<thead>
-							<tr>
-								<th class="mdl-data-table__cell--non-numeric"># Cotización</th>
-								<th class="mdl-data-table__cell--non-numeric">Cliente</th>
-								<th class="mdl-data-table__cell--non-numeric">Contacto</th>
-								<th class="mdl-data-table__cell--non-numeric">Teléfono contacto</th>
-								<th class="mdl-data-table__cell--non-numeric">Estado</th>
-								<th class="mdl-data-table__cell--non-numeric">Acciones</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td class="mdl-data-table__cell--non-numeric">05-0721</td>
-								<td class="mdl-data-table__cell--non-numeric">IPSE</td>
-								<td class="mdl-data-table__cell--non-numeric">ELIZABETH TORRES</td>
-								<td class="mdl-data-table__cell--non-numeric">6397888 EXT 203</td>
-								<td class="mdl-data-table__cell--non-numeric">Por generar</td>
-								<td class="mdl-data-table__cell--non-numeric"><a href="./generarOrden.xhtml" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Actualizar</a></td>
-							</tr>
-							<tr>
-								<td class="mdl-data-table__cell--non-numeric">05-0722</td>
-								<td class="mdl-data-table__cell--non-numeric">Rayco Ltda.</td>
-								<td class="mdl-data-table__cell--non-numeric">Natalia Zarate</td>
-								<td class="mdl-data-table__cell--non-numeric">6497444</td>
-								<td class="mdl-data-table__cell--non-numeric">Por corregir</td>
-								<td class="mdl-data-table__cell--non-numeric"><a href="./generarOrden.xhtml" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Actualizar</a></td>
-							</tr>
-							<tr>
-								<td class="mdl-data-table__cell--non-numeric">05-0723</td>
-								<td class="mdl-data-table__cell--non-numeric">Monitoreos Ambientales High Tecnology Ltda.</td>
-								<td class="mdl-data-table__cell--non-numeric">Johana Borda</td>
-								<td class="mdl-data-table__cell--non-numeric">8053444</td>
-								<td class="mdl-data-table__cell--non-numeric">Por generar</td>
-								<td class="mdl-data-table__cell--non-numeric"><a href="./generarOrden.xhtml" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Actualizar</a></td>
-							</tr>
-							<tr>
-								<td class="mdl-data-table__cell--non-numeric">05-0725</td>
-								<td class="mdl-data-table__cell--non-numeric">Juliana Carrero</td>
-								<td class="mdl-data-table__cell--non-numeric">Juliana Carrero</td>
-								<td class="mdl-data-table__cell--non-numeric">3057636114</td>
-								<td class="mdl-data-table__cell--non-numeric">Por generar</td>
-								<td class="mdl-data-table__cell--non-numeric"><a href="./generarOrden.xhtml" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Actualizar</a></td>
-							</tr>
-							<tr>
-								<td class="mdl-data-table__cell--non-numeric">05-0726</td>
-								<td class="mdl-data-table__cell--non-numeric">jonathan bruges</td>
-								<td class="mdl-data-table__cell--non-numeric">jonathan bruges</td>
-								<td class="mdl-data-table__cell--non-numeric">0123456789</td>
-								<td class="mdl-data-table__cell--non-numeric">Por corregir</td>
-								<td class="mdl-data-table__cell--non-numeric"><a href="./generarOrden.xhtml" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Actualizar</a></td>
-							</tr>
-							<tr>
-								<td class="mdl-data-table__cell--non-numeric">05-0730</td>
-								<td class="mdl-data-table__cell--non-numeric">Claudia Cepeda</td>
-								<td class="mdl-data-table__cell--non-numeric">Claudia Cepeda</td>
-								<td class="mdl-data-table__cell--non-numeric">0123456789</td>
-								<td class="mdl-data-table__cell--non-numeric">Por generar</td>
-								<td class="mdl-data-table__cell--non-numeric"><a href="./generarOrden.xhtml" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Actualizar</a></td>
-							</tr>
-							<tr>
-								<td class="mdl-data-table__cell--non-numeric">05-0731</td>
-								<td class="mdl-data-table__cell--non-numeric">Natalia Diaz Cardona</td>
-								<td class="mdl-data-table__cell--non-numeric">Natalia Diaz Cardona</td>
-								<td class="mdl-data-table__cell--non-numeric">0123456789</td>
-								<td class="mdl-data-table__cell--non-numeric">Por corregir</td>
-								<td class="mdl-data-table__cell--non-numeric"><a href="./generarOrden.xhtml" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Actualizar</a></td>
-							</tr>
-							<tr>
-								<td class="mdl-data-table__cell--non-numeric">05-0732</td>
-								<td class="mdl-data-table__cell--non-numeric">IPRORTOM</td>
-								<td class="mdl-data-table__cell--non-numeric">IPRORTOM</td>
-								<td class="mdl-data-table__cell--non-numeric">0123456789</td>
-								<td class="mdl-data-table__cell--non-numeric">Por generar</td>
-								<td class="mdl-data-table__cell--non-numeric"><a href="./generarOrden.xhtml" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Actualizar</a></td>
-							</tr>
-							<tr>
-								<td class="mdl-data-table__cell--non-numeric">05-0765</td>
-								<td class="mdl-data-table__cell--non-numeric">Sonda de Colombia S.A.</td>
-								<td class="mdl-data-table__cell--non-numeric">Mireya Céspedes Cubillos</td>
-								<td class="mdl-data-table__cell--non-numeric">6466565 Ext. 3485</td>
-								<td class="mdl-data-table__cell--non-numeric">Por corregir</td>
-								<td class="mdl-data-table__cell--non-numeric"><a href="./generarOrden.xhtml" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Actualizar</a></td>
-							</tr>
-							<tr>
-								<td class="mdl-data-table__cell--non-numeric">05-0768</td>
-								<td class="mdl-data-table__cell--non-numeric">ITT</td>
-								<td class="mdl-data-table__cell--non-numeric">Claudia E. Malagon Barinas</td>
-								<td class="mdl-data-table__cell--non-numeric">7432168</td>
-								<td class="mdl-data-table__cell--non-numeric">Por corregir</td>
-								<td class="mdl-data-table__cell--non-numeric"><a href="./generarOrden.xhtml" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Actualizar</a></td>
-							</tr>
-						</tbody>
-					</table>
+
+				<div class="mdl-cell mdl-cell--12-col">
+					<p:dataTable var="op" emptyMessage="Usted no tiene órdenes de producción pendientes por generar" value="#{indexController.listaOpPorGenerarCorregir}" styleClass="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+						<p:column headerText="No. Cotización" styleClass="mdl-data-table__cell--non-numeric">
+							<h:outputText value="#{op.numeroCotizacion}"/>
+						</p:column>
+						<p:column headerText="Cliente" styleClass="mdl-data-table__cell--non-numeric">
+							<h:outputText value="#{op.cliente}"/>
+						</p:column>
+						<p:column headerText="Contacto" styleClass="mdl-data-table__cell--non-numeric">
+							<h:outputText value="#{op.contacto}"/>
+						</p:column>
+						<p:column headerText="Teléfono contacto" styleClass="mdl-data-table__cell--non-numeric">
+							<h:outputText value="#{op.telefono_contacto}"/>
+						</p:column>
+						<p:column headerText="Estado" styleClass="mdl-data-table__cell--non-numeric">
+							<h:outputText value="#{op.estado}"/>
+						</p:column>
+						<p:column>
+							<h:panelGroup layout="block">
+								<h:link outcome="generarOrden.xhtml">
+									<f:param name="numeroCotizacion" value="#{op.numeroCotizacion}"/>
+									<h:commandButton actionListener="#{cotizacionController.leerId(op.numeroCotizacion)}" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm" value="ACTUALIZAR"/>
+								</h:link>
+							</h:panelGroup>
+						</p:column>
+					</p:dataTable>
 				</div>
 			</main>
 		</div>

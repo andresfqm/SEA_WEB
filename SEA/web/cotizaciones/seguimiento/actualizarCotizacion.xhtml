@@ -243,8 +243,8 @@
 								</tbody>
 							</table>
 							<h:panelGroup layout="block" class="buttons fullWidth">
-								<p:commandButton id="btnEnviarEmail" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent notificacion" value="#{cotizacionController.enviarEmail == true ? 'Enviar y realizar seguimiento' : 'Realizar seguimiento'}" actionListener="#{cotizacionController.registrarCotización()}" update="numeroCotizacion"/>
-								<h:commandButton class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" type="submit" value="Realizar cierre efectivo" />
+								<p:commandButton id="btnEnviarEmail" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent notificacion" value="#{cotizacionController.enviarEmail == true ? 'Enviar y realizar seguimiento' : 'Realizar seguimiento'}" actionListener="#{cotizacionController.modificarCotización(0)}" update="numeroCotizacion"/>
+								<p:commandButton styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent notificacion" value="Realizar cierre efectivo" actionListener="#{cotizacionController.modificarCotización(1)}" update="numeroCotizacion"/>
 							</h:panelGroup>
 
 						</h:panelGroup>

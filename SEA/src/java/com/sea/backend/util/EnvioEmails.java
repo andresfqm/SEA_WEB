@@ -23,6 +23,10 @@
  */
 package com.sea.backend.util;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -46,12 +50,12 @@ import javax.mail.internet.MimeMultipart;
  */
 public class EnvioEmails implements Serializable {
 
-	final String user = "andresfqm@gmail.com";//cambiará en consecuencia al servidor utilizado
-	final String pass = "1013621910";
-
+	private String user = "andresfqm@gmail.com";
+	private String pass = "1013621910";
+	private String empresa = "Fulldotaciones";
 	private String mensaje;
 
-	public void enviarEmail(String fileName, String numeroCotizacion, String rutaArchivo, List<String> emailC, String emailU, String mensaje) throws UnsupportedEncodingException {
+	public void enviarEmail(String fileName, String numeroCotizacion, String rutaArchivo, List<String> emailC, String emailU, String mensaje) throws UnsupportedEncodingException, FileNotFoundException, IOException {
 
 		//1st paso) Obtener el objeto de sesión
 		Properties props = new Properties();
@@ -81,7 +85,7 @@ public class EnvioEmails implements Serializable {
 			multiparte.addBodyPart(texto);
 			multiparte.addBodyPart(adjunto);
 			MimeMessage message = new MimeMessage(session);
-			message.setFrom(new InternetAddress(user, "Fulldotaciones"));
+			message.setFrom(new InternetAddress(user, empresa));
 
 			String dest1 = "";
 			String dest2 = "";
@@ -120,7 +124,7 @@ public class EnvioEmails implements Serializable {
 		}
 	}
 
-	public void envioEmailRecuperacionPass(String email, String clave) throws UnsupportedEncodingException {
+	public void envioEmailRecuperacionPass(String email, String clave) throws UnsupportedEncodingException, FileNotFoundException, IOException {
 
 		//1st paso) Obtener el objeto de sesión
 		Properties props = new Properties();
@@ -163,4 +167,28 @@ public class EnvioEmails implements Serializable {
 		}
 
 	}
+
+	public void obtenerUsuarioClaveEnvios() throws FileNotFoundException, IOException {
+
+		Properties p = new Properties();
+		InputStream entrada = null;
+
+		String x;
+
+		try {
+			entrada = new FileInputStream("config.properties");
+			p.load(entrada);
+			System.out.println("uno=" + p.getProperty("rutapdf"));
+			x = p.getProperty("rutapdf");
+			System.out.println("x" + x);
+
+			user = p.getProperty("user");
+			pass = p.getProperty("pass");
+			empresa = p.getProperty("empresa");
+		} catch (Exception e) {
+			System.out.println("Se presento error : " + e.getMessage());
+		}
+
+	}
+
 }

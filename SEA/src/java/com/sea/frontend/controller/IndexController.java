@@ -13,6 +13,7 @@ import com.sea.backend.entities.ViewOpPorEstado;
 import com.sea.backend.entities.Usuario;
 import com.sea.backend.model.CotizacionFacadeLocal;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -39,6 +40,7 @@ public class IndexController implements Serializable {
 	private List<ViewIndexCotizacionesActivas> listaSeguimientoCotizaciones;
 	private List<ViewArticulosPorActualizar> listaArticulosPorActualizar;
 	private List<ViewIndexOpPorGenerar> listaOpPorGenerar;
+	private List<ViewIndexOpPorGenerar> listaOpPorGenerarCorregir;
 	private List<ViewOpEnSeguimiento> listaOpEnSeguimiento;
 	private List<ViewOpPorEstado> listaOpPorCorregir;
 	private List<ViewOpPorEstado> listaOpPorAprobar;
@@ -48,6 +50,19 @@ public class IndexController implements Serializable {
 		listaSeguimientoCotizaciones = cotizacionEJB.IndexSeguimientoCotizacion(idUsuario());
 		listaArticulosPorActualizar = cotizacionEJB.IndexArticulosPorActualizar();
 		listaOpPorGenerar = cotizacionEJB.IndexOpPorGenerar(idUsuario());
+		
+		listaOpPorGenerarCorregir = listaOpPorGenerar;
+		List<ViewIndexOpPorGenerar> listaOpPorGenerarAux = new ArrayList<>();
+		
+		for (ViewIndexOpPorGenerar ls : listaOpPorGenerar) {
+			if (ls.getEstado().equalsIgnoreCase("Cierre efectivo")) {
+				listaOpPorGenerarAux.add(ls);
+			}
+			
+		}
+		
+		listaOpPorGenerar = listaOpPorGenerarAux;
+		
 		listaOpEnSeguimiento = cotizacionEJB.IndexOpEnSeguimiento(idUsuario());
 			listaOpPorCorregir = cotizacionEJB.IndexOpPorEstado(idUsuario(), "Necesita corrección");
 	}
@@ -164,6 +179,14 @@ public class IndexController implements Serializable {
 
 	public void setListaOpPorAprobar(List<ViewOpPorEstado> listaOpPorAprobar) {
 		this.listaOpPorAprobar = listaOpPorAprobar;
+	}
+
+	public List<ViewIndexOpPorGenerar> getListaOpPorGenerarCorregir() {
+		return listaOpPorGenerarCorregir;
+	}
+
+	public void setListaOpPorGenerarCorregir(List<ViewIndexOpPorGenerar> listaOpPorGenerarCorregir) {
+		this.listaOpPorGenerarCorregir = listaOpPorGenerarCorregir;
 	}
 
 }

@@ -40,13 +40,18 @@ import com.sea.backend.model.UsuarioFacadeLocal;
 import com.sea.backend.util.AbrirCerrarDialogos;
 import com.sea.backend.util.EnvioEmails;
 import com.sea.backend.util.GenerarDocumentos;
+import com.sea.test.Main;
+import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.context.ExternalContext;
@@ -55,8 +60,10 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import javax.servlet.http.HttpSession;
 import javax.sound.midi.Soundbank;
+import org.apache.log4j.PropertyConfigurator;
 import org.primefaces.context.RequestContext;
 import org.primefaces.json.JSONObject;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -195,11 +202,28 @@ public class CotizacionController implements Serializable {
 
 	private String urlIndexSeguimiento = "/SEA/cotizaciones/seguimiento/index.xhtml";
 	private String urlRegistrarCotización = "/SEA/cotizaciones/enviarCotizacion.xhtml";
+	private final String UrlGenerarOrdenProduccion = "/SEA/produccion/generar/";
+	private final static Logger log = Logger.getLogger(CotizacionController.class);
+
+	Properties properties;
 
 	private int tipoOperacion = 0;
 
 	@PostConstruct
 	public void init() {
+		try {
+			Properties props = new Properties();
+			props.load(new FileInputStream("log4j.properties"));
+			PropertyConfigurator.configure(props);
+
+			properties = new Properties();
+			InputStream entrada = null;
+			entrada = new FileInputStream("config.properties");
+			properties.load(entrada);
+
+		} catch (Exception e) {
+			log.error("Se presento el siguiente error al leer el archivo config.properties " + e.getMessage());
+		}
 
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		ExternalContext externalContext = facesContext.getExternalContext();
@@ -309,6 +333,7 @@ public class CotizacionController implements Serializable {
 	}
 
 	public void agregarCotizacionProducto() {
+		log.info("iniciando proceso de agregar productos a la cotización");
 		if (producto.getIdProducto() == null) {
 			snackbarData.put("message", "Se debe seleccionar una referencia");
 			RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
@@ -363,7 +388,7 @@ public class CotizacionController implements Serializable {
 	}
 
 	public void agregarCotizacionProductoModificacion() {
-
+		log.info("iniciando proceso de agregar productos a una cotización con tipo operacion modificación");
 		if (producto.getIdProducto() == null) {
 			snackbarData.put("message", "Se debe seleccionar una referencia");
 			RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
@@ -385,7 +410,7 @@ public class CotizacionController implements Serializable {
 
 			cotProducModific.setIdAuxiliar(numeroRegistroArticulo);
 			listaProductosModificacion.add(cotProducModific);
-			
+
 			System.out.println("Lo que tiene la variable total Descuento : " + "" + totalDescuento);
 			descuentoTotal += totalDescuento;
 
@@ -401,7 +426,6 @@ public class CotizacionController implements Serializable {
 			cotizacionModificacion.setTotalIva(totalIva);
 			cotizacionModificacion.setValorTotal(total);
 
-			
 			snackbarData.put("message", "Se agregó el artículo con referencia '" + cotProducModific.getTblProductoIdProducto().getReferencia() + "'.");
 			limpiarControlesDialogoAgregarArticulos();
 			RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
@@ -417,6 +441,7 @@ public class CotizacionController implements Serializable {
 
 	public void eliminarArticuloCotizacion(int idArticulo) {
 
+		log.info("iniciando proceso de eliminar productos a la cotización");
 		List<CotizacionProducto> lsAux = new ArrayList<>();
 		for (CotizacionProducto cp : listaCotizacionP) {
 			if (cp.getIdAuxiliar() != idArticulo) {
@@ -452,7 +477,7 @@ public class CotizacionController implements Serializable {
 	}
 
 	public void eliminarArticuloCotizacionModificacion(int idArticulo) {
-
+		log.info("iniciando proceso de eliminar productos a la cotización con tipo operación modificación");
 		List<CotizacionProducto> lsAux2 = new ArrayList<>();
 
 		float precioTotalProducto;
@@ -580,6 +605,7 @@ public class CotizacionController implements Serializable {
 
 			try {
 				cotizacion.setNumeroCotizacion(generarIdCotizacion());
+				log.info("Ingreso al metodo de registrar cotización " + cotizacion.getNumeroCotizacion());
 				cotizacion.setFechaEmision(cotizacion.getFechaEmision());
 				cotizacion.setLugarEmision(cotizacion.getLugarEmision());
 				cotizacion.setValidezOferta(cotizacion.getValidezOferta());
@@ -648,12 +674,18 @@ public class CotizacionController implements Serializable {
 				dialogTittle = "Error no controlado";
 				dialogContent = e.getMessage();
 				RequestContext.getCurrentInstance().execute("mostrarDialogos(`" + dialogTittle + "`, `" + dialogContent + "`);");
+				log.error("Se presento el siguiente error a la hora de registrar la cotización " + cotizacion.getNumeroCotizacion() + " : " + e.getMessage());
 			}
 		}
 	}
 
-	public void modificarCotización() {
+	/*
+	1- Cierre efectivo
+	0 - Actualizacion de la cotización
+	 */
+	public void modificarCotización(int cierreEfectivo) {
 		try {
+			log.info("Ingreso al metodo de registrar cotización con tipo operación modificación " + cotizacionModificacion.getNumeroCotizacion());
 			if (listaProductosModificacionEliminarBd.size() > 0) {
 				for (CotizacionProducto cotP : listaProductosModificacionEliminarBd) {
 					cotizacionProductoEJB.remove(cotP);
@@ -676,9 +708,59 @@ public class CotizacionController implements Serializable {
 					}
 				}
 			}
+			if (cierreEfectivo == 1) {
+				cotizacionModificacion.setFechaCierreEfectivo(new Date());
+				cotizacionModificacion.setEstado("Cierre efectivo");
+			}
+
 			cotizacionEJB.edit(cotizacionModificacion);
+			snackbarData.put("message", "Se actualizo la cotización de forma correcta");
+			RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
+
+			if (enviarEmail == true) {
+
+				GenerarDocumentos generarDocumentos = new GenerarDocumentos();
+				EnvioEmails email = new EnvioEmails();
+				String fileName = "";
+				String rutaArchivo = "";
+
+				String emailU = cotizacionEJB.correoUsuario(idUsuario());
+
+				List<String> emails = new ArrayList<>();
+				emails.add(emailCotizacionModificacion.getEmail1());
+				if (emailCotizacionModificacion.getEmail2() != null) {
+					emails.add(emailCotizacionModificacion.getEmail2());
+				}
+
+				if (formatoCotizacion == 1) {
+					generarDocumentos.generarArchivo(formatoCotizacion, cotizacionModificacion.getNumeroCotizacion());
+					fileName = "cotizacion.pdf";
+
+					rutaArchivo = properties.getProperty("rutapdf");
+					email.enviarEmail(fileName, cotizacionModificacion.getNumeroCotizacion(), rutaArchivo, emails, emailU, mensaje);
+
+				} else {
+					generarDocumentos.generarArchivo(formatoCotizacion, cotizacionModificacion.getNumeroCotizacion());
+					fileName = "cotizacion.xlsx";
+					rutaArchivo = properties.getProperty("rutaexcel");
+					email.enviarEmail(fileName, cotizacionModificacion.getNumeroCotizacion(), rutaArchivo, emails, emailU, mensaje);
+
+				}
+			}
+
 			limpiarControlesModificacion();
+
+			if (cierreEfectivo == 1) {
+				redireccionar(UrlGenerarOrdenProduccion);
+			} else {
+				redireccionar(urlIndexSeguimiento);
+			}
 		} catch (Exception e) {
+			dialogTittle = "Error no controlado";
+			dialogContent = e.getMessage();
+			RequestContext.getCurrentInstance().execute("mostrarDialogos(`" + dialogTittle + "`, `" + dialogContent + "`);");
+			log.error("Se presento el siguiente error al realizar la modificación de la cotización : " + cotizacionModificacion.getNumeroCotizacion() + " " + e.getMessage());
+
 		}
 
 	}
@@ -687,10 +769,6 @@ public class CotizacionController implements Serializable {
 		this.cotizacion = cotizacionEJB.find(cotizacion.getNumeroCotizacion());
 		return "actualizarCotizacion.xhtml";
 
-	}
-
-	public void agregarArticulosCotizacionModificacion() {
-		System.out.println("Aqui la logica para agregar articulos a una modificacion");
 	}
 
 	private void limpiarControles() {

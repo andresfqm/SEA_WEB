@@ -56,24 +56,33 @@ public class ViewIndexOpPorGenerar implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	@Basic(optional = false)
-    @NotNull
-    @Column(name = "usuario")
+	@NotNull
+	@Column(name = "usuario")
 	private int usuario;
 	@Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 32)
-    @Column(name = "numero_cotizacion")
+	@NotNull
+	@Size(min = 1, max = 32)
+	@Column(name = "numero_cotizacion")
 	@Id
 	private String numeroCotizacion;
 	@Size(max = 129)
-    @Column(name = "cliente")
+	@Column(name = "cliente")
 	private String cliente;
 	@Size(max = 41)
-    @Column(name = "documento")
+	@Column(name = "documento")
 	private String documento;
+	@Size(max = 129)
+	@Column(name = "contacto")
+	private String contacto;
+	@Size(max = 20)
+	@Column(name = "telefono_contacto")
+	private String telefono_contacto;
 	@Column(name = "fecha_cierre_efectivo")
-    @Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date fechaCierreEfectivo;
+	@Size(max = 20)
+	@Column(name = "estado")
+	private String estado;
 
 	public ViewIndexOpPorGenerar() {
 	}
@@ -116,6 +125,30 @@ public class ViewIndexOpPorGenerar implements Serializable {
 
 	public void setFechaCierreEfectivo(Date fechaCierreEfectivo) {
 		this.fechaCierreEfectivo = fechaCierreEfectivo;
+	}
+
+	public String getContacto() {
+		return contacto;
+	}
+
+	public void setContacto(String contacto) {
+		this.contacto = contacto;
+	}
+
+	public String getTelefono_contacto() {
+		return telefono_contacto;
+	}
+
+	public void setTelefono_contacto(String telefono_contacto) {
+		this.telefono_contacto = telefono_contacto;
+	}
+
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
 	}
 	
 }
