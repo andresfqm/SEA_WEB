@@ -5,12 +5,15 @@
  */
 package com.sea.frontend.controller;
 
+import com.sea.backend.dto.ClienteDTO;
 import com.sea.backend.entities.Ciudad;
 import com.sea.backend.entities.Cliente;
 import com.sea.backend.entities.Cotizacion;
 import com.sea.backend.entities.CotizacionProducto;
 import com.sea.backend.entities.DescuentoVolumen;
+import com.sea.backend.entities.Direccion;
 import com.sea.backend.entities.DisenoProducto;
+import com.sea.backend.entities.Email;
 import com.sea.backend.entities.EspecificacionDiseno;
 import com.sea.backend.entities.Fabricante;
 import com.sea.backend.entities.LugaresEntrega;
@@ -51,17 +54,22 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.Properties;
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+import org.primefaces.json.JSONObject;
 import org.primefaces.model.UploadedFile;
 
 /**
@@ -81,7 +89,6 @@ public class OrdenProduccionController implements Serializable {
 	private String numeroCotizacion;
 	private List<Cotizacion> listaCotizacionesOrdenProduccion;
 	private Object datosCotizacion;
-
 
 //EJB Producto Especificación
 	@EJB
@@ -197,33 +204,24 @@ public class OrdenProduccionController implements Serializable {
 	private UsuarioFacadeLocal EJBUsuario;
 	private Usuario usuario;
 
+	private ClienteDTO emailCliente;
+	private String direccionEntrega;
+
 	private UploadedFile file;
 	private UploadedFile file2;
-	
+
 	private String idUi;
 	private int valueId;
-	
-	private List<List<DisenoProducto>> listaTablaProductoDiseño= new  ArrayList<>();
-	
 
-	public UploadedFile getFile() {
-		return file;
-	}
+	private List<List<DisenoProducto>> listaTablaProductoDiseño = new ArrayList<>();
 
-	public UploadedFile getFile2() {
-		return file2;
-	}
+	private final static Logger log = Logger.getLogger(OrdenProduccionController.class);
 
-	public void setFile2(UploadedFile file2) {
-		this.file2 = file2;
-	}
-
-	public void setFile(UploadedFile file) {
-		this.file = file;
-	}
+	JSONObject snackbarData = new JSONObject();
 
 	@PostConstruct
 	public void init() {
+
 		usuario = new Usuario();
 		cotizacion = new Cotizacion();
 		cotizacionP = new CotizacionProducto();
@@ -249,13 +247,58 @@ public class OrdenProduccionController implements Serializable {
 		ordenProduccion.setFechaExpedicion(new Date());
 
 		disenoProducto = new DisenoProducto();
-		listaDiseñoProducto = new ArrayList<>();			
+		listaDiseñoProducto = new ArrayList<>();
 		especificacionDiseno = new EspecificacionDiseno();
 		tallaDisenoProducto = new TallaDisenoProducto();
 		listaTallaDisenoProductos = new ArrayList<>();
 		tallaDisenoProducto = new TallaDisenoProducto();
 		idUi = "id";
 		valueId = 0;
+		/*
+		*Autor: Aquintana
+		*Fecha modificación : 09/08/2020
+		* Obtenemos el numero de cotización que viene por parametro
+		 */
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		ExternalContext externalContext = facesContext.getExternalContext();
+		Map params = externalContext.getRequestParameterMap();
+		//Integer categorySelected = new Integer((String) params.get("id"));
+		String categorySelected = (String) params.get("numeroCotizacion");
+
+		try {
+			log.info("Se busca los datos de la cotización : " + " " + categorySelected);
+			emailCliente = new ClienteDTO();
+
+			if (categorySelected != null) {
+				cotizacion = cotizacionEJB.find(categorySelected);
+
+				int count = 0;
+				for (Email email : cotizacion.getTblClienteIdCliente().getEmailList()) {
+					if (count < 1) {
+						emailCliente.setEmail1(email.getEmail());
+						count = count + 1;
+					} else if (count == 1) {
+						emailCliente.setEmail2(email.getEmail());
+					}
+
+				}
+				for (Direccion dir : cotizacion.getTblClienteIdCliente().getDireccionList()) {
+					direccionEntrega = dir.getDireccion();
+
+				}
+
+				objetosCotizacionProducto(categorySelected);
+
+			} else {
+				snackbarData.put("message", "El número de Cotización no puede ser nulo");
+				RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
+			}
+
+		} catch (Exception e) {
+			log.error("Se presento el siguiente error al consultar los datos de la cotización : " + e.getMessage());
+			e.printStackTrace();
+		}
+
 	}
 
 	public void agregarCotizacionProducto() {
@@ -269,7 +312,6 @@ public class OrdenProduccionController implements Serializable {
 		listaCotizacionP.add(cot);
 
 	}
-	
 
 	// Metodo para traer los productos registrados en una cotización
 	public void obtenerProductosRegistrados() throws Exception {
@@ -289,18 +331,17 @@ public class OrdenProduccionController implements Serializable {
 		}
 	}
 
-	// Metodo para obtener las cotizaciones registradas para generar ordenes de producción
-	public void obtenerDatosRegistroOrdenProduccion() throws Exception {
-		try {
-			datosCotizacion = cotizacionEJB.datosCotizacion(numeroCotizacion);
-			objetosCotizacionProducto();
-			for (int i = 0; i < listaDatosCotizacionProducto.size(); i++) {
-			listaTablaProductoDiseño.add(new ArrayList<>(i));
-		}
-		} catch (Exception e) {
-		}
-	}
-
+//	// Metodo para obtener las cotizaciones registradas para generar ordenes de producción
+//	public void obtenerDatosRegistroOrdenProduccion(String numeroCotizacion) throws Exception {
+//		try {
+//			datosCotizacion = cotizacionEJB.datosCotizacion(numeroCotizacion);
+//			objetosCotizacionProducto();
+//			for (int i = 0; i < listaDatosCotizacionProducto.size(); i++) {
+//				listaTablaProductoDiseño.add(new ArrayList<>(i));
+//			}
+//		} catch (Exception e) {
+//		}
+//	}
 	public int idUsuario() {
 		HttpSession sesion = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
 		Usuario u = (Usuario) sesion.getAttribute("usuario");
@@ -321,53 +362,287 @@ public class OrdenProduccionController implements Serializable {
 
 	}
 
-
-	public PropuestaNoIncluye getPropuestaNoIncluye() {
-		return propuestaNoIncluye;
+	//Metodo para registrar las tallas
+	public void obtenertallaDescripcion() throws Exception {
+		talla = tallaEJB.tallaDescripcion(talla.getIdTalla());
 	}
 
-	public void setPropuestaNoIncluye(PropuestaNoIncluye propuestaNoIncluye) {
-		this.propuestaNoIncluye = propuestaNoIncluye;
+	public void obtenerDescripcionReferencia() throws Exception {
+		try {
+
+			producto = productoEJB.productoDescripcion(producto.getIdProducto());
+			listaMateriales = materialEJB.datosMaterial(producto.getIdProducto());
+			listaFabricante = fabricanteEJB.descripcionFabricante(producto.getIdProducto());
+			productoPrecio = productoEJB.productoPrecio(producto.getIdProducto());
+		} catch (Exception e) {
+			throw e;
+		}
+
 	}
 
-	public TiempoEntrega getTiempoEntrega() {
-		return tiempoEntrega;
+	//Coloque 1 a quintana ya que se estaba rebentando por el numero de consecutivo que lo estba buscando de la
+	// Tabla usuario el cual lo quiete Aq
+	public int consecutivoCotizacion() {
+		HttpSession sesion = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+		Usuario u = (Usuario) sesion.getAttribute("usuario");
+		return 1;
 	}
 
-	public void setTiempoEntrega(TiempoEntrega tiempoEntrega) {
-		this.tiempoEntrega = tiempoEntrega;
+	//Metodo para agragar producto_especificación
+	public void productoEspecificacon() {
+		ProductoEspecificacion proE = new ProductoEspecificacion();
+		proE.setObservaqciones(productoEspecificacion.getObservaqciones());
+		proE.setTblOrdenProduccionIdOrdenProduccion(ordenProduccion);
+		proE.setTblProductoIdProducto(producto);
+		listaProductoEspecificacion.add(proE);
+
 	}
 
-	public LugaresEntrega getLugaresEntrega() {
-		return lugaresEntrega;
+	//Metodo para agragar diseño del producto
+	public void diseñoProducto() {
+		DisenoProducto diseñoP = new DisenoProducto();
+		diseñoP.setIdDisenoProducto(producto.getIdProducto());
+		diseñoP.setLogotipo(disenoProducto.getLogotipo());
+		diseñoP.setDiagramaDiseno(disenoProducto.getDiagramaDiseno());
+		diseñoP.setNecesitaBordado(disenoProducto.getNecesitaBordado());
+		diseñoP.setDiseno(disenoProducto.getDiseno());
+		diseñoP.setDescripcionDiseno(disenoProducto.getDescripcionDiseno());
+		diseñoP.setTblProductoEspecificacionIdProductoEspecificacion(productoEspecificacion);
+		listaDiseñoProducto.add(diseñoP);
+		listaTablaProductoDiseño.get(0).add(diseñoP);
+
 	}
 
-	public void setLugaresEntrega(LugaresEntrega lugaresEntrega) {
-		this.lugaresEntrega = lugaresEntrega;
+	//Metodo para agregar tallas de los articulos
+	public void agregarTallas() {
+		TallaDisenoProducto tallaP = new TallaDisenoProducto();
+		tallaP.setCantidad(tallaDisenoProducto.getCantidad());
+		tallaP.setTblDisenoProductoIdDisenoProducto(disenoProducto);
+		tallaP.setTblTallaIdTalla(talla);
+		listaTallaDisenoProductos.add(tallaP);
+		System.out.println("asd");
+
 	}
 
-	public Cotizacion getCotizacion() {
-		return cotizacion;
+	public List<TallaDisenoProducto> getListaTallaDisenoProductos() {
+		return listaTallaDisenoProductos;
 	}
 
-	public void setCotizacion(Cotizacion cotizacion) {
-		this.cotizacion = cotizacion;
+	public void setListaTallaDisenoProductos(List<TallaDisenoProducto> listaTallaDisenoProductos) {
+		this.listaTallaDisenoProductos = listaTallaDisenoProductos;
 	}
 
-	public List<TiempoEntrega> getListaTiempoEntrega() {
-		return listaTiempoEntrega;
+	public List<Cotizacion> getListaLugarEmision() {
+		return listaLugarEmision;
 	}
 
-	public void setListaTiempoEntrega(List<TiempoEntrega> listaTiempoEntrega) {
-		this.listaTiempoEntrega = listaTiempoEntrega;
+	public void setListaLugarEmision(List<Cotizacion> listaLugarEmision) {
+		this.listaLugarEmision = listaLugarEmision;
 	}
 
-	public List<LugaresEntrega> getListaLugaresEntrega() {
-		return listaLugaresEntrega;
+	public void objetosCotizacionProducto(String numeroCotizacion) throws Exception {
+		System.out.println("(((((((((((((((((" + numeroCotizacion);
+		listaDatosCotizacionProducto = cotizacionProductoEJB.datosCotizacionProducto(numeroCotizacion);
+		ordenProduccion.setTotalPrendas(listaDatosCotizacionProducto.size());
+		System.out.println("total de prendas: " + ordenProduccion.getTotalPrendas());
+	}
+	//Metodo para traer las especififaciones de los prodectos registrados EJP: Botones, Colores, Botas etc.
+
+	public void obtenerEspecicacionesProductosRegistrados() throws Exception {
+
+		System.out.println("prueba referncia = " + referencia);
+		listaDatosEspecificacionProducto = productoEJB.datosEspecificacionProducto(getReferencia());
+
 	}
 
-	public void setListaLugaresEntrega(List<LugaresEntrega> listaLugaresEntrega) {
-		this.listaLugaresEntrega = listaLugaresEntrega;
+	public void obtenerLugarEmicionCotizacion() throws Exception {
+
+		System.out.println("Prueba Lugar Emicion = " + numeroCotizacion);
+
+	}
+
+	public void registrarOrdenProduccion() throws ClassNotFoundException, InstantiationException, IllegalAccessException, SQLException {
+		try {
+
+			/*
+			String path = FacesContext.getCurrentInstance().getExternalContext().getRealPath("Archivos");
+			path = path.substring(0, path.indexOf("\\build"));
+			path = path + "\\web\\Archivos\\";
+
+			try {
+				
+				this.diagramaDiseño = diagrama_diseño.getSubmittedFileName();
+				pathReal = "/UploadFile/Archivos/" + diagramaDiseño;
+				path = path + this.diagramaDiseño;
+				InputStream in = diagrama_diseño.getInputStream();
+				
+
+				byte[] data = new byte[in.available()];
+				in.read(data);
+				FileOutputStream out = new FileOutputStream(new File(path));
+				out.write(data);
+				in.close();
+				out.close();
+				disenoProducto.setDiagramaDiseno(pathReal);
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.out.println(e.getMessage());
+			}
+
+			try {
+				this.logotipoP = logotipo.getSubmittedFileName();
+				pathReal = "/UploadFile/Archivos/" + logotipoP;
+				path = path + this.logotipoP;
+				InputStream in2 = logotipo.getInputStream();
+
+				byte[] data2 = new byte[in2.available()];
+				in2.read(data2);
+				FileOutputStream out2 = new FileOutputStream(new File(path));
+				out2.write(data2);
+				in2.close();
+				out2.close();
+				disenoProducto.setLogotipo(pathReal);
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.out.println(e.getMessage());
+			}
+			 */
+			this.cotizacion = cotizacionEJB.find(numeroCotizacion);
+			ordenProduccion.setCiudadExpedicion(cotizacion.getLugarEmision());
+			ordenProduccion.setFechaExpedicion(ordenProduccion.getFechaExpedicion());
+			ordenProduccion.setObservaciones(ordenProduccion.getObservaciones());
+			ordenProduccion.setTotalPrendas(ordenProduccion.getTotalPrendas());
+			ordenProduccion.setEstado("Pendiente");
+			ordenProduccion.setTblCotizacionNumeroCotizacion(cotizacionEJB.find(numeroCotizacion));
+			ordenPEJB.create(ordenProduccion);
+
+			productoEspecificacion.setObservaqciones(productoEspecificacion.getObservaqciones());
+			productoEspecificacion.setTblOrdenProduccionIdOrdenProduccion(ordenPEJB.find(idOrdenProduccion));
+			for (CotizacionProductoAuxiliar listaCPA : listaDatosCotizacionProducto) {
+				productoEspecificacion.setTblProductoIdProducto(productoEJB.find(listaCPA.getIdProducto()));
+			}
+
+			for (DisenoProducto item1 : listaDiseñoProducto) {
+				disenoProducto.setTblProductoEspecificacionIdProductoEspecificacion(productoEspecificacion);
+				disenoProducto.setLogotipo(item1.getLogotipo());
+				disenoProducto.setDiagramaDiseno(item1.getDiagramaDiseno());
+				disenoProducto.setNecesitaBordado(item1.getNecesitaBordado());
+				disenoProducto.setDiseno(item1.getDiseno());
+				disenoProducto.setDescripcionDiseno(item1.getDescripcionDiseno());
+
+				String diagramaD = this.cargarArchivos(file);
+				disenoProducto.setDiagramaDiseno(diagramaD);
+				System.out.println("Diagrama Diseño " + diagramaD);
+				String logo = this.cargarArchivos(file2);
+				disenoProducto.setLogotipo(logo);
+				diseñoEJB.create(disenoProducto);
+
+			}
+		} catch (Exception e) {
+		}
+
+	}
+
+	public List<CotizacionProductoAuxiliar> getListaDatosCotizacionProducto() throws Exception {
+		return listaDatosCotizacionProducto;
+
+	}
+
+	public void setListaDatosCotizacionProducto(List<CotizacionProductoAuxiliar> listaDatosCotizacionProducto) {
+		this.listaDatosCotizacionProducto = listaDatosCotizacionProducto;
+	}
+
+	public List<ProductoAuxiliar> getListaDatosEspecificacionProducto() throws Exception {
+		return listaDatosEspecificacionProducto;
+	}
+
+	public void setListaDatosEspecificacionProducto(List<ProductoAuxiliar> listaDatosEspecificacionProducto) {
+		this.listaDatosEspecificacionProducto = listaDatosEspecificacionProducto;
+	}
+
+	public String cargarArchivos(UploadedFile fi) {
+		String path = FacesContext.getCurrentInstance().getExternalContext().getRealPath("Archivos");
+		path = path.substring(0, path.indexOf("\\build"));
+		path = path + "\\web\\Archivos\\";
+		String pathReal1 = null;
+		System.out.println("path = " + path);
+		System.out.println("Archivo :: " + fi.getFileName());
+		try {
+			String nombreDiagrama = fi.getFileName();
+			path += nombreDiagrama;
+			pathReal1 = "/Archivos/" + nombreDiagrama;
+			InputStream input = fi.getInputstream();
+			byte[] data = new byte[input.available()];
+			input.read(data);
+			FileOutputStream output = new FileOutputStream(path);
+			System.out.println("path:: " + path);
+			output.write(data);
+			output.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+		}
+		return pathReal1;
+
+	}
+
+	public String getIdUi() {
+		idUi = idUi + valueId;
+		return idUi;
+	}
+
+	public void setIdUi(String idUi) {
+		this.idUi = idUi;
+	}
+
+	public int getValueId() {
+		return valueId++;
+	}
+
+	public void setValueId(int valueId) {
+		this.valueId = valueId;
+	}
+
+	public List<List<DisenoProducto>> getListaTablaProductoDiseño() {
+		return listaTablaProductoDiseño;
+	}
+
+	public void setListaTablaProductoDiseño(List<List<DisenoProducto>> listaTablaProductoDiseño) {
+		this.listaTablaProductoDiseño = listaTablaProductoDiseño;
+	}
+
+	public UploadedFile getFile() {
+		return file;
+	}
+
+	public UploadedFile getFile2() {
+		return file2;
+	}
+
+	public void setFile2(UploadedFile file2) {
+		this.file2 = file2;
+	}
+
+	public void setFile(UploadedFile file) {
+		this.file = file;
+	}
+
+	public ClienteDTO getEmailCliente() {
+		return emailCliente;
+	}
+
+	public void setEmailCliente(ClienteDTO emailCliente) {
+		this.emailCliente = emailCliente;
+	}
+
+	public String getDireccionEntrega() {
+		return direccionEntrega;
+	}
+
+	public void setDireccionEntrega(String direccionEntrega) {
+		this.direccionEntrega = direccionEntrega;
 	}
 
 	public CotizacionProducto getCotizacionProducto() {
@@ -458,30 +733,60 @@ public class OrdenProduccionController implements Serializable {
 		this.idDescuento = idDescuento;
 	}
 
-	//Metodo para registrar las tallas
-	public void obtenertallaDescripcion() throws Exception {
-		talla = tallaEJB.tallaDescripcion(talla.getIdTalla());
+	public String getReferencia() {
+		return referencia;
 	}
 
-	public void obtenerDescripcionReferencia() throws Exception {
-		try {
-
-			producto = productoEJB.productoDescripcion(producto.getIdProducto());
-			listaMateriales = materialEJB.datosMaterial(producto.getIdProducto());
-			listaFabricante = fabricanteEJB.descripcionFabricante(producto.getIdProducto());
-			productoPrecio = productoEJB.productoPrecio(producto.getIdProducto());
-		} catch (Exception e) {
-			throw e;
-		}
-
+	public void setReferencia(String referencia) {
+		this.referencia = referencia;
 	}
 
-	//Coloque 1 a quintana ya que se estaba rebentando por el numero de consecutivo que lo estba buscando de la
-	// Tabla usuario el cual lo quiete Aq
-	public int consecutivoCotizacion() {
-		HttpSession sesion = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
-		Usuario u = (Usuario) sesion.getAttribute("usuario");
-		return 1;
+	public DisenoProducto getDisenoProducto() {
+		return disenoProducto;
+	}
+
+	public void setDisenoProducto(DisenoProducto disenoProducto) {
+		this.disenoProducto = disenoProducto;
+	}
+
+	public EspecificacionDiseno getEspecificacionDiseno() {
+		return especificacionDiseno;
+	}
+
+	public void setEspecificacionDiseno(EspecificacionDiseno especificacionDiseno) {
+		this.especificacionDiseno = especificacionDiseno;
+	}
+
+	public TallaDisenoProducto getTallaDisenoProducto() {
+		return tallaDisenoProducto;
+	}
+
+	public void setTallaDisenoProducto(TallaDisenoProducto tallaDisenoProducto) {
+		this.tallaDisenoProducto = tallaDisenoProducto;
+	}
+
+	public List<DisenoProducto> getListaDiseñoProducto() {
+		return listaDiseñoProducto;
+	}
+
+	public void setListaDiseñoProducto(List<DisenoProducto> listaDiseñoProducto) {
+		this.listaDiseñoProducto = listaDiseñoProducto;
+	}
+
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
+
+	public int getIdOrdenProduccion() {
+		return idOrdenProduccion;
+	}
+
+	public void setIdOrdenProduccion(int idOrdenProduccion) {
+		this.idOrdenProduccion = idOrdenProduccion;
 	}
 
 	public List<Material> getListaMateriales() {
@@ -700,298 +1005,51 @@ public class OrdenProduccionController implements Serializable {
 		this.idProductoEspecificacion = idProductoEspecificacion;
 	}
 
-	//Metodo para agragar producto_especificación
-	public void productoEspecificacon() {
-		ProductoEspecificacion proE = new ProductoEspecificacion();
-		proE.setObservaqciones(productoEspecificacion.getObservaqciones());
-		proE.setTblOrdenProduccionIdOrdenProduccion(ordenProduccion);
-		proE.setTblProductoIdProducto(producto);
-		listaProductoEspecificacion.add(proE);
-
+	public PropuestaNoIncluye getPropuestaNoIncluye() {
+		return propuestaNoIncluye;
 	}
 
-	//Metodo para agragar diseño del producto
-	public void diseñoProducto() {
-		DisenoProducto diseñoP = new DisenoProducto();
-		diseñoP.setIdDisenoProducto(producto.getIdProducto());
-		diseñoP.setLogotipo(disenoProducto.getLogotipo());
-		diseñoP.setDiagramaDiseno(disenoProducto.getDiagramaDiseno());
-		diseñoP.setNecesitaBordado(disenoProducto.getNecesitaBordado());
-		diseñoP.setDiseno(disenoProducto.getDiseno());
-		diseñoP.setDescripcionDiseno(disenoProducto.getDescripcionDiseno());
-		diseñoP.setTblProductoEspecificacionIdProductoEspecificacion(productoEspecificacion);
-		listaDiseñoProducto.add(diseñoP);
-		listaTablaProductoDiseño.get(0).add(diseñoP);
-
-	}
-	
-	//Metodo para agregar tallas de los articulos
-	public void agregarTallas(){
-		TallaDisenoProducto tallaP = new TallaDisenoProducto();
-		tallaP.setCantidad(tallaDisenoProducto.getCantidad());
-		tallaP.setTblDisenoProductoIdDisenoProducto(disenoProducto);
-		tallaP.setTblTallaIdTalla(talla);
-		listaTallaDisenoProductos.add(tallaP);
-		System.out.println("asd");
-				
+	public void setPropuestaNoIncluye(PropuestaNoIncluye propuestaNoIncluye) {
+		this.propuestaNoIncluye = propuestaNoIncluye;
 	}
 
-	public List<TallaDisenoProducto> getListaTallaDisenoProductos() {
-		return listaTallaDisenoProductos;
+	public TiempoEntrega getTiempoEntrega() {
+		return tiempoEntrega;
 	}
 
-	public void setListaTallaDisenoProductos(List<TallaDisenoProducto> listaTallaDisenoProductos) {
-		this.listaTallaDisenoProductos = listaTallaDisenoProductos;
-	}
-	
-
-	public List<Cotizacion> getListaLugarEmision() {
-		return listaLugarEmision;
+	public void setTiempoEntrega(TiempoEntrega tiempoEntrega) {
+		this.tiempoEntrega = tiempoEntrega;
 	}
 
-	public void setListaLugarEmision(List<Cotizacion> listaLugarEmision) {
-		this.listaLugarEmision = listaLugarEmision;
+	public LugaresEntrega getLugaresEntrega() {
+		return lugaresEntrega;
 	}
 
-	public void objetosCotizacionProducto() throws Exception {
-		System.out.println("(((((((((((((((((" + numeroCotizacion);
-		listaDatosCotizacionProducto = cotizacionProductoEJB.datosCotizacionProducto(numeroCotizacion);
-		ordenProduccion.setTotalPrendas(listaDatosCotizacionProducto.size());
-		System.out.println("total de prendas: " + ordenProduccion.getTotalPrendas());
-	}
-	//Metodo para traer las especififaciones de los prodectos registrados EJP: Botones, Colores, Botas etc.
-
-	public void obtenerEspecicacionesProductosRegistrados() throws Exception {
-
-		System.out.println("prueba referncia = " + referencia);
-		listaDatosEspecificacionProducto = productoEJB.datosEspecificacionProducto(getReferencia());
-
+	public void setLugaresEntrega(LugaresEntrega lugaresEntrega) {
+		this.lugaresEntrega = lugaresEntrega;
 	}
 
-	public void obtenerLugarEmicionCotizacion() throws Exception {
-
-		System.out.println("Prueba Lugar Emicion = " + numeroCotizacion);
-		
-
+	public Cotizacion getCotizacion() {
+		return cotizacion;
 	}
 
-	public void registrarOrdenProduccion() throws ClassNotFoundException, InstantiationException, IllegalAccessException, SQLException {
-		try {
-
-			/*
-			String path = FacesContext.getCurrentInstance().getExternalContext().getRealPath("Archivos");
-			path = path.substring(0, path.indexOf("\\build"));
-			path = path + "\\web\\Archivos\\";
-
-			try {
-				
-				this.diagramaDiseño = diagrama_diseño.getSubmittedFileName();
-				pathReal = "/UploadFile/Archivos/" + diagramaDiseño;
-				path = path + this.diagramaDiseño;
-				InputStream in = diagrama_diseño.getInputStream();
-				
-
-				byte[] data = new byte[in.available()];
-				in.read(data);
-				FileOutputStream out = new FileOutputStream(new File(path));
-				out.write(data);
-				in.close();
-				out.close();
-				disenoProducto.setDiagramaDiseno(pathReal);
-
-			} catch (Exception e) {
-				e.printStackTrace();
-				System.out.println(e.getMessage());
-			}
-
-			try {
-				this.logotipoP = logotipo.getSubmittedFileName();
-				pathReal = "/UploadFile/Archivos/" + logotipoP;
-				path = path + this.logotipoP;
-				InputStream in2 = logotipo.getInputStream();
-
-				byte[] data2 = new byte[in2.available()];
-				in2.read(data2);
-				FileOutputStream out2 = new FileOutputStream(new File(path));
-				out2.write(data2);
-				in2.close();
-				out2.close();
-				disenoProducto.setLogotipo(pathReal);
-
-			} catch (Exception e) {
-				e.printStackTrace();
-				System.out.println(e.getMessage());
-			}
-			 */
-			this.cotizacion = cotizacionEJB.find(numeroCotizacion);
-			ordenProduccion.setCiudadExpedicion(cotizacion.getLugarEmision());
-			ordenProduccion.setFechaExpedicion(ordenProduccion.getFechaExpedicion());
-			ordenProduccion.setObservaciones(ordenProduccion.getObservaciones());
-			ordenProduccion.setTotalPrendas(ordenProduccion.getTotalPrendas());
-			ordenProduccion.setEstado("Pendiente");
-			ordenProduccion.setTblCotizacionNumeroCotizacion(cotizacionEJB.find(numeroCotizacion));
-			ordenPEJB.create(ordenProduccion);
-
-			
-			productoEspecificacion.setObservaqciones(productoEspecificacion.getObservaqciones());
-			productoEspecificacion.setTblOrdenProduccionIdOrdenProduccion(ordenPEJB.find(idOrdenProduccion));
-			for (CotizacionProductoAuxiliar listaCPA : listaDatosCotizacionProducto) {
-			productoEspecificacion.setTblProductoIdProducto(productoEJB.find(listaCPA.getIdProducto()));
-			}
-			
-
-			for (DisenoProducto item1 : listaDiseñoProducto) {
-				disenoProducto.setTblProductoEspecificacionIdProductoEspecificacion(productoEspecificacion);
-				disenoProducto.setLogotipo(item1.getLogotipo());
-				disenoProducto.setDiagramaDiseno(item1.getDiagramaDiseno());
-				disenoProducto.setNecesitaBordado(item1.getNecesitaBordado());
-				disenoProducto.setDiseno(item1.getDiseno());
-				disenoProducto.setDescripcionDiseno(item1.getDescripcionDiseno());
-
-				String diagramaD = this.cargarArchivos(file);
-				disenoProducto.setDiagramaDiseno(diagramaD);
-				System.out.println("Diagrama Diseño " + diagramaD);
-				String logo = this.cargarArchivos(file2);
-				disenoProducto.setLogotipo(logo);
-				diseñoEJB.create(disenoProducto);
-
-			}
-		} catch (Exception e) {
-		}
-
+	public void setCotizacion(Cotizacion cotizacion) {
+		this.cotizacion = cotizacion;
 	}
 
-	public List<CotizacionProductoAuxiliar> getListaDatosCotizacionProducto() throws Exception {
-		return listaDatosCotizacionProducto;
-
+	public List<TiempoEntrega> getListaTiempoEntrega() {
+		return listaTiempoEntrega;
 	}
 
-	public void setListaDatosCotizacionProducto(List<CotizacionProductoAuxiliar> listaDatosCotizacionProducto) {
-		this.listaDatosCotizacionProducto = listaDatosCotizacionProducto;
+	public void setListaTiempoEntrega(List<TiempoEntrega> listaTiempoEntrega) {
+		this.listaTiempoEntrega = listaTiempoEntrega;
 	}
 
-	public List<ProductoAuxiliar> getListaDatosEspecificacionProducto() throws Exception {
-		return listaDatosEspecificacionProducto;
+	public List<LugaresEntrega> getListaLugaresEntrega() {
+		return listaLugaresEntrega;
 	}
 
-
-
-	public void setListaDatosEspecificacionProducto(List<ProductoAuxiliar> listaDatosEspecificacionProducto) {
-		this.listaDatosEspecificacionProducto = listaDatosEspecificacionProducto;
+	public void setListaLugaresEntrega(List<LugaresEntrega> listaLugaresEntrega) {
+		this.listaLugaresEntrega = listaLugaresEntrega;
 	}
-
-	public String getReferencia() {
-		return referencia;
-	}
-
-	public void setReferencia(String referencia) {
-		this.referencia = referencia;
-	}
-
-	public DisenoProducto getDisenoProducto() {
-		return disenoProducto;
-	}
-
-	public void setDisenoProducto(DisenoProducto disenoProducto) {
-		this.disenoProducto = disenoProducto;
-	}
-
-	public EspecificacionDiseno getEspecificacionDiseno() {
-		return especificacionDiseno;
-	}
-
-	public void setEspecificacionDiseno(EspecificacionDiseno especificacionDiseno) {
-		this.especificacionDiseno = especificacionDiseno;
-	}
-
-	public TallaDisenoProducto getTallaDisenoProducto() {
-		return tallaDisenoProducto;
-	}
-
-	public void setTallaDisenoProducto(TallaDisenoProducto tallaDisenoProducto) {
-		this.tallaDisenoProducto = tallaDisenoProducto;
-	}
-
-	public List<DisenoProducto> getListaDiseñoProducto() {
-		return listaDiseñoProducto;
-	}
-
-	public void setListaDiseñoProducto(List<DisenoProducto> listaDiseñoProducto) {
-		this.listaDiseñoProducto = listaDiseñoProducto;
-	}
-
-	public Usuario getUsuario() {
-		return usuario;
-	}
-
-	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
-	}
-
-
-	public int getIdOrdenProduccion() {
-		return idOrdenProduccion;
-	}
-
-	public void setIdOrdenProduccion(int idOrdenProduccion) {
-		this.idOrdenProduccion = idOrdenProduccion;
-	}
-
-	public String cargarArchivos(UploadedFile fi) {
-		String path = FacesContext.getCurrentInstance().getExternalContext().getRealPath("Archivos");
-		path = path.substring(0, path.indexOf("\\build"));
-		path = path + "\\web\\Archivos\\";
-		String pathReal1 = null;
-		System.out.println("path = " + path);
-		System.out.println("Archivo :: " + fi.getFileName());
-		try {
-			String nombreDiagrama = fi.getFileName();
-			path += nombreDiagrama;
-			pathReal1 = "/Archivos/" + nombreDiagrama;
-			InputStream input = fi.getInputstream();
-			byte[] data = new byte[input.available()];
-			input.read(data);
-			FileOutputStream output = new FileOutputStream(path);
-			System.out.println("path:: " + path);
-			output.write(data);
-			output.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println(e.getMessage());
-		}
-		return pathReal1;
-		
-		
-
-	}
-
-	public String getIdUi() {
-		idUi = idUi + valueId;
-		return idUi;
-	}
-
-	public void setIdUi(String idUi) {
-		this.idUi = idUi;
-	}
-
-	public int getValueId() {
-		return valueId ++ ;
-	}
-
-	public void setValueId(int valueId) {
-		this.valueId = valueId;
-	}
-
-	public List<List<DisenoProducto>> getListaTablaProductoDiseño() {
-		return listaTablaProductoDiseño;
-	}
-
-	public void setListaTablaProductoDiseño(List<List<DisenoProducto>> listaTablaProductoDiseño) {
-		this.listaTablaProductoDiseño = listaTablaProductoDiseño;
-	}
-
-	
-	
-	
-
 }

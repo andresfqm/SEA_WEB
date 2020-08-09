@@ -19,44 +19,37 @@
 					<h:panelGroup class="step">
 						<h3 class="mdl-typography--headline">Datos de la orden</h3>
 
-
-
 						<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                            <h:outputLabel class="mdl-textfield__label" for="numeroCotizacion">Cotización No.</h:outputLabel>
-                            <p:selectOneMenu value="#{ordenProduccionController.numeroCotizacion}" filter="true" filterMatchMode="contains" id="numeroCotizacion">
-                                <p:ajax listener="#{ordenProduccionController.obtenerDatosRegistroOrdenProduccion()}" update="ciudadEmision, cliente, e-mail, direccionCliente, datosCP1, espec"/>
-								<f:selectItem itemValue="" itemLabel="Seleccione" />
-                                <f:selectItems value="#{ordenProduccionController.listaCotizacionesOrdenProduccion}" var="ord" itemLabel="#{ord.numeroCotizacion}" itemValue="#{ord.numeroCotizacion}"/>
-                            </p:selectOneMenu>
-                        </h:panelGroup>
-
+							<h:inputText class="mdl-textfield__input" pt:maxlength="32" id="numeroCotizacion" value="#{ordenProduccionController.cotizacion.numeroCotizacion}" pt:disabled="true" />
+							<h:outputLabel class="mdl-textfield__label" for="numeroCotizacion">Cotización No.</h:outputLabel>
+						</h:panelGroup>
 
 						<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
 							<h:inputText class="mdl-textfield__input" id="numeroOP" value="0000" disabled="disabled" />
 							<h:outputLabel class="mdl-textfield__label" for="numeroOP">Orden de producción No.</h:outputLabel>
 						</h:panelGroup>
 						<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-							<h:inputText class="mdl-textfield__input" p:maxlength="32" id="ciudadEmision" value="#{ordenProduccionController.datosCotizacion[5]}" pt:disabled="true" />
+							<h:inputText class="mdl-textfield__input" p:maxlength="32" id="ciudadEmision" value="#{ordenProduccionController.cotizacion.lugarEmision}" pt:disabled="true" />
 							<h:outputLabel class="mdl-textfield__label" for="ciudadEmision">Ciudad de emisión</h:outputLabel>
 						</h:panelGroup>
+						
 						<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-							<h:inputText pt:type="date" class="mdl-textfield__input" id="fechaEmision" value="#{ordenProduccionController.ordenProduccion.fechaExpedicion}" pt:disabled="true">
-								<f:convertDateTime pattern="dd/MM/yy" />
+							<h:inputText class="mdl-textfield__input" id="fechaEmision" value="#{ordenProduccionController.ordenProduccion.fechaExpedicion}" pt:disabled="true" >
+								<f:convertDateTime pattern="dd/MM/yyyy" />
 							</h:inputText>
-							<h:outputLabel class="mdl-textfield__label" for="fechaEmision">Fecha de emisión</h:outputLabel>
+							<h:outputLabel class="mdl-textfield__label" for="fechaEmision">Fecha de emisión:</h:outputLabel>
 						</h:panelGroup>
 
-
 						<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-							<h:inputText class="mdl-textfield__input" id="cliente" value="#{ordenProduccionController.datosCotizacion[1]}" pt:disabled="true" />
+							<h:inputText class="mdl-textfield__input" id="cliente" value="#{ordenProduccionController.cotizacion.tblClienteIdCliente.nombreORazonSocial}" pt:disabled="true" />
 							<h:outputLabel class="mdl-textfield__label" for="cliente">Empresa</h:outputLabel>
 						</h:panelGroup>
 						<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-							<h:inputText class="mdl-textfield__input" pt:type="email" id="e-mail" value="#{ordenProduccionController.datosCotizacion[3]}" pt:disabled="true" />
+							<h:inputText class="mdl-textfield__input" pt:type="email" id="e-mail" value="#{ordenProduccionController.emailCliente.email1}" pt:disabled="true" />
 							<h:outputLabel class="mdl-textfield__label" for="e-mail">e-mail</h:outputLabel>
 						</h:panelGroup>
 						<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-							<h:inputText class="mdl-textfield__input" id="direccionCliente" value="#{ordenProduccionController.datosCotizacion[4]}" pt:disabled="true" />
+							<h:inputText class="mdl-textfield__input" id="direccionCliente" value="#{ordenProduccionController.direccionEntrega}" pt:disabled="true" />
 							<h:outputLabel class="mdl-textfield__label" for="direccionCliente">Dirección</h:outputLabel>
 						</h:panelGroup>
 						<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
@@ -102,13 +95,10 @@
 
 						</ui:repeat>
 						<div>
-						<h:panelGroup layout="block" class="fullWidth">
-							<h:form id="formTable">
-								<p:dataTable id="tableP" var="proET" emptyMessage="No se encontraron registros" value="#{ordenProduccionController.listaDiseñoProducto}" styleClass="mdl-data-table mdl-js-data-table  mdl-shadow--2dp">
+							<h:panelGroup layout="block" class="fullWidth">
+								<h:form id="formTable">
+									<p:dataTable id="tableP" var="proET" emptyMessage="No se encontraron registros" value="#{ordenProduccionController.listaDiseñoProducto}" styleClass="mdl-data-table mdl-js-data-table  mdl-shadow--2dp">
 
-										<p:column headerText="Diseño">
-											<h:outputText value="#{proET.diseno}"/>
-										</p:column>
 										<p:column headerText="Diseño">
 											<h:outputText value="#{proET.diseno}"/>
 										</p:column>
@@ -116,25 +106,25 @@
 											<h:outputText value="#{proET.descripcionDiseno}"/>
 										</p:column>
 
-								</p:dataTable>
-							</h:form>
+									</p:dataTable>
+								</h:form>
 
 
-						</h:panelGroup><br/>
-						<h:panelGroup layout="block" class="fullWidth">
-							<h:form id="formt">
-								<p:dataTable id="tablaT" var="proT" emptyMessage="No se encontraron registros" value="#{ordenProduccionController.listaTallaDisenoProductos}" styleClass="mdl-data-table mdl-js-data-table  mdl-shadow--2dp">
-									<p:column headerText="Talla">
-										<h:outputText value="#{proT.tblTallaIdTalla.talla}"/>
-									</p:column>
-									<p:column headerText="Cantidad">
-										<h:outputText value="#{proT.cantidad}"/>
-									</p:column>
+							</h:panelGroup><br/>
+							<h:panelGroup layout="block" class="fullWidth">
+								<h:form id="formt">
+									<p:dataTable id="tablaT" var="proT" emptyMessage="No se encontraron registros" value="#{ordenProduccionController.listaTallaDisenoProductos}" styleClass="mdl-data-table mdl-js-data-table  mdl-shadow--2dp">
+										<p:column headerText="Talla">
+											<h:outputText value="#{proT.tblTallaIdTalla.talla}"/>
+										</p:column>
+										<p:column headerText="Cantidad">
+											<h:outputText value="#{proT.cantidad}"/>
+										</p:column>
 
-								</p:dataTable>
+									</p:dataTable>
 
-							</h:form>
-						</h:panelGroup>
+								</h:form>
+							</h:panelGroup>
 						</div>
 						<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
 							<h:inputText class="mdl-textfield__input" id="totalPrendas" pt:type="number" p:min="1" p:step="1" pt:maxlength="32" pt:required="true" value="#{ordenProduccionController.ordenProduccion.totalPrendas}" />
@@ -177,7 +167,8 @@
 					<h:form id="addCantidadTallas" class="mdl-dialog" enctype="multipart/form-data">
 						<h3 class="mdl-dialog__title">Cantidad por tallas</h3>
 						<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" id="id">
-							<h:outputLabel class="mdl-textfield__label" value="#{ordenProduccionController.producto.idProducto}"></h:outputLabel>
+							<h:inputText class="mdl-textfield__input" value="#{item[1]}" pt:disabled="true"/>
+							<h:outputLabel class="mdl-textfield__label">Producto :</h:outputLabel>
 						</h:panelGroup>
 
 						<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
@@ -242,13 +233,6 @@
 					</h:form>
 
 				</p:dialog>
-
-
-
-
-
-
-
 
 			</main>
 			<ui:composition template="/templates/navGeneral.xhtml" />
