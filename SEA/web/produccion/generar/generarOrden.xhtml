@@ -32,7 +32,7 @@
 							<h:inputText class="mdl-textfield__input" p:maxlength="32" id="ciudadEmision" value="#{ordenProduccionController.cotizacion.lugarEmision}" pt:disabled="true" />
 							<h:outputLabel class="mdl-textfield__label" for="ciudadEmision">Ciudad de emisión</h:outputLabel>
 						</h:panelGroup>
-						
+
 						<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
 							<h:inputText class="mdl-textfield__input" id="fechaEmision" value="#{ordenProduccionController.ordenProduccion.fechaExpedicion}" pt:disabled="true" >
 								<f:convertDateTime pattern="dd/MM/yyyy" />
@@ -90,7 +90,7 @@
 							<h3 class="mdl-typography--headline">Cantidad por tallas</h3>
 							<!-- Usar <template> para los artículos a cotizar -->
 							<p:commandLink ajax="true" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm" onclick="PF('dlg2').show();" actionListener="#{ordenProduccionController.producto.setIdProducto(item[4])}" value="Agregar diseño producto" update=":addCantidadTallas"/>
-							<p:commandLink styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm" onclick="PF('dlg3').show();" value="Agregar tallas" />
+							<p:commandLink ajax="true" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm" onclick="PF('dlg3').show();" value="Agregar tallas" update=":tallas"/>
 							<br/>
 
 						</ui:repeat>
@@ -99,6 +99,9 @@
 								<h:form id="formTable">
 									<p:dataTable id="tableP" var="proET" emptyMessage="No se encontraron registros" value="#{ordenProduccionController.listaDiseñoProducto}" styleClass="mdl-data-table mdl-js-data-table  mdl-shadow--2dp">
 
+										<p:column headerText="Producto">
+											<h:outputText value="#{proET.descripcion}"/>
+										</p:column>
 										<p:column headerText="Diseño">
 											<h:outputText value="#{proET.diseno}"/>
 										</p:column>
@@ -109,18 +112,20 @@
 									</p:dataTable>
 								</h:form>
 
-
 							</h:panelGroup><br/>
 							<h:panelGroup layout="block" class="fullWidth">
 								<h:form id="formt">
 									<p:dataTable id="tablaT" var="proT" emptyMessage="No se encontraron registros" value="#{ordenProduccionController.listaTallaDisenoProductos}" styleClass="mdl-data-table mdl-js-data-table  mdl-shadow--2dp">
+										<p:column headerText="Producto">
+											<h:outputText value="#{proT.descripcion}"/>
+										</p:column>
+
 										<p:column headerText="Talla">
 											<h:outputText value="#{proT.tblTallaIdTalla.talla}"/>
 										</p:column>
 										<p:column headerText="Cantidad">
 											<h:outputText value="#{proT.cantidad}"/>
 										</p:column>
-
 									</p:dataTable>
 
 								</h:form>
@@ -167,7 +172,7 @@
 					<h:form id="addCantidadTallas" class="mdl-dialog" enctype="multipart/form-data">
 						<h3 class="mdl-dialog__title">Cantidad por tallas</h3>
 						<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" id="id">
-							<h:inputText class="mdl-textfield__input" value="#{item[1]}" pt:disabled="true"/>
+							<h:inputText class="mdl-textfield__input" value="#{ordenProduccionController.disenoProducto.descripcion = item[1]}" pt:disabled="true"/>
 							<h:outputLabel class="mdl-textfield__label">Producto :</h:outputLabel>
 						</h:panelGroup>
 
@@ -185,26 +190,22 @@
 						<h3 class="mdl-typography--headline">Diagrama de diseño</h3>
 
 						<h:panelGroup layout="block">
-							<p:fileUpload id="diagramaDiseno" value="#{ordenProduccionController.file}" mode="simple" label="Seleccionar" skinSimple="true"/>
+							<p:fileUpload id="diagramaDiseno" value="#{ordenProduccionController.fileDiagramaDiseño}" mode="simple" label="Seleccionar" skinSimple="true"/>
 						</h:panelGroup>
 
 						<h3 class="mdl-typography--headline">Logotipo</h3>
 
 						<h:panelGroup layout="block">
-							<p:fileUpload id="logotipo" value="#{ordenProduccionController.file2}" mode="simple" label="Seleccionar" skinSimple="true"/>
-
-
+							<p:fileUpload id="logotipo" value="#{ordenProduccionController.fileLogotipoDiseño}" mode="simple" label="Seleccionar" skinSimple="true"/>
 						</h:panelGroup>
-
 
 						<h:outputLabel class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="Necesitabordado">
                             <h:selectBooleanCheckbox id="Necesitabordado" class="mdl-switch__input" value="#{ordenProduccionController.disenoProducto.necesitaBordado}" />
                             <h:panelGroup class="mdl-switch__label">Necesita bordado</h:panelGroup>
                         </h:outputLabel>
 
-
 						<h:panelGroup layout="block" class="mdl-dialog__actions">
-							<p:commandButton ajax="true" actionListener="#{ordenProduccionController.diseñoProducto()}" value="Agregar" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm" update="formGen:datosCP1" oncomplete="PF('dlg2').hide();"/>
+							<p:commandButton ajax="false" actionListener="#{ordenProduccionController.agregarDiseñoProducto()}" value="Agregar" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm" update="formGen:datosCP1" oncomplete="PF('dlg2').hide();"/>
 							<p:commandButton value="Cancelar" onclick="PF('dlg2').hide();" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm"/>
 
 						</h:panelGroup>
@@ -213,7 +214,11 @@
 
 				</p:dialog>
 				<p:dialog widgetVar="dlg3" id="tallasArticulos">
-					<h:form id="tallas" class="mdl-dialog">
+					<h:form id="tallas" class="mdl-dialog" enctype="multipart/form-data">
+						<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+							<h:inputText class="mdl-textfield__input" value="#{ordenProduccionController.tallaDisenoProducto.descripcion = item[1]}" pt:disabled="true"/>
+							<h:outputLabel class="mdl-textfield__label">Producto :</h:outputLabel>
+						</h:panelGroup>
 						<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
 							<h:outputLabel class="mdl-textfield__label" for="referencia">Talla</h:outputLabel>
 							<p:selectOneMenu value="#{ordenProduccionController.talla.idTalla}" id="talla">
@@ -227,7 +232,7 @@
 							<h:outputLabel class="mdl-textfield__label" for="cantidadTalla">Cantidad talla</h:outputLabel>
 						</h:panelGroup>
 
-						<p:commandButton ajax="true" actionListener="#{ordenProduccionController.agregarTallas()}" value="Agregar" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm" update="formGen:datosCP1" oncomplete="PF('dlg3').hide();"/>
+						<p:commandButton  actionListener="#{ordenProduccionController.agregarTallas()}" value="Agregar" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm" update="formGen:datosCP1" oncomplete="PF('dlg3').hide();"/>
 						<p:commandButton value="Cancelar" onclick="PF('dlg3').hide();" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm"/>
 
 					</h:form>

@@ -37,6 +37,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -88,6 +89,9 @@ public class DisenoProducto implements Serializable {
 	private List<EspecificacionDiseno> especificacionDisenoList;
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "tblDisenoProductoIdDisenoProducto")
 	private List<TallaDisenoProducto> tallaDisenoProductoList;
+	@Transient
+	private String descripcion;
+
 
 	public DisenoProducto() {
 	}
@@ -199,5 +203,15 @@ public class DisenoProducto implements Serializable {
 	public String toString() {
 		return "com.sea.backend.entities.DisenoProducto[ idDisenoProducto=" + idDisenoProducto + " ]";
 	}
+
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
+	
+	
 	
 }

@@ -43,7 +43,9 @@ import com.sea.backend.model.TallaDisenoProductoFacadeLocal;
 import com.sea.backend.model.TallaFacadeLocal;
 import com.sea.backend.model.TiempoEntregaFacadeLocal;
 import com.sea.backend.model.UsuarioFacadeLocal;
+import com.sea.backend.util.CargarArchivos;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -68,7 +70,9 @@ import javax.inject.Named;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
 import org.primefaces.json.JSONObject;
 import org.primefaces.model.UploadedFile;
 
@@ -207,8 +211,8 @@ public class OrdenProduccionController implements Serializable {
 	private ClienteDTO emailCliente;
 	private String direccionEntrega;
 
-	private UploadedFile file;
-	private UploadedFile file2;
+	private UploadedFile fileDiagramaDiseño;
+	private UploadedFile fileLogotipoDiseño;
 
 	private String idUi;
 	private int valueId;
@@ -218,9 +222,23 @@ public class OrdenProduccionController implements Serializable {
 	private final static Logger log = Logger.getLogger(OrdenProduccionController.class);
 
 	JSONObject snackbarData = new JSONObject();
+	Properties properties;
 
 	@PostConstruct
 	public void init() {
+
+		try {
+			Properties props = new Properties();
+			props.load(new FileInputStream("log4j.properties"));
+			PropertyConfigurator.configure(props);
+			
+			properties = new Properties();
+			InputStream entrada = null;
+			entrada = new FileInputStream("config.properties");
+			properties.load(entrada);
+		} catch (Exception e) {
+			log.error("Se presento el siguiente error al tratar de leer el archivo de configuración " + e);
+		}
 
 		usuario = new Usuario();
 		cotizacion = new Cotizacion();
@@ -399,17 +417,34 @@ public class OrdenProduccionController implements Serializable {
 	}
 
 	//Metodo para agragar diseño del producto
-	public void diseñoProducto() {
-		DisenoProducto diseñoP = new DisenoProducto();
-		diseñoP.setIdDisenoProducto(producto.getIdProducto());
-		diseñoP.setLogotipo(disenoProducto.getLogotipo());
-		diseñoP.setDiagramaDiseno(disenoProducto.getDiagramaDiseno());
-		diseñoP.setNecesitaBordado(disenoProducto.getNecesitaBordado());
-		diseñoP.setDiseno(disenoProducto.getDiseno());
-		diseñoP.setDescripcionDiseno(disenoProducto.getDescripcionDiseno());
-		diseñoP.setTblProductoEspecificacionIdProductoEspecificacion(productoEspecificacion);
-		listaDiseñoProducto.add(diseñoP);
-		listaTablaProductoDiseño.get(0).add(diseñoP);
+	public void agregarDiseñoProducto() {
+		log.info("Ingreso al proceso de adicionar diseño al producto");
+		try {
+			DisenoProducto diseñoP = new DisenoProducto();
+			diseñoP.setIdDisenoProducto(producto.getIdProducto());
+			diseñoP.setNecesitaBordado(disenoProducto.getNecesitaBordado());
+			diseñoP.setDiseno(disenoProducto.getDiseno());
+			diseñoP.setDescripcion(disenoProducto.getDescripcion());
+			diseñoP.setDescripcionDiseno(disenoProducto.getDescripcionDiseno());
+			diseñoP.setTblProductoEspecificacionIdProductoEspecificacion(productoEspecificacion);
+
+			if (fileDiagramaDiseño != null) {
+				String rutaDiseño = CargarArchivos.cargarArchivos(fileDiagramaDiseño, properties.getProperty("rutaDiseno"));
+				diseñoP.setDiagramaDiseno(rutaDiseño);
+				fileDiagramaDiseño = null;
+			}
+			if (fileLogotipoDiseño != null) {
+				String rutaLogotipo = CargarArchivos.cargarArchivos(fileLogotipoDiseño, properties.getProperty("rutaLogotiposDiseno"));
+				diseñoP.setLogotipo(rutaLogotipo);
+				fileLogotipoDiseño = null;
+			}
+
+			listaDiseñoProducto.add(diseñoP);
+			//listaTablaProductoDiseño.get(0).add(diseñoP);
+		} catch (Exception e) {
+			log.error("Se presento el siguiente error en el proceso de adicionar diseño al producto : " + e);
+			e.printStackTrace();
+		}
 
 	}
 
@@ -419,6 +454,7 @@ public class OrdenProduccionController implements Serializable {
 		tallaP.setCantidad(tallaDisenoProducto.getCantidad());
 		tallaP.setTblDisenoProductoIdDisenoProducto(disenoProducto);
 		tallaP.setTblTallaIdTalla(talla);
+		tallaP.setDescripcion(tallaDisenoProducto.getDescripcion());
 		listaTallaDisenoProductos.add(tallaP);
 		System.out.println("asd");
 
@@ -532,13 +568,12 @@ public class OrdenProduccionController implements Serializable {
 				disenoProducto.setDiseno(item1.getDiseno());
 				disenoProducto.setDescripcionDiseno(item1.getDescripcionDiseno());
 
-				String diagramaD = this.cargarArchivos(file);
-				disenoProducto.setDiagramaDiseno(diagramaD);
-				System.out.println("Diagrama Diseño " + diagramaD);
-				String logo = this.cargarArchivos(file2);
-				disenoProducto.setLogotipo(logo);
-				diseñoEJB.create(disenoProducto);
-
+//				//String diagramaD = this.cargarArchivos(file);
+//				disenoProducto.setDiagramaDiseno(diagramaD);
+//				System.out.println("Diagrama Diseño " + diagramaD);
+//				String logo = this.cargarArchivos(file2);
+//				disenoProducto.setLogotipo(logo);
+//				diseñoEJB.create(disenoProducto);
 			}
 		} catch (Exception e) {
 		}
@@ -560,32 +595,6 @@ public class OrdenProduccionController implements Serializable {
 
 	public void setListaDatosEspecificacionProducto(List<ProductoAuxiliar> listaDatosEspecificacionProducto) {
 		this.listaDatosEspecificacionProducto = listaDatosEspecificacionProducto;
-	}
-
-	public String cargarArchivos(UploadedFile fi) {
-		String path = FacesContext.getCurrentInstance().getExternalContext().getRealPath("Archivos");
-		path = path.substring(0, path.indexOf("\\build"));
-		path = path + "\\web\\Archivos\\";
-		String pathReal1 = null;
-		System.out.println("path = " + path);
-		System.out.println("Archivo :: " + fi.getFileName());
-		try {
-			String nombreDiagrama = fi.getFileName();
-			path += nombreDiagrama;
-			pathReal1 = "/Archivos/" + nombreDiagrama;
-			InputStream input = fi.getInputstream();
-			byte[] data = new byte[input.available()];
-			input.read(data);
-			FileOutputStream output = new FileOutputStream(path);
-			System.out.println("path:: " + path);
-			output.write(data);
-			output.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println(e.getMessage());
-		}
-		return pathReal1;
-
 	}
 
 	public String getIdUi() {
@@ -611,22 +620,6 @@ public class OrdenProduccionController implements Serializable {
 
 	public void setListaTablaProductoDiseño(List<List<DisenoProducto>> listaTablaProductoDiseño) {
 		this.listaTablaProductoDiseño = listaTablaProductoDiseño;
-	}
-
-	public UploadedFile getFile() {
-		return file;
-	}
-
-	public UploadedFile getFile2() {
-		return file2;
-	}
-
-	public void setFile2(UploadedFile file2) {
-		this.file2 = file2;
-	}
-
-	public void setFile(UploadedFile file) {
-		this.file = file;
 	}
 
 	public ClienteDTO getEmailCliente() {
@@ -1052,4 +1045,21 @@ public class OrdenProduccionController implements Serializable {
 	public void setListaLugaresEntrega(List<LugaresEntrega> listaLugaresEntrega) {
 		this.listaLugaresEntrega = listaLugaresEntrega;
 	}
+
+	public UploadedFile getFileDiagramaDiseño() {
+		return fileDiagramaDiseño;
+	}
+
+	public void setFileDiagramaDiseño(UploadedFile fileDiagramaDiseño) {
+		this.fileDiagramaDiseño = fileDiagramaDiseño;
+	}
+
+	public UploadedFile getFileLogotipoDiseño() {
+		return fileLogotipoDiseño;
+	}
+
+	public void setFileLogotipoDiseño(UploadedFile fileLogotipoDiseño) {
+		this.fileLogotipoDiseño = fileLogotipoDiseño;
+	}
+
 }

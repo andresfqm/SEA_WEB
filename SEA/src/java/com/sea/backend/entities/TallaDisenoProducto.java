@@ -33,6 +33,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -52,20 +53,22 @@ public class TallaDisenoProducto implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	@Id
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 45)
-    @Column(name = "ID_TALLA_DISENO_PRODUCTO")
+	@Basic(optional = false)
+	@NotNull
+	@Size(min = 1, max = 45)
+	@Column(name = "ID_TALLA_DISENO_PRODUCTO")
 	private String idTallaDisenoProducto;
 	@Size(max = 45)
-    @Column(name = "CANTIDAD")
+	@Column(name = "CANTIDAD")
 	private String cantidad;
 	@JoinColumn(name = "TBL_DISENO_PRODUCTO_ID_DISENO_PRODUCTO", referencedColumnName = "ID_DISENO_PRODUCTO")
-    @ManyToOne(optional = false)
+	@ManyToOne(optional = false)
 	private DisenoProducto tblDisenoProductoIdDisenoProducto;
 	@JoinColumn(name = "TBL_TALLA_ID_TALLA", referencedColumnName = "ID_TALLA")
-    @ManyToOne(optional = false)
+	@ManyToOne(optional = false)
 	private Talla tblTallaIdTalla;
+	@Transient
+	private String descripcion;
 
 	public TallaDisenoProducto() {
 	}
@@ -130,5 +133,13 @@ public class TallaDisenoProducto implements Serializable {
 	public String toString() {
 		return "com.sea.backend.entities.TallaDisenoProducto[ idTallaDisenoProducto=" + idTallaDisenoProducto + " ]";
 	}
-	
+
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
+
 }
