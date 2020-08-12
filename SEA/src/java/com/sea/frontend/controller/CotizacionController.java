@@ -40,13 +40,10 @@ import com.sea.backend.model.UsuarioFacadeLocal;
 import com.sea.backend.util.AbrirCerrarDialogos;
 import com.sea.backend.util.EnvioEmails;
 import com.sea.backend.util.GenerarDocumentos;
-import com.sea.test.Main;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -59,7 +56,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import javax.servlet.http.HttpSession;
-import javax.sound.midi.Soundbank;
 import org.apache.log4j.PropertyConfigurator;
 import org.primefaces.context.RequestContext;
 import org.primefaces.json.JSONObject;
@@ -223,6 +219,7 @@ public class CotizacionController implements Serializable {
 
 		} catch (Exception e) {
 			log.error("Se presento el siguiente error al leer el archivo config.properties " + e.getMessage());
+			e.printStackTrace();
 		}
 
 		FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -321,16 +318,26 @@ public class CotizacionController implements Serializable {
 		descuento = new Descuento();
 	}
 
-	//Obteniendo todos los datos del cliente
-	public void obtenerDatosCliente() throws Exception {
+	/*
+    * @author Andres Quintana
+	* Fecha modificación 11/08/2020
+	* Metodo encargado de obtener todos los datos del cliente
+	 */
+	public void obtenerDatosCliente() {
+		log.info("Ingreso al proceso de obtener los datos del cliente");
 		try {
-
 			datosCliente = clienteEJB.datosCliente(idCliente);
 		} catch (Exception e) {
-			throw e;
+			log.error("Se presento el siguiente error al obtener los datos del cliente : " + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
+	/*
+    * @author Andres Quintana
+	* Fecha modificación 11/08/2020
+	* Metodo encargado de agregar productos a la cotización
+	 */
 	public void agregarCotizacionProducto() {
 		log.info("iniciando proceso de agregar productos a la cotización");
 		if (producto.getIdProducto() == null) {
@@ -379,6 +386,11 @@ public class CotizacionController implements Serializable {
 		}
 	}
 
+	/*
+    * @author Andres Quintana
+	* Fecha modificación 11/08/2020
+	* Metodo encargado de abrir el dialogo de agregar articulos
+	 */
 	public void agregarArticulo() {
 		listaProducto = productoEJB.findAll();
 		lsDescuento = descuentoEJB.findAll();
@@ -386,6 +398,11 @@ public class CotizacionController implements Serializable {
 
 	}
 
+	/*
+    * @author Andres Quintana
+	* Fecha modificación 11/08/2020
+	* Metodo encargado de agregar mas productos a una cotización que se encuentra en seguimiento
+	 */
 	public void agregarCotizacionProductoModificacion() {
 		log.info("iniciando proceso de agregar productos a una cotización con tipo operacion modificación");
 		if (producto.getIdProducto() == null) {
@@ -432,12 +449,22 @@ public class CotizacionController implements Serializable {
 		}
 	}
 
+	/*
+    * @author Andres Quintana
+	* Fecha modificación 11/08/2020
+	* Metodo encargado de abrir el dialogo de agregar articulos a una cotización que se encuentre en seguimiento
+	 */
 	public void agregarArticuloModificacion() {
 		listaProducto = productoEJB.findAll();
 		lsDescuento = descuentoEJB.findAll();
 		AbrirCerrarDialogos.abrirCerrarDialogos("PF('dlgCotizacionMod').show();");
 	}
 
+	/*
+    * @author Andres Quintana
+	* Fecha modificación 11/08/2020
+	* Metodo encargado de eliminar un articulo agregado a la cotización y recalcular los valores de la misma
+	 */
 	public void eliminarArticuloCotizacion(int idArticulo) {
 
 		log.info("iniciando proceso de eliminar productos a la cotización");
@@ -475,6 +502,11 @@ public class CotizacionController implements Serializable {
 		listaCotizacionP = lsAux;
 	}
 
+	/*
+    * @author Andres Quintana
+	* Fecha modificación 11/08/2020
+	* Metodo encargado de eliminar un articulo agregado a una cotización que se encuentra en seguimiento y recalcular los valores de la misma
+	 */
 	public void eliminarArticuloCotizacionModificacion(int idArticulo) {
 		log.info("iniciando proceso de eliminar productos a la cotización con tipo operación modificación");
 		List<CotizacionProducto> lsAux2 = new ArrayList<>();
@@ -541,6 +573,11 @@ public class CotizacionController implements Serializable {
 		listaProductosModificacion = lsAux2;
 	}
 
+	/*
+    * @author Andres Quintana
+	* Fecha modificación 11/08/2020
+	* Metodo encargado de limpiar los campos del dialogo de agregar articulos
+	 */
 	public void limpiarControlesDialogoAgregarArticulos() {
 		producto = new Producto();
 		cotizacionP = new CotizacionProducto();
@@ -558,6 +595,11 @@ public class CotizacionController implements Serializable {
 		tipoOperacion = 0;
 	}
 
+	/*
+    * @author Andres Quintana
+	* Fecha modificación 11/08/2020
+	* Metodo encargado de calcular el precion sin iva
+	 */
 	public void calcularPrecioSinIva() {
 		double desAux = 0;
 		if (cotizacionP.getCantidad() > 0) {
@@ -583,8 +625,12 @@ public class CotizacionController implements Serializable {
 
 	}
 
-	public void registrarCotización()
-			throws ClassNotFoundException, InstantiationException, IllegalAccessException, SQLException {
+	/*
+    * @author Andres Quintana
+	* Fecha modificación 11/08/2020
+	* Metodo encargado de registrar la cotización
+	 */
+	public void registrarCotización() {
 		if (idTiempoEntrega == 0) {
 			snackbarData.put("message", "Se debe seleccionar Tiempo de entrega");
 			RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
@@ -653,15 +699,18 @@ public class CotizacionController implements Serializable {
 
 					if (formatoCotizacion == 1) {
 						generarDocumentos.generarArchivo(formatoCotizacion, cotizacion.getNumeroCotizacion());
-						fileName = "cotizacion.pdf";
-						rutaArchivo = "D:\\SEA\\Reportes\\PDF\\cotizacion_N_";
-						email.enviarEmail(fileName, cotizacion.getNumeroCotizacion(), rutaArchivo, emails, emailU, mensaje);
+						fileName = "cotizacion_N_" + cotizacion.getNumeroCotizacion() + ".pdf";
+						rutaArchivo = properties.getProperty("rutapdf") + "cotizacion_N_";
+						String extencionPdf = ".pdf";
+
+						email.enviarEmail(fileName, extencionPdf, cotizacion.getNumeroCotizacion(), rutaArchivo, emails, emailU, mensaje);
 
 					} else {
 						generarDocumentos.generarArchivo(formatoCotizacion, cotizacion.getNumeroCotizacion());
-						fileName = "cotizacion.xlsx";
-						rutaArchivo = "D:\\SEA\\Reportes\\EXCEL\\cotizacion_N_";
-						email.enviarEmail(fileName, cotizacion.getNumeroCotizacion(), rutaArchivo, emails, emailU, mensaje);
+						fileName = "cotizacion_N_" + cotizacion.getNumeroCotizacion() + ".xlsx";
+						String extencionExcel = ".xlsx";
+						rutaArchivo = properties.getProperty("rutaexcel") + "cotizacion_N_";
+						email.enviarEmail(fileName, extencionExcel, cotizacion.getNumeroCotizacion(), rutaArchivo, emails, emailU, mensaje);
 
 					}
 				}
@@ -674,13 +723,16 @@ public class CotizacionController implements Serializable {
 				dialogContent = e.getMessage();
 				RequestContext.getCurrentInstance().execute("mostrarDialogos(`" + dialogTittle + "`, `" + dialogContent + "`);");
 				log.error("Se presento el siguiente error a la hora de registrar la cotización " + cotizacion.getNumeroCotizacion() + " : " + e.getMessage());
+				e.printStackTrace();
 			}
 		}
 	}
 
+
 	/*
-	1- Cierre efectivo
-	0 - Actualizacion de la cotización
+    * @author Andres Quintana
+	* Fecha modificación 11/08/2020
+	* Metodo encargado de actualizar la cotización, si el parametro es 1 = Cierre efectivo, si es 0 = Actualizacion de la cotización y sigue en estado en seguimiento
 	 */
 	public void modificarCotización(int cierreEfectivo) {
 		try {
@@ -733,16 +785,16 @@ public class CotizacionController implements Serializable {
 
 				if (formatoCotizacion == 1) {
 					generarDocumentos.generarArchivo(formatoCotizacion, cotizacionModificacion.getNumeroCotizacion());
-					fileName = "cotizacion.pdf";
-
-					rutaArchivo = properties.getProperty("rutapdf");
-					email.enviarEmail(fileName, cotizacionModificacion.getNumeroCotizacion(), rutaArchivo, emails, emailU, mensaje);
+					fileName = "cotizacion_N_" + cotizacionModificacion.getNumeroCotizacion() + ".pdf";
+					rutaArchivo = properties.getProperty("rutapdf") + "cotizacion_N_";
+					String extencionPdf = ".pdf";
+					email.enviarEmail(fileName, extencionPdf, cotizacionModificacion.getNumeroCotizacion(), rutaArchivo, emails, emailU, mensaje);
 
 				} else {
-					generarDocumentos.generarArchivo(formatoCotizacion, cotizacionModificacion.getNumeroCotizacion());
-					fileName = "cotizacion.xlsx";
-					rutaArchivo = properties.getProperty("rutaexcel");
-					email.enviarEmail(fileName, cotizacionModificacion.getNumeroCotizacion(), rutaArchivo, emails, emailU, mensaje);
+					fileName = "cotizacion_N_" + cotizacionModificacion.getNumeroCotizacion() + ".xlsx";
+					String extencionExcel = ".xlsx";
+					rutaArchivo = properties.getProperty("rutaexcel") + "cotizacion_N_";
+					email.enviarEmail(fileName, extencionExcel , cotizacionModificacion.getNumeroCotizacion(), rutaArchivo, emails, emailU, mensaje);
 
 				}
 			}
@@ -758,7 +810,8 @@ public class CotizacionController implements Serializable {
 			dialogTittle = "Error no controlado";
 			dialogContent = e.getMessage();
 			RequestContext.getCurrentInstance().execute("mostrarDialogos(`" + dialogTittle + "`, `" + dialogContent + "`);");
-			log.error("Se presento el siguiente error al realizar la modificación de la cotización : " + cotizacionModificacion.getNumeroCotizacion() + " " + e.getMessage());
+			log.error("Se presento el siguiente error al realizar la modificación de la cotización # : " + cotizacionModificacion.getNumeroCotizacion() + " " + e.getMessage());
+			e.printStackTrace();
 
 		}
 
@@ -824,11 +877,18 @@ public class CotizacionController implements Serializable {
 
 	}
 
-	// Metodo para obtener las cotizaciones registradas por un asesor
-	public void obtenerCotizacionesRegistradas() throws Exception {
+	/*
+    * @author Andres Quintana
+	* Fecha modificación 11/08/2020
+	* Metodo encargado de obtener las cotizaciones registradas por un asesor
+	 */
+	public void obtenerCotizacionesRegistradas() {
+		log.info("Ingreso al proceso de obtener las cotizaciones registradas por el asesor ");
 		try {
 			listaSeguimientoCotizacions = cotizacionEJB.listaSeguimiento(idUsuario());
 		} catch (Exception e) {
+			log.error("Se presento el siguiente error al obtener las cotizaciones registradas por el asesor : " + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
@@ -838,8 +898,13 @@ public class CotizacionController implements Serializable {
 		return u.getIdUsuario();
 	}
 
-	//Forma de generar el id de la cotización
+	/*
+    * @author Andres Quintana
+	* Fecha modificación 11/08/2020
+	* Metodo encargado de obtener el proximo consecutivo de la cotización
+	 */
 	public String generarIdCotizacion() {
+		log.info("Ingreso al proceso de obtener el nuevo consecutivo de la cotización");
 		HttpSession sesion = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
 		Usuario u = (Usuario) sesion.getAttribute("usuario");
 		this.usuario = u;
@@ -850,18 +915,23 @@ public class CotizacionController implements Serializable {
 			numero = Integer.parseInt(numeroCotizacionObtenida);
 			numero = numero + 1;
 		} catch (Exception e) {
+			log.error("Se presento el siguiente error al obtener el nuevo consecutivo de la cotización");
 		}
 
 		return u.getIdInterno() + " -" + numero;
 	}
 
-	// Metodo para realizar las redirecciones a otras paginas
-	//Recibe como parametro la url a la que se va a redirigir
+	/*
+    * @author Andres Quintana
+	* Fecha modificación 11/08/2020
+	* Metodo para realizar las redirecciones a otras paginas, recibe como parametro la url a la que se va a redirigir
+	 */
 	public void redireccionar(String url) throws IOException {
 		FacesContext context = FacesContext.getCurrentInstance();
 		context.getExternalContext().redirect(url);
 	}
 
+	// Getter an Setter
 	public PropuestaNoIncluye getPropuestaNoIncluye() {
 		return propuestaNoIncluye;
 	}

@@ -25,33 +25,69 @@ package com.sea.backend.util;
 
 import com.sea.backend.model.CotizacionFacade;
 import com.sea.backend.model.CotizacionFacadeLocal;
+import java.io.FileInputStream;
 import java.io.Serializable;
+import java.sql.SQLException;
+import java.util.Properties;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 
 /**
  *
- * @author rpc
+ * @author Andres Quintana
  */
 public class GenerarDocumentos implements Serializable {
 
 	private CotizacionFacadeLocal cotizacionEJB;
+	private final static Logger log = Logger.getLogger(GenerarDocumentos.class);
 
+	public GenerarDocumentos() {
+		try {
+			Properties props = new Properties();
+			props.load(new FileInputStream("log4j.properties"));
+			PropertyConfigurator.configure(props);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	/*
+    * @author Andres Quintana
+	* Fecha modificación 11/08/2020
+	* Metodo encargado de generar las cotizaciones en formato pdf o xml
+	 */
 	public void generarArchivo(int formatoCotizacion, String numeroCotizacion) {
+		log.info("Ingreso al proceso de generación de archivos pdf o xml de la cotización # " + numeroCotizacion);
 		cotizacionEJB = new CotizacionFacade();
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		ServletContext servletContext = (ServletContext) facesContext.getExternalContext().getContext();
-		String ruta = servletContext.getRealPath("/reportes/cotizacion.jasper");
 
 		try {
+			String ruta = servletContext.getRealPath("/reportes/cotizacion.jasper");
 			if (formatoCotizacion == 1) {
 				cotizacionEJB.getReportePDF(ruta, numeroCotizacion);
 			} else {
 				cotizacionEJB.getReporteXLSX(ruta, numeroCotizacion);
 			}
 
+		} catch (InstantiationException e) {
+			log.error("Se presento la siguiente excepcion a la hora de generar el pdf o excel de la cotización # " + numeroCotizacion + " " + e.getMessage());
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			log.error("Se presento la siguiente excepcion a la hora de generar el pdf o excel de la cotización # " + numeroCotizacion + " " + e.getMessage());
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			log.error("Se presento la siguiente excepcion a la hora de generar el pdf o excel de la cotización # " + numeroCotizacion + " " + e.getMessage());
+			e.printStackTrace();
+		} catch (SQLException e) {
+			log.error("Se presento la siguiente excepcion a la hora de generar el pdf o excel de la cotización # " + numeroCotizacion + " " + e.getMessage());
+			e.printStackTrace();
 		} catch (Exception e) {
-			System.out.println(" Se presento la siguiente excepcion a la hora de generar el pdf o excel");
+			log.error("Se presento la siguiente excepcion a la hora de generar el pdf o excel de la cotización # " + numeroCotizacion + " " + e.getMessage());
+			e.printStackTrace();
 		}
 
 	}

@@ -32,12 +32,15 @@ import com.sea.backend.entities.ViewIndexOpPorGenerar;
 import com.sea.backend.entities.ViewOpEnSeguimiento;
 import com.sea.backend.entities.ViewOpPorEstado;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -169,6 +172,12 @@ public class CotizacionFacade extends AbstractFacade<Cotizacion> implements Coti
 		Class.forName("com.mysql.jdbc.Driver").newInstance();
 		try {
 
+			Properties properties;
+			properties = new Properties();
+			InputStream entrada = null;
+			entrada = new FileInputStream("config.properties");
+			properties.load(entrada);
+
 			conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/fulldotaciones?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&useSSL=false", "root", "Tempo123#$");
 
 			//Se definen los parametros si es que el reporte necesita
@@ -176,7 +185,7 @@ public class CotizacionFacade extends AbstractFacade<Cotizacion> implements Coti
 			parameter.put("numero_cotizacion", numero_cotizacion);
 
 			File file = new File(ruta);
-			String destino = "D:\\SEA\\Reportes\\PDF\\cotizacion_N_" + numero_cotizacion + ".pdf";
+			String destino = properties.getProperty("rutapdf") + "cotizacion_N_" + numero_cotizacion + ".pdf";
 
 			JasperReport jasperReport = (JasperReport) JRLoader.loadObjectFromFile(file.getPath());
 
@@ -199,6 +208,7 @@ public class CotizacionFacade extends AbstractFacade<Cotizacion> implements Coti
 
 	@Override
 	public void getReporteXLSX(String ruta, String numero_cotizacion) throws ClassNotFoundException, InstantiationException, IllegalAccessException, SQLException {
+		
 		Connection conexion;
 		Class.forName("com.mysql.jdbc.Driver").newInstance();
 		conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/fulldotaciones?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&useSSL=false", "root", "Tempo123#$");
@@ -206,9 +216,15 @@ public class CotizacionFacade extends AbstractFacade<Cotizacion> implements Coti
 		//Se definen los parametros si es que el reporte necesita
 		Map parameter = new HashMap();
 		parameter.put("numero_cotizacion", numero_cotizacion);
-		String destino = "D:\\SEA\\Reportes\\EXCEL\\cotizacion_N_" + numero_cotizacion + ".xlsx";
 
 		try {
+
+			Properties properties;
+			properties = new Properties();
+			InputStream entrada = null;
+			entrada = new FileInputStream("config.properties");
+			properties.load(entrada);
+			String destino = properties.getProperty("rutaexcel") + "cotizacion_N_" + numero_cotizacion + ".xlsx";
 			File file = new File(ruta);
 
 			JasperReport jasperReport = (JasperReport) JRLoader.loadObjectFromFile(file.getPath());

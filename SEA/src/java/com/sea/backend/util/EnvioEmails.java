@@ -24,8 +24,6 @@
 package com.sea.backend.util;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
@@ -43,40 +41,67 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 
 /**
  *
- * @author rpc
+ * @author Andres Quintana
  */
 public class EnvioEmails implements Serializable {
 
-	private String user = "andresfqm@gmail.com";
-	private String pass = "1013621910";
-	private String empresa = "Fulldotaciones";
+	private String user = "";
+	private String pass = "";
+	private String empresa = "";
 	private String mensaje;
+	Properties properties;
+	private final static Logger log = Logger.getLogger(EnvioEmails.class);
 
-	public void enviarEmail(String fileName, String numeroCotizacion, String rutaArchivo, List<String> emailC, String emailU, String mensaje) throws UnsupportedEncodingException, FileNotFoundException, IOException {
+	public EnvioEmails() {
+		try {
+			Properties props = new Properties();
+			props.load(new FileInputStream("log4j.properties"));
+			PropertyConfigurator.configure(props);
 
-		//1st paso) Obtener el objeto de sesión
-		Properties props = new Properties();
-		props.setProperty("mail.smtp.host", "smtp.gmail.com"); // envia 
-		props.setProperty("mail.smtp.starttls.enable", "true");
-		props.setProperty("mail.smtp.port", "25");
-		props.setProperty("mail.smtp.starttls.required", "false");
-		props.setProperty("mail.smtp.auth", "true");
-		props.setProperty("mail.smtp.ssl.trust", "smtp.gmail.com");
+			properties = new Properties();
+			InputStream entrada = null;
+			entrada = new FileInputStream("config.properties");
+			properties.load(entrada);
+			user = properties.getProperty("user");
+			pass = properties.getProperty("pass");
+			empresa = properties.getProperty("empresa");
 
-		Session session = Session.getInstance(props, new javax.mail.Authenticator() {
-			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(user, pass);
-			}
-		});
+		} catch (Exception e) {
+			log.error("Se presento el siguiente error al leer el archivo properties  " + e.getMessage());
+			e.printStackTrace();
+		}
+
+	}
+
+	/*
+    * @author Andres Quintana
+	* Fecha modificación 11/08/2020
+	* Metodo encargado de enviar las cotizaciones via mail
+	 */
+	public void enviarEmail(String fileName,String extension, String numeroCotizacion, String rutaArchivo, List<String> emailC, String emailU, String mensaje) {
+
+		log.info("Ingreso al proceso de envio de email de la cotización # " + numeroCotizacion);
 
 		//2nd paso)compose message
 		try {
 
+			//1st paso) Obtener el objeto de sesión
+			Properties props = new Properties();
+			props = cargarDatosServidorDeCorreos();
+
+			Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+				protected PasswordAuthentication getPasswordAuthentication() {
+					return new PasswordAuthentication(user, pass);
+				}
+			});
+
 			BodyPart adjunto = new MimeBodyPart();
-			adjunto.setDataHandler(new DataHandler(new FileDataSource(rutaArchivo + numeroCotizacion + ".pdf")));
+			adjunto.setDataHandler(new DataHandler(new FileDataSource(rutaArchivo + numeroCotizacion + extension)));
 			adjunto.setFileName(fileName);
 
 			BodyPart texto = new MimeBodyPart();
@@ -117,31 +142,38 @@ public class EnvioEmails implements Serializable {
 			//3rd paso)send message
 			Transport.send(message);
 
-			System.out.println("Done");
-
 		} catch (MessagingException e) {
-			throw new RuntimeException(e);
+			log.error("Se presento el siguiente error al enviar el correo de la cotización # " + numeroCotizacion + " " + e.getMessage());
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			log.error("Se presento el siguiente error al enviar el correo de la cotización # " + numeroCotizacion + " " + e.getMessage());
+			e.printStackTrace();
+		} catch (Exception e) {
+			log.error("Se presento el siguiente error al enviar el correo de la cotización # " + numeroCotizacion + " " + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
-	public void envioEmailRecuperacionPass(String email, String clave) throws UnsupportedEncodingException, FileNotFoundException, IOException {
+	/*
+    * @author Andres Quintana
+	* Fecha modificación 11/08/2020
+	* Metodo encargado de enviar los mails de recuperación de contraseñas
+	 */
+	public void envioEmailRecuperacionPass(String email, String clave) {
 
-		//1st paso) Obtener el objeto de sesión
-		Properties props = new Properties();
-		props.setProperty("mail.smtp.host", "smtp.gmail.com"); // envia 
-		props.setProperty("mail.smtp.starttls.enable", "true");
-		props.setProperty("mail.smtp.port", "25");
-		props.setProperty("mail.smtp.starttls.required", "false");
-		props.setProperty("mail.smtp.auth", "true");
-		props.setProperty("mail.smtp.ssl.trust", "smtp.gmail.com");
-
-		Session session = Session.getInstance(props, new javax.mail.Authenticator() {
-			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(user, pass);
-			}
-		});
+		log.info("Ingreso al proceso de envio de email para la recuperación de contraseña");
 
 		try {
+			//1st paso) Obtener el objeto de sesión
+			Properties props = new Properties();
+			props = cargarDatosServidorDeCorreos();
+
+			Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+				protected PasswordAuthentication getPasswordAuthentication() {
+					return new PasswordAuthentication(user, pass);
+				}
+			});
+
 			BodyPart texto = new MimeBodyPart();
 			mensaje = "Su nueva clave de acceso es :  " + clave + " " + "Se recomienda sea cambiada antes de ingresar al sistema";
 			texto.setText(mensaje);
@@ -160,35 +192,32 @@ public class EnvioEmails implements Serializable {
 			//3rd paso)send message
 			Transport.send(message);
 
-			System.out.println("Done");
-
 		} catch (MessagingException e) {
-			throw new RuntimeException(e);
-		}
-
-	}
-
-	public void obtenerUsuarioClaveEnvios() throws FileNotFoundException, IOException {
-
-		Properties p = new Properties();
-		InputStream entrada = null;
-
-		String x;
-
-		try {
-			entrada = new FileInputStream("config.properties");
-			p.load(entrada);
-			System.out.println("uno=" + p.getProperty("rutapdf"));
-			x = p.getProperty("rutapdf");
-			System.out.println("x" + x);
-
-			user = p.getProperty("user");
-			pass = p.getProperty("pass");
-			empresa = p.getProperty("empresa");
+			log.error("Se presento el siguiente error al enviar el correo de recuperación de contraseña : " + " " + e.getMessage());
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			log.error("Se presento el siguiente error al enviar el correo de recuperación de contraseña : " + " " + e.getMessage());
+			e.printStackTrace();
 		} catch (Exception e) {
-			System.out.println("Se presento error : " + e.getMessage());
+			log.error("Se presento el siguiente error al enviar el correo de recuperación de contraseña : " + " " + e.getMessage());
+			e.printStackTrace();
 		}
 
 	}
 
+	/*
+    * @author Andres Quintana
+	* Fecha creación 11/08/2020
+	* Metodo encargado de setear los valores del servidor de correos
+	 */
+	private Properties cargarDatosServidorDeCorreos() {
+		Properties props = new Properties();
+		props.setProperty("mail.smtp.host", "smtp.gmail.com"); // envia 
+		props.setProperty("mail.smtp.starttls.enable", "true");
+		props.setProperty("mail.smtp.port", "25");
+		props.setProperty("mail.smtp.starttls.required", "false");
+		props.setProperty("mail.smtp.auth", "true");
+		props.setProperty("mail.smtp.ssl.trust", "smtp.gmail.com");
+		return props;
+	}
 }

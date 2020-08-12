@@ -7,10 +7,8 @@ package com.sea.frontend.controller;
 
 import com.sea.backend.dto.ClienteDTO;
 import com.sea.backend.entities.Ciudad;
-import com.sea.backend.entities.Cliente;
 import com.sea.backend.entities.Cotizacion;
 import com.sea.backend.entities.CotizacionProducto;
-import com.sea.backend.entities.DescuentoVolumen;
 import com.sea.backend.entities.Direccion;
 import com.sea.backend.entities.DisenoProducto;
 import com.sea.backend.entities.Email;
@@ -44,25 +42,17 @@ import com.sea.backend.model.TallaFacadeLocal;
 import com.sea.backend.model.TiempoEntregaFacadeLocal;
 import com.sea.backend.model.UsuarioFacadeLocal;
 import com.sea.backend.util.CargarArchivos;
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.Properties;
-import javax.activation.DataHandler;
-import javax.activation.FileDataSource;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
@@ -72,7 +62,6 @@ import javax.servlet.http.Part;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.primefaces.context.RequestContext;
-import org.primefaces.event.FileUploadEvent;
 import org.primefaces.json.JSONObject;
 import org.primefaces.model.UploadedFile;
 
@@ -231,13 +220,14 @@ public class OrdenProduccionController implements Serializable {
 			Properties props = new Properties();
 			props.load(new FileInputStream("log4j.properties"));
 			PropertyConfigurator.configure(props);
-			
+
 			properties = new Properties();
 			InputStream entrada = null;
 			entrada = new FileInputStream("config.properties");
 			properties.load(entrada);
 		} catch (Exception e) {
-			log.error("Se presento el siguiente error al tratar de leer el archivo de configuración " + e);
+			log.error("Se presento el siguiente error al tratar de leer el archivo de configuración " + e.getMessage());
+			e.printStackTrace();
 		}
 
 		usuario = new Usuario();
@@ -272,10 +262,11 @@ public class OrdenProduccionController implements Serializable {
 		tallaDisenoProducto = new TallaDisenoProducto();
 		idUi = "id";
 		valueId = 0;
+
 		/*
-		*Autor: Aquintana
-		*Fecha modificación : 09/08/2020
-		* Obtenemos el numero de cotización que viene por parametro
+        * @author Andres Quintana
+	    * Fecha modificación 09/08/2020
+	    * Obtenemos el numero de cotización que viene por parametro
 		 */
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		ExternalContext externalContext = facesContext.getExternalContext();
@@ -286,10 +277,8 @@ public class OrdenProduccionController implements Serializable {
 		try {
 			log.info("Se busca los datos de la cotización : " + " " + categorySelected);
 			emailCliente = new ClienteDTO();
-
 			if (categorySelected != null) {
 				cotizacion = cotizacionEJB.find(categorySelected);
-
 				int count = 0;
 				for (Email email : cotizacion.getTblClienteIdCliente().getEmailList()) {
 					if (count < 1) {
@@ -298,11 +287,9 @@ public class OrdenProduccionController implements Serializable {
 					} else if (count == 1) {
 						emailCliente.setEmail2(email.getEmail());
 					}
-
 				}
 				for (Direccion dir : cotizacion.getTblClienteIdCliente().getDireccionList()) {
 					direccionEntrega = dir.getDireccion();
-
 				}
 
 				objetosCotizacionProducto(categorySelected);
@@ -319,27 +306,26 @@ public class OrdenProduccionController implements Serializable {
 
 	}
 
-	public void agregarCotizacionProducto() {
-		CotizacionProducto cot = new CotizacionProducto();
-
-		cot.setTblProductoIdProducto(producto);
-		cot.setCantidad(cotizacionP.getCantidad());
-		cot.setPrecioParaCliente(cotizacionP.getPrecioParaCliente());
-
-		//  ven.setTblProductoIdProducto(productoEJB.find(producto.getIdProducto()));
-		listaCotizacionP.add(cot);
-
-	}
-
-	// Metodo para traer los productos registrados en una cotización
-	public void obtenerProductosRegistrados() throws Exception {
-		try {
-
-			datosCotizacionProducto = cotizacionProductoEJB.datosCotizacionProducto(getNumeroCotizacion());
-		} catch (Exception e) {
-		}
-	}
-
+//	public void agregarCotizacionProducto() {
+//		CotizacionProducto cot = new CotizacionProducto();
+//
+//		cot.setTblProductoIdProducto(producto);
+//		cot.setCantidad(cotizacionP.getCantidad());
+//		cot.setPrecioParaCliente(cotizacionP.getPrecioParaCliente());
+//
+//		//  ven.setTblProductoIdProducto(productoEJB.find(producto.getIdProducto()));
+//		listaCotizacionP.add(cot);
+//
+//	}
+//	public void obtenerProductosRegistrados() {
+//		log.info("Ingreso al proceso de obtener los productos correspondientes a la cotización " + " #" + getNumeroCotizacion() + "para generar la orden de producción");
+//		try {
+//			datosCotizacionProducto = cotizacionProductoEJB.datosCotizacionProducto(getNumeroCotizacion());
+//		} catch (Exception e) {
+//			log.error("Se presento el siguiente error a la hora de consultar los productos de la cotización " + " #" + getNumeroCotizacion() + "Para generar la orden de producción " + " " + e.getMessage());
+//			e.printStackTrace();
+//		}
+//	}
 	// Metodo para obtener las cotizaciones registradas por un asesor
 	public void obtenerCotizacionesRegistradas() throws Exception {
 		try {
@@ -366,14 +352,13 @@ public class OrdenProduccionController implements Serializable {
 		return u.getIdUsuario();
 	}
 
-	public void modificarCotización() {
-		try {
-			cotizacionEJB.edit(cotizacion);
-		} catch (Exception e) {
-		}
-
-	}
-
+//	public void modificarCotización() {
+//		try {
+//			cotizacionEJB.edit(cotizacion);
+//		} catch (Exception e) {
+//		}
+//
+//	}
 	public String leerId(Cotizacion cotizacion) {
 		this.cotizacion = cotizacionEJB.find(cotizacion.getNumeroCotizacion());
 		return "actualizarCotizacion.xhtml";
@@ -398,14 +383,13 @@ public class OrdenProduccionController implements Serializable {
 
 	}
 
-	//Coloque 1 a quintana ya que se estaba rebentando por el numero de consecutivo que lo estba buscando de la
-	// Tabla usuario el cual lo quiete Aq
-	public int consecutivoCotizacion() {
-		HttpSession sesion = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
-		Usuario u = (Usuario) sesion.getAttribute("usuario");
-		return 1;
-	}
-
+//	//Coloque 1 a quintana ya que se estaba rebentando por el numero de consecutivo que lo estba buscando de la
+//	// Tabla usuario el cual lo quiete Aq
+//	public int consecutivoCotizacion() {
+//		HttpSession sesion = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+//		Usuario u = (Usuario) sesion.getAttribute("usuario");
+//		return 1;
+//	}
 	//Metodo para agragar producto_especificación
 	public void productoEspecificacon() {
 		ProductoEspecificacion proE = new ProductoEspecificacion();
@@ -416,7 +400,11 @@ public class OrdenProduccionController implements Serializable {
 
 	}
 
-	//Metodo para agragar diseño del producto
+	/*
+        * @author Andres Quintana
+	    * Fecha modificación 09/08/2020
+	    * Metodo encargado de agragar el diseño del producto y almacena la imagen y logotipo en la ruta configurada el el archivo de configuración properties
+	 */
 	public void agregarDiseñoProducto() {
 		log.info("Ingreso al proceso de adicionar diseño al producto");
 		try {
@@ -448,7 +436,11 @@ public class OrdenProduccionController implements Serializable {
 
 	}
 
-	//Metodo para agregar tallas de los articulos
+	/*
+        * @author Andres Quintana
+	    * Fecha modificación 09/08/2020
+	    * Metodo encargado de agragar las tallas al producto
+	 */
 	public void agregarTallas() {
 		TallaDisenoProducto tallaP = new TallaDisenoProducto();
 		tallaP.setCantidad(tallaDisenoProducto.getCantidad());
@@ -460,30 +452,19 @@ public class OrdenProduccionController implements Serializable {
 
 	}
 
-	public List<TallaDisenoProducto> getListaTallaDisenoProductos() {
-		return listaTallaDisenoProductos;
-	}
-
-	public void setListaTallaDisenoProductos(List<TallaDisenoProducto> listaTallaDisenoProductos) {
-		this.listaTallaDisenoProductos = listaTallaDisenoProductos;
-	}
-
-	public List<Cotizacion> getListaLugarEmision() {
-		return listaLugarEmision;
-	}
-
-	public void setListaLugarEmision(List<Cotizacion> listaLugarEmision) {
-		this.listaLugarEmision = listaLugarEmision;
-	}
-
+	/*
+        * @author Andres Quintana
+	    * Fecha modificación 09/08/2020
+	    * Metodo encargado de obtener los productos registrados en una cotización que se encuentra en estado Cierre Efectivo o Por Corregir
+	 */
 	public void objetosCotizacionProducto(String numeroCotizacion) throws Exception {
 		System.out.println("(((((((((((((((((" + numeroCotizacion);
 		listaDatosCotizacionProducto = cotizacionProductoEJB.datosCotizacionProducto(numeroCotizacion);
 		ordenProduccion.setTotalPrendas(listaDatosCotizacionProducto.size());
 		System.out.println("total de prendas: " + ordenProduccion.getTotalPrendas());
 	}
-	//Metodo para traer las especififaciones de los prodectos registrados EJP: Botones, Colores, Botas etc.
 
+	//Metodo para traer las especififaciones de los prodectos registrados EJP: Botones, Colores, Botas etc.
 	public void obtenerEspecicacionesProductosRegistrados() throws Exception {
 
 		System.out.println("prueba referncia = " + referencia);
@@ -491,14 +472,14 @@ public class OrdenProduccionController implements Serializable {
 
 	}
 
-	public void obtenerLugarEmicionCotizacion() throws Exception {
-
-		System.out.println("Prueba Lugar Emicion = " + numeroCotizacion);
-
-	}
-
+	/*
+        * @author Andres Quintana
+	    * Fecha modificación 09/08/2020
+	    * Metodo encargado de registrar la orden de produción
+	 */
 	public void registrarOrdenProduccion() throws ClassNotFoundException, InstantiationException, IllegalAccessException, SQLException {
 		try {
+			log.info("Ingreso al proceso de registrar la orden de producción de la cotización # " + numeroCotizacion);
 
 			/*
 			String path = FacesContext.getCurrentInstance().getExternalContext().getRealPath("Archivos");
@@ -576,10 +557,13 @@ public class OrdenProduccionController implements Serializable {
 //				diseñoEJB.create(disenoProducto);
 			}
 		} catch (Exception e) {
+			log.error("Se presento el siguiente error al registrar la orden de producción de la cotización # " + numeroCotizacion + " " + e.getMessage());
+			e.printStackTrace();
 		}
 
 	}
 
+	// Getter and Setter
 	public List<CotizacionProductoAuxiliar> getListaDatosCotizacionProducto() throws Exception {
 		return listaDatosCotizacionProducto;
 
@@ -1060,6 +1044,22 @@ public class OrdenProduccionController implements Serializable {
 
 	public void setFileLogotipoDiseño(UploadedFile fileLogotipoDiseño) {
 		this.fileLogotipoDiseño = fileLogotipoDiseño;
+	}
+
+	public List<TallaDisenoProducto> getListaTallaDisenoProductos() {
+		return listaTallaDisenoProductos;
+	}
+
+	public void setListaTallaDisenoProductos(List<TallaDisenoProducto> listaTallaDisenoProductos) {
+		this.listaTallaDisenoProductos = listaTallaDisenoProductos;
+	}
+
+	public List<Cotizacion> getListaLugarEmision() {
+		return listaLugarEmision;
+	}
+
+	public void setListaLugarEmision(List<Cotizacion> listaLugarEmision) {
+		this.listaLugarEmision = listaLugarEmision;
 	}
 
 }
