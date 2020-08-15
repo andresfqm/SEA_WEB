@@ -88,7 +88,7 @@
 										<h:outputLabel class="mdl-textfield__label" for="documentoTipoDocumento">Tipo documento</h:outputLabel>
 									</h:panelGroup>
 									<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-										<h:inputText class="mdl-textfield__input"  p:type="number" p:min="1" p:maxlength="32" p:step="1" p:required="true" pt:required="required" id="NoDocumento" value="#{clienteController.cliente.numeroDocumento}"/>
+										<h:inputText class="mdl-textfield__input"  p:type="number" p:min="1" p:maxlength="15" p:step="1" p:required="true" pt:required="required" id="NoDocumento" value="#{clienteController.cliente.numeroDocumento}"/>
 										<h:outputLabel class="mdl-textfield__label" for="NoDocumento">Número de documento</h:outputLabel>
 									</h:panelGroup>
 									<h:panelGroup id="DVP">
@@ -201,7 +201,7 @@
 								</h:panelGroup>
 							</h:panelGroup>
 							<h:panelGroup layout="block" class="mdl-dialog__actions">
-								<p:commandButton actionListener="#{clienteController.registrarCliente()}" id="mostrarClienteNuevo" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm" value="Crear cliente"  update="addCliente :formClient:tableClient"/>
+								<p:commandButton actionListener="#{clienteController.registrarCliente()}" id="mostrarClienteNuevo" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm" type="submit" value="Crear cliente"  update="addCliente :formClient:tableClient" onclick="this.disabled=true;"/>
 								<p:commandButton type="reset" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect toggleSubForm" value="Cancelar" onclick="PF('createClient').hide();"/>
 							</h:panelGroup>
 						</h:form>

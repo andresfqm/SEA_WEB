@@ -23,6 +23,8 @@
  */
 package com.sea.backend.util;
 
+import com.sea.backend.entities.Email;
+import com.sea.backend.entities.Usuario;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -83,7 +85,7 @@ public class EnvioEmails implements Serializable {
 	* Fecha modificación 11/08/2020
 	* Metodo encargado de enviar las cotizaciones via mail
 	 */
-	public void enviarEmail(String fileName,String extension, String numeroCotizacion, String rutaArchivo, List<String> emailC, String emailU, String mensaje) {
+	public void enviarEmail(String fileName, String extension, String numeroCotizacion, String rutaArchivo, List<String> emailC, String emailU, String mensaje) {
 
 		log.info("Ingreso al proceso de envio de email de la cotización # " + numeroCotizacion);
 
@@ -219,5 +221,59 @@ public class EnvioEmails implements Serializable {
 		props.setProperty("mail.smtp.auth", "true");
 		props.setProperty("mail.smtp.ssl.trust", "smtp.gmail.com");
 		return props;
+	}
+
+	
+	/*
+    * @author Andres Quintana
+	* Fecha creación 14/08/2020
+	* Metodo encargado de enviar correo con la confirmación de la creación del usuario y detalla los datos de acceso
+	 */
+	public String enviarEmailRegistroUsuarios(Usuario usuario, String urlIngreso) {
+		log.info("Ingreso al proceso de envio de email de creación de usuario del usuario : " + usuario);
+		String respuestaEnvio = "";
+		try {
+			//1st paso) Obtener el objeto de sesión
+			Properties props = new Properties();
+			props = cargarDatosServidorDeCorreos();
+
+			Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+				protected PasswordAuthentication getPasswordAuthentication() {
+					return new PasswordAuthentication(user, pass);
+				}
+			});
+
+			String contraseñaDesencriptada = Encriptacion.Desencriptar(usuario.getContrasena());
+			BodyPart texto = new MimeBodyPart();
+			texto.setText("Bienvenido al sistema SEA\n" + usuario.getNombre() + "\n"
+					+ "\n" + "Sus datos de ingreso al sistema son los siguientes : " + "\n"
+					+ "Usuario: " + usuario.getNombreUsuario() + "\n" + "Contraseña: " + contraseñaDesencriptada
+					+ "\n" + "ID interno: " + usuario.getIdInterno() + "\n" + "Url ingreso al sistema: " + urlIngreso
+					+ "\n" + "\n"
+					+ "Cordialmente," + "\n" + empresa);
+			MimeMultipart multiparte = new MimeMultipart();
+			multiparte.addBodyPart(texto);
+			MimeMessage message = new MimeMessage(session);
+			message.setFrom(new InternetAddress(user, empresa));
+
+			String EmailDestino = "";
+			for (Email email : usuario.getEmailList()) {
+				EmailDestino = email.getEmail();
+				break;
+			}
+			message.setRecipients(Message.RecipientType.TO, EmailDestino);
+			message.setSubject("Creación de usuario " + usuario.getNombre() + " " + usuario.getApellido());
+			message.setContent(multiparte, "text/html; charset=utf-8");
+
+			//3rd paso)send message
+			Transport.send(message);
+			respuestaEnvio = "OK";
+		} catch (Exception e) {
+			log.error("Se presento el siguiente error al enviar el correo de creación de usuarios del usuario " + usuario.getNombreUsuario() + e.getMessage());
+			e.printStackTrace();
+			return respuestaEnvio = "FALLO";
+		}
+		return respuestaEnvio;
+
 	}
 }

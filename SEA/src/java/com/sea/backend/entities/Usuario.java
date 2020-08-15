@@ -29,6 +29,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -109,9 +110,9 @@ public class Usuario implements Serializable {
 	private boolean autenticado;
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "tblUsuarioIdUsuario")
 	private List<Cliente> clienteList;
-	@OneToMany(mappedBy = "tblUsuarioIdUsuario")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "tblUsuarioIdUsuario")
 	private List<Telefono> telefonoList;
-	@OneToMany(mappedBy = "tblUsuarioIdUsuario")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "tblUsuarioIdUsuario")
 	private List<Direccion> direccionList;
 	@JoinColumn(name = "TBL_CARGO_ID_CARGO", referencedColumnName = "ID_CARGO")
     @ManyToOne(optional = false)
@@ -119,7 +120,7 @@ public class Usuario implements Serializable {
 	@JoinColumn(name = "TBL_TIPO_DOCUMENTO_ID_TIPO_DOCUMENTO", referencedColumnName = "ID_TIPO_DOCUMENTO")
     @ManyToOne(optional = false)
 	private TipoDocumento tblTipoDocumentoIdTipoDocumento;
-	@OneToMany(mappedBy = "tblUsuarioIdUsuario")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "tblUsuarioIdUsuario")
 	private List<Email> emailList;
 
 	public Usuario() {

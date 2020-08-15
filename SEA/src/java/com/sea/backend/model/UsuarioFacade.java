@@ -25,6 +25,8 @@ package com.sea.backend.model;
 
 import com.sea.backend.entities.Ciudad;
 import com.sea.backend.entities.Direccion;
+import com.sea.backend.entities.Email;
+import com.sea.backend.entities.Telefono;
 import com.sea.backend.entities.Usuario;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +37,7 @@ import javax.persistence.Query;
 
 /**
  *
- * @author Depurador
+ * @author Andres Quintana
  */
 @Stateless
 public class UsuarioFacade extends AbstractFacade<Usuario> implements UsuarioFacadeLocal {
@@ -132,18 +134,18 @@ public class UsuarioFacade extends AbstractFacade<Usuario> implements UsuarioFac
 	}
 
 	@Override
-	public String buscarIdInterno(String idInterno) {
+	public boolean buscarIdInterno(String idInterno) {
 		List<Usuario> lista = new ArrayList<>();
-		String codigoObtenido = null;
 		Query query = em.createNamedQuery("Usuario.findByIdInterno", Usuario.class);
 		query.setParameter("idInterno", idInterno);
 		lista = query.getResultList();
 
-		for (Usuario valor : lista) {
-			codigoObtenido = valor.getIdInterno();
+		if (lista != null) {
+			if (lista.size() > 0) {
+				return true;
+			}
 		}
-
-		return codigoObtenido;
+		return false;
 	}
 
 	@Override
@@ -167,6 +169,80 @@ public class UsuarioFacade extends AbstractFacade<Usuario> implements UsuarioFac
 
 		}
 		return usuario;
+	}
+
+	@Override
+	public Telefono buscarTelefonoUsuario(Usuario ci) {
+		Telefono telefono = null;
+		List<Telefono> lista;
+		String jpql = "FROM Telefono t where t.tblUsuarioIdUsuario = ?1";
+		Query query = em.createQuery(jpql);
+		query.setParameter(1, ci);
+		lista = query.getResultList();
+		if (!lista.isEmpty()) {
+			telefono = lista.get(0);
+		}
+
+		return telefono;
+	}
+
+	@Override
+	public Email buscarEmailUsuario(Usuario ci) {
+		Email email = null;
+		List<Email> lista;
+		String jpql = "FROM Email e where e.tblUsuarioIdUsuario = ?1";
+		Query query = em.createQuery(jpql);
+		query.setParameter(1, ci);
+		lista = query.getResultList();
+		if (!lista.isEmpty()) {
+			email = lista.get(0);
+		}
+
+		return email;
+	}
+
+	@Override
+	public boolean buscarEmail(String email) {
+		List<Email> lista = new ArrayList<>();
+		Query query = em.createNamedQuery("Email.findByEmail", Email.class);
+		query.setParameter("email", email);
+		lista = query.getResultList();
+		if (lista != null) {
+			if (lista.size() > 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public boolean buscarNumeroDocuemnto(String numeroDocumento) {
+		List<Usuario> lista = new ArrayList<>();
+		Query query = em.createNamedQuery("Usuario.findByNumeroDocumento", Usuario.class);
+		query.setParameter("numeroDocumento", numeroDocumento);
+		lista = query.getResultList();
+
+		if (lista != null) {
+			if (lista.size() > 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public boolean buscarExistensiaDeUsuario(String usuario) {
+		List<Usuario> lista = new ArrayList<>();
+		Query query = em.createNamedQuery("Usuario.findByNombreUsuario", Usuario.class);
+		query.setParameter("nombreUsuario", usuario);
+		lista = query.getResultList();
+
+		if (lista != null) {
+			if (lista.size() > 0) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

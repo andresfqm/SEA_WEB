@@ -18,7 +18,7 @@
 				<div class="page-content">
 					<h:panelGroup >
 						<h:form id="usform" >
-							<p:dataTable value="#{usuarioController.lista}" var="usr" styleClass="mdl-data-table mdl-js-data-table mdl-shadow--2dp" rowStyleClass="mdl-data-table__cell--non-numeric" id="Table">
+							<p:dataTable value="#{usuarioController.lista}" var="usr" styleClass="mdl-data-table mdl-js-data-table mdl-shadow--2dp" rowStyleClass="mdl-data-table__cell--non-numeric" id="Table" rows="10" paginator="true">
 								<p:column>
 									<f:facet name="header">
 										<h:outputLabel value="Nombre"/>
@@ -94,12 +94,13 @@
 							<h:panelGroup layout="block" class="mdl-dialog__content">
 								<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
 									<p:selectOneMenu id="tipoDocumento" value="#{usuarioController.tipoDocumento.idTipoDocumento}" required="true">
+										<f:selectItem itemValue="" itemLabel="Seleccione"/>
 										<f:selectItems value="#{tipoDocumentoController.listaTipoD}" var="lisD" itemLabel="#{lisD.tipo}" itemValue="#{lisD.idTipoDocumento}" />
 									</p:selectOneMenu>
 									<h:outputLabel class="mdl-textfield__label" for="tipoDocumento">Tipo de documento</h:outputLabel>
 								</h:panelGroup>
 								<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-									<h:inputText class="mdl-textfield__input" value="#{usuarioController.usuario.numeroDocumento}" pt:type="number" pt:min="1" pt:step="1" pt:maxlength="32" pt:required="required" id="NoDocumento" >
+									<h:inputText class="mdl-textfield__input" value="#{usuarioController.usuario.numeroDocumento}" p:min="1" p:maxlength="15" p:step="1" p:required="true" pt:required="required" id="NoDocumento" >
 										<f:validateRequired />
 									</h:inputText>
 									<h:outputLabel class="mdl-textfield__label" for="NoDocumento">Número de documento</h:outputLabel>
@@ -160,8 +161,8 @@
 									<h:inputText class="mdl-textfield__input" value="#{usuarioController.direccion.direccion}" pt:maxlength="128" pt:required="required" id="direccion" />
 									<h:outputLabel class="mdl-textfield__label" for="direccion">Dirección de residencia</h:outputLabel>
 								</h:panelGroup>
-								<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-									<h:inputText class="mdl-textfield__input" value="#{usuarioController.usuario.idInterno}" pt:maxlength="32" pt:required="required" id="IDInterno" />
+								<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" rendered="#{usuarioController.enabledDisabledCampoPass}">
+									<h:inputText class="mdl-textfield__input" id="IDInterno" value="#{usuarioController.usuario.idInterno}" pt:maxlength="32" required="#{usuarioController.enabledDisabledCampoPass == true ?false:true}" />
 									<h:outputLabel class="mdl-textfield__label" for="IDInterno">ID Interno</h:outputLabel>
 								</h:panelGroup>
 								<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label ">
@@ -175,28 +176,16 @@
 									<h:inputText class="mdl-textfield__input" pt:maxlength="45" value="#{usuarioController.usuario.nombreUsuario}" pt:required="required" id="nombreUsuario" />
 									<h:outputLabel class="mdl-textfield__label" for="nombreUsuario">Nombre de usuario</h:outputLabel>
 								</h:panelGroup>
-								<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label fullWidth">
-									<h:inputSecret class="mdl-textfield__input" pt:maxlength="45" pt:required="required" id="contrasena" value="#{usuarioController.usuario.contrasena}"/>
-									<h:outputLabel class="mdl-textfield__label" for="contrasena">Contraseña</h:outputLabel>
-								</h:panelGroup>
-								<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label fullWidth">
-									<h:inputSecret class="mdl-textfield__input" pt:maxlength="45" value="#{usuarioController.confirmaciónPassword}"  pt:required="required" id="confirmacionContrasena" />
-									<h:outputLabel class="mdl-textfield__label" for="confirmacionContrasena">Confirme la contraseña</h:outputLabel>
-								</h:panelGroup>
 								<h:outputLabel class="mdl-switch mdl-js-switch mdl-js-ripple-effect fullWidth" for="activo">
 									<h:selectBooleanCheckbox id="activo" value="#{usuarioController.usuario.habilitado}" class="mdl-switch__input" />
 									<h:panelGroup class="mdl-switch__label">¿Activo?</h:panelGroup>
 								</h:outputLabel>
-								<h:outputLabel class="mdl-switch mdl-js-switch mdl-js-ripple-effect fullWidth" for="activo">
-									<h:selectBooleanCheckbox id="habilitado" value="#{usuarioController.usuario.habilitado}" class="mdl-switch__input" />
-									<h:panelGroup class="mdl-switch__label">¿Habilitado?</h:panelGroup>
-								</h:outputLabel>
 							</h:panelGroup>
 
 							<h:panelGroup layout="block" class="mdl-dialog__actions">
-								<p:commandButton actionListener="#{usuarioController.registrar()}" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm" type="submit" value="Crear usuario" update="addUser :usform:Table" rendered="#{usuarioController.renderizarCrear}"/>
-								<p:commandButton actionListener="#{usuarioController.modificar()}" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm" type="submit" value="Editar usuario" update="addUser :usform:Table" rendered="#{usuarioController.renderizarEditar}"/>
-								<p:commandButton styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect toggleSubForm" value="Cancelar" actionListener="#{usuarioController.limpiar()}" immediate="true" update=":usform:Table"/>
+								<p:commandButton actionListener="#{usuarioController.registrar()}" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm" type="submit" value="Crear usuario" update="addUser :usform:Table" rendered="#{usuarioController.renderizarCrear}" onclick="this.disabled = true;"/>
+								<p:commandButton actionListener="#{usuarioController.modificar()}" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm" type="submit" value="Editar usuario" update="addUser :usform:Table" rendered="#{usuarioController.renderizarEditar}" onclick="this.disabled = true;"/>
+								<p:commandButton styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect toggleSubForm" value="Cancelar" actionListener="#{usuarioController.limpiar()}" immediate="true" update="addUser :usform:Table"/>
 							</h:panelGroup>
 						</h:form>
 					</p:dialog>

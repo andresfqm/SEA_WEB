@@ -33,10 +33,15 @@ import org.apache.commons.codec.binary.Base64;
 
 /**
  *
- * @author rpc
+ * @author Andres Quintana
  */
 public class Encriptacion implements Serializable {
 
+	/*
+    * @author Andres Quintana
+	* Fecha Modificación 14/08/2020
+	* Metodo que recibe un string y devuelve un string encriptado en MD5
+	 */
 	public static String Encriptar(String texto) {
 
 		String secretKey = "qualityinfosolutions"; //llave para encriptar datos
@@ -62,6 +67,11 @@ public class Encriptacion implements Serializable {
 		return base64EncryptedString;
 	}
 
+	/*
+    * @author Andres Quintana
+	* Fecha Modificación 14/08/2020
+	* Metodo que recibe un string encriptado en MD5 y devuelve un string desencriptado
+	 */
 	public static String Desencriptar(String textoEncriptado) throws Exception {
 
 		String secretKey = "qualityinfosolutions"; //llave para desenciptar datos

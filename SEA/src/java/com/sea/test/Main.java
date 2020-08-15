@@ -23,11 +23,13 @@
  */
 package com.sea.test;
 
+import com.sea.backend.util.GeneracionDeContraseñas;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Properties;
@@ -42,7 +44,7 @@ public class Main {
 
 	private final static Logger log = Logger.getLogger(Main.class);
 
-	public static void main(String Args[]) throws FileNotFoundException, IOException {
+	public static void main(String Args[]) throws FileNotFoundException, IOException, NoSuchAlgorithmException {
 		int hora, minutos, segundos;
 		Calendar calendario = Calendar.getInstance();
 		hora = calendario.get(Calendar.HOUR_OF_DAY);
@@ -81,6 +83,10 @@ public class Main {
 //		} catch (Exception e) {
 //			System.out.println("Se presento error : " + e.getMessage());
 //		}
+
+
+		String contraseñaGenerada = GeneracionDeContraseñas.generarContraseña();
+		System.out.println("La contraseña generada es : "  + contraseñaGenerada);
 	}
 
 }

@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2017 Depurador.
+ * Copyright 2020 rpc.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,58 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.sea.backend.model;
+package com.sea.backend.util;
 
-import com.sea.backend.entities.Direccion;
-import com.sea.backend.entities.Email;
-import com.sea.backend.entities.Telefono;
-import com.sea.backend.entities.Usuario;
-import java.util.List;
-import javax.ejb.Local;
+import java.io.Serializable;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.util.Random;
 
 /**
  *
- * @author Depurador
+ * @author Andres Quintana
  */
-@Local
-public interface UsuarioFacadeLocal {
+public class GeneracionDeContraseñas implements Serializable{
 
-	void create(Usuario usuario);
+	/**
+	 *
+	 * @author Andres Quintana 
+	 * Fecha creación 14/08/2020 
+	 * Metodo encargado de generar contraseñas aleatoriamente
+	 */
+	public static String generarContraseña() throws NoSuchAlgorithmException {
 
-	void edit(Usuario usuario);
-
-	void remove(Usuario usuario);
-
-	void actualizarNumeroCotizacion(int us, int numeroCotizacion);
-
-	Usuario find(Object id);
-
-	List<Usuario> findAll();
-
-	List<Usuario> findRange(int[] range);
-
-	int count();
-
-	Usuario iniciarSesion(Usuario us);
-
-	Usuario recuperarContraseña(Usuario us);
-
-	List<Usuario> listaUsuario();
-
-	public Usuario listaUsuario(String us);
-
-	Direccion actualizarCiudad(Usuario ci);
-
-	boolean buscarIdInterno(String idInterno);
-	
-	Telefono buscarTelefonoUsuario(Usuario ci);
-	
-	Email buscarEmailUsuario(Usuario ci);
-	
-	boolean buscarEmail(String email);
-	
-	boolean buscarNumeroDocuemnto(String numeroDocumento);
-	
-	boolean buscarExistensiaDeUsuario(String usuario);
-
+		String[] symbols = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"};
+		int length = 10;
+		Random random = SecureRandom.getInstanceStrong();
+		StringBuilder sb = new StringBuilder(length);
+		for (int i = 0; i < length; i++) {
+			int indexRandom = random.nextInt(symbols.length);
+			sb.append(symbols[indexRandom]);
+		}
+		String password = sb.toString();
+		return password;
+	}
 }
