@@ -25,16 +25,23 @@ import com.sea.backend.model.TipoEmailFacadeLocal;
 import com.sea.backend.model.TipoTelefonoFacadeLocal;
 import com.sea.backend.model.UsuarioFacadeLocal;
 import com.sea.backend.util.AbrirCerrarDialogos;
+import com.sea.backend.util.EnvioEmails;
 import com.sea.backend.util.Validaciones;
+import java.io.FileInputStream;
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 import org.primefaces.json.JSONObject;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.CellEditEvent;
 
 /**
  *
@@ -68,6 +75,7 @@ public class ClienteController implements Serializable {
 	private Telefono telefono;
 	private List<Telefono> listaTelefono;
 	private List<Telefono> addTelefono;
+	private List<Telefono> modTelefono;
 
 	@EJB
 	private TipoDocumentoFacadeLocal tipoDocumentoEJB;
@@ -79,6 +87,7 @@ public class ClienteController implements Serializable {
 	private TipoEmail tipoEmail;
 	private List<TipoEmail> listaTipoEmail;
 	private List<Email> addEmail;
+	private List<Email> modEmail;
 
 	@EJB
 	private TipoDireccionFacadeLocal tipoDireccionEJB;
@@ -110,6 +119,10 @@ public class ClienteController implements Serializable {
 	private Origen origen;
 	private List<Origen> listaOrigen;
 
+	private final static Logger log = Logger.getLogger(ClienteController.class);
+
+	private int numMaxNit = 9;
+
 	@PostConstruct
 	public void init() {
 		cliente = new Cliente();
@@ -138,6 +151,13 @@ public class ClienteController implements Serializable {
 		listaTipoDireccion = tipoDireccionEJB.findAll();
 		addTelefono = new ArrayList<>();
 		addEmail = new ArrayList<>();
+		try {
+			Properties props = new Properties();
+			props.load(new FileInputStream("log4j.properties"));
+			PropertyConfigurator.configure(props);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void abrirDialogoTelefono() {
@@ -204,6 +224,7 @@ public class ClienteController implements Serializable {
 				cliente.setTblTipoDocumentoIdTipoDocumento(tipoDocumentoEJB.find(tipoDocumento.getIdTipoDocumento()));
 				cliente.setTblUsuarioIdUsuario(usuarioEJB.find(usuario.getIdUsuario()));
 				cliente.setTblOrigenIdOrigen(origenEJB.find(origen.getIdOrigen()));
+				cliente.setActivo(true);
 				clienteEJB.create(cliente);
 				direccion.setTblTipoDireccionIdTipoDireccion(tipoDireccion);
 				direccion.setTblClienteIdCliente(cliente);
@@ -220,37 +241,126 @@ public class ClienteController implements Serializable {
 					ema.setTblClienteIdCliente(cliente);
 					emailEJB.create(ema);
 				}
-				addEmail = new ArrayList<>();
 
 				snackbarData.put("message", "Se creó al cliente'" + cliente.getNombreORazonSocial() + " " + cliente.getApellido() + "'.");
 				RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
 
-				usuario = new Usuario();
-				cliente = new Cliente();
-				direccion = new Direccion();
-				telefono = new Telefono();
-				email = new Email();
+				EnvioEmails envioEmails = new EnvioEmails();
+				cliente.setEmailList(addEmail);
+				String respuesta = envioEmails.enviarEmailRegistroClientes(cliente);
+
+				if (respuesta.equalsIgnoreCase("FALLO")) {
+					dialogTittle = "Error no controlado";
+					dialogContent = "Se presento un error al enviar el correo de notificación de creación cliente, por favor valide con el administrador del sistema";
+					RequestContext.getCurrentInstance().execute("mostrarDialogos(`" + dialogTittle + "`, `" + dialogContent + "`);");
+
+				}
+				listaClientes = clienteEJB.listaClientes();
 				AbrirCerrarDialogos.abrirCerrarDialogos("PF('createClient').hide();");
 			}
+			limpiar();
 		} catch (Exception e) {
 			dialogTittle = "Error no controlado";
 			dialogContent = e.getMessage();
 			RequestContext.getCurrentInstance().execute("mostrarDialogos(`" + dialogTittle + "`, `" + dialogContent + "`);");
 		}
-		listaClientes = clienteEJB.listaClientes();
 	}
 
-	public void eliminarCliente(int idCliente) {
+	public void leerID(int idCliente) {
+		log.info("Ingreso al proceso de cargar los datos del cliente a modificar");
 		try {
-			clienteEJB.eliminarCliente(idCliente);
-			snackbarData.put("message", "Se elimino el cliente de forma correcta");
-			RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
+			cliente = clienteEJB.find(idCliente);
+			//clienteEJB.eliminarCliente(idCliente);
+
+			tipoDocumento.setIdTipoDocumento(this.cliente.getTblTipoDocumentoIdTipoDocumento().getIdTipoDocumento());
+			//RequestContext.getCurrentInstance().update(":addUser:ciudad");
+			modTelefono = clienteEJB.listaTelefonosCliente(cliente);
+			modEmail = clienteEJB.listaEmailsCliente(cliente);
+			direccion = direccionEJB.direccionCliente(cliente.getIdCliente());
+			departamento.setIdDepartamento(direccion.getTblCiudadIdCiudad().getTblDepartamentoIdDepartamento().getIdDepartamento());
+			obtenerCiudad();
+			ciudad.setIdCiudad(this.direccion.getTblCiudadIdCiudad().getIdCiudad());
+			ciudad.setNombre(this.direccion.getTblCiudadIdCiudad().getNombre());
+			tipoDireccion.setIdTipoDireccion(this.direccion.getTblTipoDireccionIdTipoDireccion().getIdTipoDireccion());
+			usuario.setIdUsuario(cliente.getTblUsuarioIdUsuario().getIdUsuario());
+			render();
+			AbrirCerrarDialogos.abrirCerrarDialogos("PF('dlgModificarCliente').show();");
+
 		} catch (Exception e) {
 			dialogTittle = "Error no controlado";
 			dialogContent = e.getMessage();
 			RequestContext.getCurrentInstance().execute("mostrarDialogos(`" + dialogTittle + "`, `" + dialogContent + "`);");
 		}
 
+	}
+
+	public void editarTelefono(CellEditEvent event) {
+		String oldValue = (String) event.getOldValue();
+		String newValue = (String) event.getNewValue();
+
+		if (newValue != null && !newValue.equals(oldValue)) {
+			System.out.println("Se edito un valor ");
+		}
+	}
+
+	public void editarEmail(CellEditEvent event) {
+		Object oldValue = event.getOldValue();
+		Object newValue = event.getNewValue();
+
+		if (newValue != null && !newValue.equals(oldValue)) {
+			System.out.println("Se edito un valor ");
+		}
+	}
+
+	public void modificarCliente() {
+		log.info("Ingreso al proceso de modificar los datos del cliente : " + cliente.getNombreORazonSocial());
+		try {
+			cliente.setTblTipoDocumentoIdTipoDocumento(tipoDocumentoEJB.find(tipoDocumento.getIdTipoDocumento()));
+			cliente.setTblUsuarioIdUsuario(usuarioEJB.find(usuario.getIdUsuario()));
+			clienteEJB.edit(cliente);
+
+			for (Telefono tel : modTelefono) {
+				telefonoEJB.edit(tel);
+			}
+			addTelefono = new ArrayList<>();
+
+			for (Email ema : modEmail) {
+				emailEJB.edit(ema);
+			}
+			addEmail = new ArrayList<>();
+
+			direccion.setTblTipoDireccionIdTipoDireccion(tipoDireccion);
+			direccion.setTblClienteIdCliente(cliente);
+			direccion.setTblCiudadIdCiudad(ciudadEJB.listaCiudad(ciudad.getNombre()));
+			direccionEJB.edit(direccion);
+			listaClientes = clienteEJB.listaClientes();
+			snackbarData.put("message", "Se edito el cliente" + cliente.getNombreORazonSocial() + " " + cliente.getApellido() + "'.");
+			RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
+
+			limpiar();
+
+			AbrirCerrarDialogos.abrirCerrarDialogos("PF('dlgModificarCliente').hide();");
+		} catch (Exception e) {
+			log.error("Se presento el siguiente error al modificar el cliente : " + cliente.getNombreORazonSocial());
+			e.printStackTrace();
+		}
+
+	}
+
+	public void limpiar() {
+		cliente = new Cliente();
+		departamento = new Departamento();
+		tipoDireccion = new TipoDireccion();
+		ciudad = new Ciudad();
+		email = new Email();
+		telefono = new Telefono();
+		tipoTelefono = new TipoTelefono();
+		tipoEmail = new TipoEmail();
+		addEmail = new ArrayList<>();
+		usuario = new Usuario();
+		direccion = new Direccion();
+		tipoDocumento = new TipoDocumento();
+		AbrirCerrarDialogos.abrirCerrarDialogos("PF('dlgModificarCliente').hide();");
 	}
 
 	public void obtenerCiudad() {
@@ -467,6 +577,30 @@ public class ClienteController implements Serializable {
 
 	public void setAddEmail(List<Email> addEmail) {
 		this.addEmail = addEmail;
+	}
+
+	public int getNumMaxNit() {
+		return numMaxNit;
+	}
+
+	public void setNumMaxNit(int numMaxNit) {
+		this.numMaxNit = numMaxNit;
+	}
+
+	public List<Telefono> getModTelefono() {
+		return modTelefono;
+	}
+
+	public void setModTelefono(List<Telefono> modTelefono) {
+		this.modTelefono = modTelefono;
+	}
+
+	public List<Email> getModEmail() {
+		return modEmail;
+	}
+
+	public void setModEmail(List<Email> modEmail) {
+		this.modEmail = modEmail;
 	}
 
 }

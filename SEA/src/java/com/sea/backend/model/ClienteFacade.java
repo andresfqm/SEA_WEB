@@ -25,6 +25,8 @@ package com.sea.backend.model;
 
 import com.sea.backend.dto.ClienteDTO;
 import com.sea.backend.entities.Cliente;
+import com.sea.backend.entities.Email;
+import com.sea.backend.entities.Telefono;
 import com.sea.backend.entities.Usuario;
 import java.util.ArrayList;
 import java.util.List;
@@ -178,7 +180,7 @@ public class ClienteFacade extends AbstractFacade<Cliente> implements ClienteFac
 	@Override
 	public List<Cliente> listaClientes() {
 		List<Cliente> lista;
-		String jpql = "SELECT cl.numeroDocumento, cl.nombreORazonSocial, d.direccion, t.numeroTelefono, e.email, cl.nombreContacto, u.nombre, u.apellido,cl.digitoVerificacion, cl.idCliente FROM Cliente cl\n"
+		String jpql = "SELECT cl.numeroDocumento, cl.nombreORazonSocial, d.direccion, t.numeroTelefono, e.email, cl.nombreContacto, u.nombre, u.apellido,cl.digitoVerificacion, cl.idCliente, cl.activo FROM Cliente cl\n"
 				+ "JOIN cl.direccionList d\n"
 				+ "JOIN cl.telefonoList t\n"
 				+ "JOIN cl.emailList e\n"
@@ -189,13 +191,12 @@ public class ClienteFacade extends AbstractFacade<Cliente> implements ClienteFac
 		return lista;
 	}
 
-	@Override
-	public void eliminarCliente(int idCliente) {
-		StoredProcedureQuery query = this.em.createNamedStoredProcedureQuery("eliminarCliente");
-		query.setParameter("idCliente", idCliente);
-		query.execute();
-	}
-
+//	@Override
+//	public void eliminarCliente(int idCliente) {
+//		StoredProcedureQuery query = this.em.createNamedStoredProcedureQuery("eliminarCliente");
+//		query.setParameter("idCliente", idCliente);
+//		query.execute();
+//	}
 	@Override
 	public boolean consultarRegistroIdentificacion(String numeroDocumento) {
 		List<Cliente> lista = new ArrayList<>();
@@ -209,6 +210,26 @@ public class ClienteFacade extends AbstractFacade<Cliente> implements ClienteFac
 			existencia = true;
 		}
 		return existencia;
+	}
+
+	@Override
+	public List<Telefono> listaTelefonosCliente(Cliente cl) {
+		List<Telefono> lista;
+		String jpql = "FROM Telefono t where t.tblClienteIdCliente = ?1";
+		Query query = em.createQuery(jpql);
+		query.setParameter(1, cl);
+		lista = query.getResultList();
+		return lista;
+	}
+
+	@Override
+	public List<Email> listaEmailsCliente(Cliente cl) {
+		List<Email> lista;
+		String jpql = "FROM Email e where e.tblClienteIdCliente = ?1";
+		Query query = em.createQuery(jpql);
+		query.setParameter(1, cl);
+		lista = query.getResultList();
+		return lista;
 	}
 
 }

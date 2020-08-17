@@ -82,7 +82,6 @@ public class UsuarioController implements Serializable {
 	private List<Usuario> lista;
 	private String accion;
 	private String limpieza = "";
-	private boolean enabledDisabledCampoPass;
 
 	private String ConfirmaciónPassword;
 
@@ -265,12 +264,19 @@ public class UsuarioController implements Serializable {
 				RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
 			} else {
 				//getAccion();
+				usuario.setTblTipoDocumentoIdTipoDocumento(tipoDocumentoEJB.find(tipoDocumento.getIdTipoDocumento()));
 				usuario.setTblCargoIdCargo(cargo);
 				usuarioEJB.edit(usuario);
+				telefono.setTblTipoTelefonoIdTipoTelefono(tipoTelefonoEJB.find(tipoTelefono.getIdTipoTelefono()));
+				telefono.setTblUsuarioIdUsuario(usuario);
 				telefonoEJB.edit(telefono);
+				correo.setTblUsuarioIdUsuario(usuario);
+				correo.setTblTipoEmailIdTipoEmail(tipoEmailEJB.find(tipoEmail.getIdTipoEmail()));
 				correoEJB.edit(correo);
+				direccion.setTblTipoDireccionIdTipoDireccion(tipoDireccion);
+				direccion.setTblUsuarioIdUsuario(usuario);
+				direccion.setTblCiudadIdCiudad(ciudadEJB.listaCiudad(ciudad.getNombre()));
 				direccionEJB.edit(direccion);
-
 				snackbarData.put("message", "Se modificó al usuario '" + usuario.getNombre() + " " + usuario.getApellido() + "'.");
 				RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
 				AbrirCerrarDialogos.abrirCerrarDialogos("PF('dlg1').hide();");
@@ -311,7 +317,6 @@ public class UsuarioController implements Serializable {
 	 */
 	public void leerID(int usuario) {
 		log.info("Ingreso al proceso de cargar los datos del usuario a modificar");
-		enabledDisabledCampoPass = false;
 
 		try {
 
@@ -371,13 +376,12 @@ public class UsuarioController implements Serializable {
 		}
 	}
 
-		/*
+	/*
     * @author Andres Quintana
 	* Fecha Modificación 14/08/2020
 	* Metodo encargado de abrir el dialogo de creación de usuarios
 	 */
 	public void abrirDialogoCreacionUsuarios() {
-		enabledDisabledCampoPass = true;
 		renderizarEditar = false;
 		renderizarCrear = true;
 		limpiar();
@@ -400,7 +404,7 @@ public class UsuarioController implements Serializable {
 		ciudad.setNombre(limpieza);
 		tipoDireccion = new TipoDireccion();
 		cargo = new Cargo();
-		enabledDisabledCampoPass = true;
+		tipoDocumento = new TipoDocumento();
 		AbrirCerrarDialogos.abrirCerrarDialogos("PF('dlg1').hide();");
 	}
 
@@ -611,14 +615,6 @@ public class UsuarioController implements Serializable {
 
 	public void setUsuarioCambioPass(Usuario usuarioCambioPass) {
 		this.usuarioCambioPass = usuarioCambioPass;
-	}
-
-	public boolean isEnabledDisabledCampoPass() {
-		return enabledDisabledCampoPass;
-	}
-
-	public void setEnabledDisabledCampoPass(boolean enabledDisabledCampoPass) {
-		this.enabledDisabledCampoPass = enabledDisabledCampoPass;
 	}
 
 }

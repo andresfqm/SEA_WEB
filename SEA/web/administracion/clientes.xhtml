@@ -10,6 +10,7 @@
 		<ui:composition template="/templates/resources.xhtml" />
         <h:outputStylesheet library="css" name="administracion.css" />
     </h:head>
+
     <h:body>
         <div class="mdl-layout mdl-js-layout">
 			<ui:composition template="/templates/header.xhtml" />
@@ -61,60 +62,70 @@
 							</h:column>
 							<h:column>
 								<f:facet name="header">
+									<h:outputLabel value="Estado"/>
+								</f:facet>
+								<h:outputText value="#{cl[10] == true ?'Activo' : 'Inactivo'}"/>
+							</h:column>
+							<h:column>
+								<f:facet name="header">
 									<h:outputLabel value="Acciones"/>
 								</f:facet>
-								<h:panelGroup layout="block">
-									<p:commandButton actionListener="#{clienteController.eliminarCliente(cl[9])}" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm" value="Eliminar" immediate="true" update=":formClient"/>
-									<p:commandButton styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm" value="Modificar"/>
+								<h:panelGroup layout="block">	
+									<p:commandButton actionListener="#{clienteController.leerID(cl[9])}" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm" value="Modificar" update="modCliente"/>
 								</h:panelGroup>
 							</h:column>
 						</h:dataTable>
+						<p:commandLink type="button" onclick="PF('createClient').show();" styleClass="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored button-bottom_right toggleSubForm">
+							<i class="material-icons">person_add</i>
+						</p:commandLink>
 					</h:form>
-					<p:commandLink type="button" onclick="PF('createClient').show();" styleClass="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored button-bottom_right toggleSubForm">
-						<i class="material-icons">person_add</i>
-					</p:commandLink>
+
 					<p:dialog widgetVar="createClient" id="dlg">
 						<h:form id="addCliente" class="mdl-dialog">
 							<p:growl showDetail="true"/>
 							<h3 class="mdl-dialog__title">Registrar cliente</h3>
 							<h:panelGroup layout="block" class="mdl-dialog__content">
 								<h:panelGroup layout="block" class="mdl-dialog__content">
-									<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-										<p:selectOneMenu id="documentoTipoDocumento" styleClass="mdl-selectfield__select" required="true" pt:required="required" value="#{clienteController.tipoDocumento.idTipoDocumento}">
-											<f:ajax event="valueChange" listener="#{clienteController.render()}" render="DVP panelg panelNom panelApe"/>
-											<f:selectItem itemLabel="Seleccione" itemValue="" />
-											<f:selectItems value="#{clienteController.listaTipoDocumento}" var="tipDo" itemLabel="#{tipDo.tipo}" itemValue="#{tipDo.idTipoDocumento}" />
-										</p:selectOneMenu>
-										<h:outputLabel class="mdl-textfield__label" for="documentoTipoDocumento">Tipo documento</h:outputLabel>
-									</h:panelGroup>
-									<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-										<h:inputText class="mdl-textfield__input"  p:type="number" p:min="1" p:maxlength="15" p:step="1" p:required="true" pt:required="required" id="NoDocumento" value="#{clienteController.cliente.numeroDocumento}"/>
-										<h:outputLabel class="mdl-textfield__label" for="NoDocumento">Número de documento</h:outputLabel>
-									</h:panelGroup>
-									<h:panelGroup id="DVP">
-										<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" rendered="#{clienteController.tipoDocumento.tipo == 'Numero de identificación tributaria'}">
-											<h:inputText class="mdl-textfield__input"  disabled="disabled" id="DV" value="#{clienteController.cliente.digitoVerificacion}" rendered="#{clienteController.tipoDocumento.tipo == 'Numero de identificación tributaria'}" pt:maxlength="1" pt:required="required"/>
-											<h:outputLabel class="mdl-textfield__label" for="DV" rendered="#{clienteController.tipoDocumento.tipo == 'Numero de identificación tributaria'}">Dígito de verificación</h:outputLabel>
+									<h:panelGrid columns="2">
+										<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+											<p:selectOneMenu id="documentoTipoDocumento" styleClass="mdl-selectfield__select" required="true" pt:required="required" value="#{clienteController.tipoDocumento.idTipoDocumento}">
+												<f:ajax event="valueChange" listener="#{clienteController.render()}" render="numeroDocumentoC DVP panelg panelNom panelApe"/>
+												<f:selectItem itemLabel="Seleccione" itemValue="" />
+												<f:selectItems value="#{clienteController.listaTipoDocumento}" var="tipDo" itemLabel="#{tipDo.tipo}" itemValue="#{tipDo.idTipoDocumento}" />
+											</p:selectOneMenu>
+											<h:outputLabel class="mdl-textfield__label" for="documentoTipoDocumento">Tipo documento</h:outputLabel>
 										</h:panelGroup>
-									</h:panelGroup>
-									<h:panelGroup id="panelg">
-										<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label fullWidth" rendered="#{clienteController.tipoDocumento.tipo == 'Numero de identificación tributaria'}">
-											<h:inputText class="mdl-textfield__input" id="razonSocial" value="#{clienteController.cliente.nombreORazonSocial}" rendered="#{clienteController.tipoDocumento.tipo == 'Numero de identificación tributaria'}" pt:maxlength="70" pt:required="required"/>
-											<h:outputLabel class="mdl-textfield__label" for="razonSocial" rendered="#{clienteController.tipoDocumento.tipo == 'Numero de identificación tributaria'}">Razón social</h:outputLabel>
+										<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" id="numeroDocumentoC">
+											<h:inputText class="mdl-textfield__input"  p:type="number" p:min="1" p:maxlength="#{clienteController.tipoDocumento.idTipoDocumento == 3?9 : 15}" p:step="1" p:required="true" pt:required="required" id="NoDocumento" value="#{clienteController.cliente.numeroDocumento}"/>
+											<h:outputLabel class="mdl-textfield__label" for="NoDocumento">Número de documento</h:outputLabel>
 										</h:panelGroup>
-									</h:panelGroup>
-									<h:panelGroup id="panelNom">
-										<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" rendered="#{clienteController.tipoDocumento.tipo != 'Numero de identificación tributaria'}">
-											<h:inputText class="mdl-textfield__input" p:maxlength="256" p:required="true" pt:required="required" id="nombre" value="#{clienteController.cliente.nombreORazonSocial}" rendered="#{clienteController.tipoDocumento.tipo != 'Numero de identificación tributaria'}"/>
-											<h:outputLabel class="mdl-textfield__label" for="nombre" rendered="#{clienteController.tipoDocumento.tipo != 'Numero de identificación tributaria'}">Nombre</h:outputLabel>
+									</h:panelGrid>
+									<h:panelGrid columns="2">
+										<h:panelGroup id="DVP">
+											<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" rendered="#{clienteController.tipoDocumento.tipo == 'Numero de identificación tributaria'}">
+												<h:inputText class="mdl-textfield__input"  disabled="disabled" id="DV" value="#{clienteController.cliente.digitoVerificacion}" rendered="#{clienteController.tipoDocumento.tipo == 'Numero de identificación tributaria'}" pt:maxlength="1" pt:required="required"/>
+												<h:outputLabel class="mdl-textfield__label" for="DV" rendered="#{clienteController.tipoDocumento.tipo == 'Numero de identificación tributaria'}">Dígito de verificación</h:outputLabel>
+											</h:panelGroup>
 										</h:panelGroup>
-									</h:panelGroup>
-									<h:panelGroup  id="panelApe">
-										<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" rendered="#{clienteController.tipoDocumento.tipo != 'Numero de identificación tributaria'}">
-											<h:inputText class="mdl-textfield__input"  p:maxlength="256" p:required="true" pt:required="required" id="apellido" value="#{clienteController.cliente.apellido}" rendered="#{clienteController.tipoDocumento.tipo != 'Numero de identificación tributaria'}" />
-											<h:outputLabel class="mdl-textfield__label" for="apellido" rendered="#{clienteController.tipoDocumento.tipo != 'Numero de identificación tributaria'}">Apellido</h:outputLabel>
+										<h:panelGroup id="panelg">
+											<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label fullWidth" rendered="#{clienteController.tipoDocumento.tipo == 'Numero de identificación tributaria'}">
+												<h:inputText class="mdl-textfield__input" id="razonSocial" value="#{clienteController.cliente.nombreORazonSocial}" rendered="#{clienteController.tipoDocumento.tipo == 'Numero de identificación tributaria'}" pt:maxlength="70" pt:required="required"/>
+												<h:outputLabel class="mdl-textfield__label" for="razonSocial" rendered="#{clienteController.tipoDocumento.tipo == 'Numero de identificación tributaria'}">Razón social</h:outputLabel>
+											</h:panelGroup>
 										</h:panelGroup>
-									</h:panelGroup>
+										<h:panelGroup id="panelNom">
+											<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" rendered="#{clienteController.tipoDocumento.tipo != 'Numero de identificación tributaria'}">
+												<h:inputText class="mdl-textfield__input" p:maxlength="256" p:required="true" pt:required="required" id="nombre" value="#{clienteController.cliente.nombreORazonSocial}" rendered="#{clienteController.tipoDocumento.tipo != 'Numero de identificación tributaria'}"/>
+												<h:outputLabel class="mdl-textfield__label" for="nombre" rendered="#{clienteController.tipoDocumento.tipo != 'Numero de identificación tributaria'}">Nombre</h:outputLabel>
+											</h:panelGroup>
+										</h:panelGroup>
+										<h:panelGroup  id="panelApe">
+											<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" rendered="#{clienteController.tipoDocumento.tipo != 'Numero de identificación tributaria'}">
+												<h:inputText class="mdl-textfield__input"  p:maxlength="256" p:required="true" pt:required="required" id="apellido" value="#{clienteController.cliente.apellido}" rendered="#{clienteController.tipoDocumento.tipo != 'Numero de identificación tributaria'}" />
+												<h:outputLabel class="mdl-textfield__label" for="apellido" rendered="#{clienteController.tipoDocumento.tipo != 'Numero de identificación tributaria'}">Apellido</h:outputLabel>
+											</h:panelGroup>
+										</h:panelGroup>
+									</h:panelGrid>
 									<h:panelGroup>
 										<p:commandLink type="button" actionListener="#{clienteController.abrirDialogoTelefono()}" styleClass="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored toggleSubForm" immediate="true" update="addTelefono">
 											<i class="material-icons">add_ic_call</i>
@@ -155,43 +166,49 @@
 										</h:column>
 									</h:dataTable>
 
-									<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-										<p:selectOneMenu id="Departamento" value="#{clienteController.departamento.idDepartamento}" filter="true" filterMatchMode="contains" style="width: 100%" pt:required="required" required="true">
-											<p:ajax listener="#{clienteController.obtenerCiudad()}" update="ciudad" />
-											<f:selectItem itemValue="" itemLabel="Seleccione" />
-											<f:selectItems value="#{clienteController.listaDepartamento}" var="dep" itemLabel="#{dep.nombre}" itemValue="#{dep.idDepartamento}"/>
-										</p:selectOneMenu>
-										<h:outputLabel class="mdl-textfield__label" for="Departamento">Departamento</h:outputLabel>
-									</h:panelGroup>
-									<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-										<p:selectOneMenu value="#{clienteController.ciudad.nombre}" id="ciudad" filter="true" filterMatchMode="contains" pt:required="required" required="true" >
-											<f:selectItem itemValue="" itemLabel="Seleccione" />
-											<f:selectItems value="#{clienteController.listaCiudad}" var="ciu" itemLabel="#{ciu}" itemValue="#{ciu}"/>
-										</p:selectOneMenu>
-										<h:outputLabel class="mdl-textfield__label" for="ciudad">Ciudad</h:outputLabel>
-									</h:panelGroup>
-									<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-										<p:selectOneMenu id="tipoDireccion" styleClass="mdl-selectfield__select" pt:required="required" required="true" value="#{clienteController.tipoDireccion.idTipoDireccion}">
-											<f:selectItem itemValue="" itemLabel="Seleccione" />
-											<f:selectItems value="#{clienteController.listaTipoDireccion}" var="lisTiDir" itemLabel="#{lisTiDir.tipo}" itemValue="#{lisTiDir.idTipoDireccion}"/>
-										</p:selectOneMenu>
-										<h:outputLabel class="mdl-textfield__label" for="tipoDireccion">Tipo de dirección</h:outputLabel>
-									</h:panelGroup>
-									<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label fullWidth">
-										<h:inputText class="mdl-textfield__input" p:maxlength="128"  p:required="true" pt:required="required" id="direccion" value="#{clienteController.direccion.direccion}"/>
-										<h:outputLabel class="mdl-textfield__label" for="direccion">Dirección</h:outputLabel>
-									</h:panelGroup>
-									<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label fullWidth">
-										<h:inputText class="mdl-textfield__input" p:maxlength="128" pt:required="required" p:required="true" id="personaContacto" value="#{clienteController.cliente.nombreContacto}"/>
-										<h:outputLabel class="mdl-textfield__label" for="personaContacto">Persona de contacto</h:outputLabel>
-									</h:panelGroup>
-									<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-										<p:selectOneMenu id="asesor" styleClass="mdl-selectfield__select" pt:required="required" p:required="true" value="#{clienteController.usuario.idUsuario}" filter="true" filterMatchMode="contains">
-											<f:selectItem itemValue="" itemLabel="Seleccione" />
-											<f:selectItems value="#{clienteController.listaUsuario}" var="lisUs" itemLabel="#{lisUs.nombre} #{lisUs.apellido}" itemValue="#{lisUs.idUsuario}"/>
-										</p:selectOneMenu>
-										<h:outputLabel class="mdl-textfield__label" for="asesor">Asesor asignado</h:outputLabel>
-									</h:panelGroup>
+									<h:panelGrid columns="2">
+										<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+											<p:selectOneMenu id="Departamento" value="#{clienteController.departamento.idDepartamento}" filter="true" filterMatchMode="contains" style="width: 100%" pt:required="required" required="true">
+												<p:ajax listener="#{clienteController.obtenerCiudad()}" update="ciudad" />
+												<f:selectItem itemValue="" itemLabel="Seleccione" />
+												<f:selectItems value="#{clienteController.listaDepartamento}" var="dep" itemLabel="#{dep.nombre}" itemValue="#{dep.idDepartamento}"/>
+											</p:selectOneMenu>
+											<h:outputLabel class="mdl-textfield__label" for="Departamento">Departamento</h:outputLabel>
+										</h:panelGroup>
+										<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+											<p:selectOneMenu value="#{clienteController.ciudad.nombre}" id="ciudad" filter="true" filterMatchMode="contains" pt:required="required" required="true" >
+												<f:selectItem itemValue="" itemLabel="Seleccione" />
+												<f:selectItems value="#{clienteController.listaCiudad}" var="ciu" itemLabel="#{ciu}" itemValue="#{ciu}"/>
+											</p:selectOneMenu>
+											<h:outputLabel class="mdl-textfield__label" for="ciudad">Ciudad</h:outputLabel>
+										</h:panelGroup>
+									</h:panelGrid>
+									<h:panelGrid columns="2">
+										<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+											<p:selectOneMenu id="tipoDireccion" styleClass="mdl-selectfield__select" pt:required="required" required="true" value="#{clienteController.tipoDireccion.idTipoDireccion}">
+												<f:selectItem itemValue="" itemLabel="Seleccione" />
+												<f:selectItems value="#{clienteController.listaTipoDireccion}" var="lisTiDir" itemLabel="#{lisTiDir.tipo}" itemValue="#{lisTiDir.idTipoDireccion}"/>
+											</p:selectOneMenu>
+											<h:outputLabel class="mdl-textfield__label" for="tipoDireccion">Tipo de dirección</h:outputLabel>
+										</h:panelGroup>
+										<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label fullWidth">
+											<h:inputText class="mdl-textfield__input" p:maxlength="128"  p:required="true" pt:required="required" id="direccion" value="#{clienteController.direccion.direccion}"/>
+											<h:outputLabel class="mdl-textfield__label" for="direccion">Dirección</h:outputLabel>
+										</h:panelGroup>
+									</h:panelGrid>
+									<h:panelGrid columns="2">
+										<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label fullWidth">
+											<h:inputText class="mdl-textfield__input" p:maxlength="128" pt:required="required" p:required="true" id="personaContacto" value="#{clienteController.cliente.nombreContacto}"/>
+											<h:outputLabel class="mdl-textfield__label" for="personaContacto">Persona de contacto</h:outputLabel>
+										</h:panelGroup>
+										<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+											<p:selectOneMenu id="asesor" styleClass="mdl-selectfield__select" pt:required="required" p:required="true" value="#{clienteController.usuario.idUsuario}" filter="true" filterMatchMode="contains">
+												<f:selectItem itemValue="" itemLabel="Seleccione" />
+												<f:selectItems value="#{clienteController.listaUsuario}" var="lisUs" itemLabel="#{lisUs.nombre} #{lisUs.apellido}" itemValue="#{lisUs.idUsuario}"/>
+											</p:selectOneMenu>
+											<h:outputLabel class="mdl-textfield__label" for="asesor">Asesor asignado</h:outputLabel>
+										</h:panelGroup>
+									</h:panelGrid>
 									<h:panelGroup layout="block" class="mdl-selectfield mdl-js-selectfield mdl-selectfield--floating-label fullWidth">
 										<p:selectOneMenu id="origen" styleClass="mdl-selectfield__select" required="true" value="#{clienteController.origen.idOrigen}">
 											<f:selectItems value="#{clienteController.listaOrigen}" var="lisOr" itemLabel="#{lisOr.nombre}" itemValue="#{lisOr.idOrigen}"/>
@@ -201,7 +218,7 @@
 								</h:panelGroup>
 							</h:panelGroup>
 							<h:panelGroup layout="block" class="mdl-dialog__actions">
-								<p:commandButton actionListener="#{clienteController.registrarCliente()}" id="mostrarClienteNuevo" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm" type="submit" value="Crear cliente"  update="addCliente :formClient:tableClient" onclick="this.disabled=true;"/>
+								<p:commandButton actionListener="#{clienteController.registrarCliente()}" id="mostrarClienteNuevo" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm" type="submit" value="Crear cliente"  update="addCliente :formClient:tableClient" onclick="this.disabled = true;"/>
 								<p:commandButton type="reset" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect toggleSubForm" value="Cancelar" onclick="PF('createClient').hide();"/>
 							</h:panelGroup>
 						</h:form>
@@ -254,6 +271,136 @@
 							</h:panelGroup>
 						</h:form>
 					</p:dialog>
+
+
+
+					<p:dialog widgetVar="dlgModificarCliente" id="modCliente">
+						<h:form id="addClienteM" class="mdl-dialog">
+							<p:growl showDetail="true"/>
+							<h3 class="mdl-dialog__title">Modificar Cliente</h3>
+							<h:panelGroup layout="block" class="mdl-dialog__content">
+								<h:panelGrid columns="2">
+									<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+										<p:selectOneMenu id="documentoTipoDocumentoM" styleClass="mdl-selectfield__select" required="true" pt:required="required" value="#{clienteController.tipoDocumento.idTipoDocumento}" disabled="#{clienteController.tipoDocumento.idTipoDocumento == 3 ? true : false}">
+											<f:ajax event="valueChange" listener="#{clienteController.render()}" render="numeroDocumento DVPM panelgM panelNomM panelApeM"/>
+											<f:selectItem itemLabel="Seleccione" itemValue="" />
+											<f:selectItems value="#{clienteController.listaTipoDocumento}" var="tipDoM" itemLabel="#{tipDoM.tipo}" itemValue="#{tipDoM.idTipoDocumento}" />
+										</p:selectOneMenu>
+										<h:outputLabel class="mdl-textfield__label" for="documentoTipoDocumentoM">Tipo documento</h:outputLabel>
+									</h:panelGroup>
+									<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" id="numeroDocumento">
+										<h:inputText class="mdl-textfield__input"  p:type="number" p:min="1" p:maxlength="#{clienteController.tipoDocumento.idTipoDocumento == 3?9 : 15}" p:step="1" p:required="true" pt:required="required" id="NoDocumentoM" value="#{clienteController.cliente.numeroDocumento}"/>
+										<h:outputLabel class="mdl-textfield__label" for="NoDocumentoM">Número de documento</h:outputLabel>
+									</h:panelGroup>
+								</h:panelGrid>
+								<h:panelGrid columns="2">
+									<h:panelGroup id="DVPM">
+										<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" rendered="#{clienteController.tipoDocumento.tipo == 'Numero de identificación tributaria'}">
+											<h:inputText class="mdl-textfield__input"  disabled="disabled" id="DVM" value="#{clienteController.cliente.digitoVerificacion}" rendered="#{clienteController.tipoDocumento.tipo == 'Numero de identificación tributaria'}" pt:maxlength="1" pt:required="required"/>
+											<h:outputLabel class="mdl-textfield__label" for="DVM" rendered="#{clienteController.tipoDocumento.tipo == 'Numero de identificación tributaria'}">Dígito de verificación</h:outputLabel>
+										</h:panelGroup>
+									</h:panelGroup>
+									<h:panelGroup id="panelgM">
+										<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label fullWidth" rendered="#{clienteController.tipoDocumento.tipo == 'Numero de identificación tributaria'}">
+											<h:inputText class="mdl-textfield__input" id="razonSocialM" value="#{clienteController.cliente.nombreORazonSocial}" rendered="#{clienteController.tipoDocumento.tipo == 'Numero de identificación tributaria'}" pt:maxlength="70" pt:required="required"/>
+											<h:outputLabel class="mdl-textfield__label" for="razonSocialM" rendered="#{clienteController.tipoDocumento.tipo == 'Numero de identificación tributaria'}">Razón social</h:outputLabel>
+										</h:panelGroup>
+									</h:panelGroup>
+									<h:panelGroup id="panelNomM">
+										<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" rendered="#{clienteController.tipoDocumento.tipo != 'Numero de identificación tributaria'}">
+											<h:inputText class="mdl-textfield__input" p:maxlength="256" p:required="true" pt:required="required" id="nombreM" value="#{clienteController.cliente.nombreORazonSocial}" rendered="#{clienteController.tipoDocumento.tipo != 'Numero de identificación tributaria'}"/>
+											<h:outputLabel class="mdl-textfield__label" for="nombreM" rendered="#{clienteController.tipoDocumento.tipo != 'Numero de identificación tributaria'}">Nombre</h:outputLabel>
+										</h:panelGroup>
+									</h:panelGroup>
+									<h:panelGroup  id="panelApeM">
+										<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" rendered="#{clienteController.tipoDocumento.tipo != 'Numero de identificación tributaria'}">
+											<h:inputText class="mdl-textfield__input"  p:maxlength="256" p:required="true" pt:required="required" id="apellidoM" value="#{clienteController.cliente.apellido}" rendered="#{clienteController.tipoDocumento.tipo != 'Numero de identificación tributaria'}" />
+											<h:outputLabel class="mdl-textfield__label" for="apellidoM" rendered="#{clienteController.tipoDocumento.tipo != 'Numero de identificación tributaria'}">Apellido</h:outputLabel>
+										</h:panelGroup>
+									</h:panelGroup>
+								</h:panelGrid>
+								<p:dataTable value="#{clienteController.modTelefono}" var="tlm" id="tableTelefonoMod" editable="true" editMode="cell" widgetVar="cellTel">
+									<p:ajax event="cellEdit" listener="#{clienteController.editarTelefono}" />
+									<p:column headerText="Tipo Telefono">
+										<h:outputText value="#{tlm.tblTipoTelefonoIdTipoTelefono.tipo}"/>
+									</p:column>
+									<p:column headerText="Número Telefono">
+										<p:cellEditor>
+											<f:facet name="output"><h:outputText value="#{tlm.numeroTelefono}" /></f:facet>
+											<f:facet name="input"><p:inputText id="modelInput" value="#{tlm.numeroTelefono}"/></f:facet>
+										</p:cellEditor>
+									</p:column>
+								</p:dataTable>
+
+
+								<p:dataTable value="#{clienteController.modEmail}" var="emaM" id="tableEmailMod" editable="true" editMode="cell" widgetVar="cellEmail">
+									<p:ajax event="cellEdit" listener="#{clienteController.editarEmail}" />
+									<p:column headerText="Tipo Email">
+										<h:outputText value="#{emaM.tblTipoEmailIdTipoEmail.tipo}"/>
+									</p:column>
+									<p:column headerText="Email">
+										<p:cellEditor>
+											<f:facet name="output"><h:outputText value="#{emaM.email}" /></f:facet>
+											<f:facet name="input"><p:inputText id="modelInput" value="#{emaM.email}"/></f:facet>
+										</p:cellEditor>
+									</p:column>
+								</p:dataTable>
+								<h:panelGrid columns="2">
+									<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+										<p:selectOneMenu id="DepartamentoM" value="#{clienteController.departamento.idDepartamento}" filter="true" filterMatchMode="contains" style="width: 100%" pt:required="required" required="true">
+											<p:ajax listener="#{clienteController.obtenerCiudad()}" update="ciudadM" />
+											<f:selectItem itemValue="" itemLabel="Seleccione" />
+											<f:selectItems value="#{clienteController.listaDepartamento}" var="depM" itemLabel="#{depM.nombre}" itemValue="#{depM.idDepartamento}"/>
+										</p:selectOneMenu>
+										<h:outputLabel class="mdl-textfield__label" for="DepartamentoM">Departamento</h:outputLabel>
+									</h:panelGroup>
+									<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+										<p:selectOneMenu value="#{clienteController.ciudad.nombre}" id="ciudadM" filter="true" filterMatchMode="contains" pt:required="required" required="true" >
+											<f:selectItem itemValue="" itemLabel="Seleccione" />
+											<f:selectItems value="#{clienteController.listaCiudad}" var="ciuM" itemLabel="#{ciuM}" itemValue="#{ciuM}"/>
+										</p:selectOneMenu>
+										<h:outputLabel class="mdl-textfield__label" for="ciudadM">Ciudad</h:outputLabel>
+									</h:panelGroup>
+								</h:panelGrid>
+								<h:panelGrid columns="2">
+									<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+										<p:selectOneMenu id="tipoDireccionM" styleClass="mdl-selectfield__select" pt:required="required" required="true" value="#{clienteController.tipoDireccion.idTipoDireccion}">
+											<f:selectItem itemValue="" itemLabel="Seleccione" />
+											<f:selectItems value="#{clienteController.listaTipoDireccion}" var="lisTiDirM" itemLabel="#{lisTiDirM.tipo}" itemValue="#{lisTiDirM.idTipoDireccion}"/>
+										</p:selectOneMenu>
+										<h:outputLabel class="mdl-textfield__label" for="tipoDireccionM">Tipo de dirección</h:outputLabel>
+									</h:panelGroup>
+									<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label fullWidth">
+										<h:inputText class="mdl-textfield__input" p:maxlength="128"  p:required="true" pt:required="required" id="direccionM" value="#{clienteController.direccion.direccion}"/>
+										<h:outputLabel class="mdl-textfield__label" for="direccionM">Dirección</h:outputLabel>
+									</h:panelGroup>
+								</h:panelGrid>
+								<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label fullWidth">
+									<h:inputText class="mdl-textfield__input" p:maxlength="128" pt:required="required" p:required="true" id="personaContactoM" value="#{clienteController.cliente.nombreContacto}"/>
+									<h:outputLabel class="mdl-textfield__label" for="personaContactoM">Persona de contacto</h:outputLabel>
+								</h:panelGroup>
+								<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+									<p:selectOneMenu id="asesorM" styleClass="mdl-selectfield__select" pt:required="required" p:required="true" value="#{clienteController.usuario.idUsuario}" filter="true" filterMatchMode="contains">
+										<f:selectItem itemValue="" itemLabel="Seleccione" />
+										<f:selectItems value="#{clienteController.listaUsuario}" var="lisUsM" itemLabel="#{lisUsM.nombre} #{lisUsM.apellido}" itemValue="#{lisUsM.idUsuario}"/>
+									</p:selectOneMenu>
+									<h:outputLabel class="mdl-textfield__label" for="asesorM">Asesor asignado</h:outputLabel>
+								</h:panelGroup>
+								<h:outputLabel class="mdl-switch mdl-js-switch mdl-js-ripple-effect fullWidth" for="activo">
+									<h:selectBooleanCheckbox id="activo" value="#{clienteController.cliente.activo}" class="mdl-switch__input" />
+									<h:panelGroup class="mdl-switch__label">¿Activo?</h:panelGroup>
+								</h:outputLabel>
+
+								<h:panelGroup layout="block" class="mdl-dialog__actions">
+									<p:commandButton actionListener="#{clienteController.modificarCliente()}" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm" type="submit" value="Editar Cliente" update="addClienteM :formClient:tableClient" onclick="this.disabled = true;"/>
+									<p:commandButton styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect toggleSubForm" value="Cancelar" actionListener="#{clienteController.limpiar()}" immediate="true" update="addCliente :formClient:tableClient"/>
+								</h:panelGroup>
+							</h:panelGroup>
+						</h:form>
+					</p:dialog>
+
+
+
 				</div>
 			</main>
 		</div>

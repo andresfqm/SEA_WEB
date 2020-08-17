@@ -26,6 +26,8 @@ package com.sea.backend.model;
 import com.sea.backend.dto.ClienteDTO;
 import com.sea.backend.entities.Ciudad;
 import com.sea.backend.entities.Cliente;
+import com.sea.backend.entities.Email;
+import com.sea.backend.entities.Telefono;
 import com.sea.backend.entities.Usuario;
 import java.util.List;
 import javax.ejb.Local;
@@ -43,7 +45,7 @@ public interface ClienteFacadeLocal {
 
 	void remove(Cliente cliente);
 	
-	void eliminarCliente(int idCliente);
+	//void eliminarCliente(int idCliente);
 
 	Cliente find(Object id);
 
@@ -60,4 +62,8 @@ public interface ClienteFacadeLocal {
 	List<Cliente> listaClientes();
 	
 	boolean consultarRegistroIdentificacion(String numeroDocumento);
+	
+	List<Telefono> listaTelefonosCliente(Cliente cl);
+	
+	List<Email> listaEmailsCliente(Cliente cl);
 }

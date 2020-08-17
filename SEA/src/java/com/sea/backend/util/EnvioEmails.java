@@ -23,6 +23,7 @@
  */
 package com.sea.backend.util;
 
+import com.sea.backend.entities.Cliente;
 import com.sea.backend.entities.Email;
 import com.sea.backend.entities.Usuario;
 import java.io.FileInputStream;
@@ -223,14 +224,13 @@ public class EnvioEmails implements Serializable {
 		return props;
 	}
 
-	
 	/*
     * @author Andres Quintana
 	* Fecha creación 14/08/2020
 	* Metodo encargado de enviar correo con la confirmación de la creación del usuario y detalla los datos de acceso
 	 */
 	public String enviarEmailRegistroUsuarios(Usuario usuario, String urlIngreso) {
-		log.info("Ingreso al proceso de envio de email de creación de usuario del usuario : " + usuario);
+		log.info("Ingreso al proceso de envio de email de creación de usuario del usuario : " + usuario.getNombre() + " " + usuario.getApellido());
 		String respuestaEnvio = "";
 		try {
 			//1st paso) Obtener el objeto de sesión
@@ -270,6 +270,74 @@ public class EnvioEmails implements Serializable {
 			respuestaEnvio = "OK";
 		} catch (Exception e) {
 			log.error("Se presento el siguiente error al enviar el correo de creación de usuarios del usuario " + usuario.getNombreUsuario() + e.getMessage());
+			e.printStackTrace();
+			return respuestaEnvio = "FALLO";
+		}
+		return respuestaEnvio;
+
+	}
+
+	/*
+    * @author Andres Quintana
+	* Fecha creación 17/08/2020
+	* Metodo encargado de enviar correo con la confirmación de la creación del cliente por parte de la empresa
+	 */
+	public String enviarEmailRegistroClientes(Cliente cliente) {
+		log.info("Ingreso al proceso de envio de email de creación de usuario del usuario : " + cliente.getNombreORazonSocial());
+		String respuestaEnvio = "";
+		try {
+			//1st paso) Obtener el objeto de sesión
+			Properties props = new Properties();
+			props = cargarDatosServidorDeCorreos();
+
+			Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+				protected PasswordAuthentication getPasswordAuthentication() {
+					return new PasswordAuthentication(user, pass);
+				}
+			});
+
+			BodyPart texto = new MimeBodyPart();
+			texto.setText("Cordial saludo \n" + cliente.getNombreORazonSocial() + "\n"
+					+ "\n" + "La empresa " + empresa + " lo a creado como cliente y le ha asigando el asesor "
+					+ cliente.getTblUsuarioIdUsuario().getNombre() + " " + cliente.getTblUsuarioIdUsuario().getApellido()
+					+ "\n" + "\n"
+					+ "Cordialmente," + "\n" + empresa);
+			MimeMultipart multiparte = new MimeMultipart();
+			multiparte.addBodyPart(texto);
+			MimeMessage message = new MimeMessage(session);
+			message.setFrom(new InternetAddress(user, empresa));
+
+			String dest1 = "";
+			String dest2 = "";
+			int count = 0;
+			if (cliente.getEmailList().size() > 0) {
+				for (Email e : cliente.getEmailList()) {
+					if (count == 0) {
+						dest1 = e.getEmail();
+						count = count + 1;
+					} else if (count == 1) {
+						dest2 = e.getEmail();
+					}
+				}
+			}
+
+			if (dest2.isEmpty()) {
+				dest2 = dest1;
+			}
+			InternetAddress[] destinatarios = {
+				new InternetAddress(dest1),
+				new InternetAddress(dest2)
+			};
+
+			message.setRecipients(Message.RecipientType.TO, destinatarios);
+			message.setSubject("Notificación Creación Como Cliente ");
+			message.setContent(multiparte, "text/html; charset=utf-8");
+
+			//3rd paso)send message
+			Transport.send(message);
+			respuestaEnvio = "OK";
+		} catch (Exception e) {
+			log.error("Se presento el siguiente error al enviar el correo de creación del cliente " + cliente.getNombreORazonSocial() + " " + cliente.getApellido() + e.getMessage());
 			e.printStackTrace();
 			return respuestaEnvio = "FALLO";
 		}

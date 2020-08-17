@@ -60,6 +60,7 @@ import javax.xml.bind.annotation.XmlTransient;
 	, @NamedQuery(name = "Cliente.findByDigitoVerificacion", query = "SELECT c FROM Cliente c WHERE c.digitoVerificacion = :digitoVerificacion")
 	, @NamedQuery(name = "Cliente.findByNombreORazonSocial", query = "SELECT c FROM Cliente c WHERE c.nombreORazonSocial = :nombreORazonSocial")
 	, @NamedQuery(name = "Cliente.findByApellido", query = "SELECT c FROM Cliente c WHERE c.apellido = :apellido")
+	, @NamedQuery(name = "Cliente.findByActivo", query = "SELECT c FROM Cliente c WHERE c.activo = :activo")
 	, @NamedQuery(name = "Cliente.findByNombreContacto", query = "SELECT c FROM Cliente c WHERE c.nombreContacto = :nombreContacto")
 })
 @NamedStoredProcedureQuery(
@@ -98,6 +99,10 @@ public class Cliente implements Serializable {
 	@Size(min = 1, max = 128)
 	@Column(name = "NOMBRE_CONTACTO")
 	private String nombreContacto;
+	@Basic(optional = false)
+	@NotNull
+	@Column(name = "ACTIVO")
+	private boolean activo;
 	@JoinColumn(name = "TBL_COMENTARIO_CAMBIO_ASESOR_ID_COMENTARIO_CAMBIO_ASESOR", referencedColumnName = "ID_COMENTARIO_CAMBIO_ASESOR")
 	@ManyToOne
 	private ComentarioCambioAsesor tblComentarioCambioAsesorIdComentarioCambioAsesor;
@@ -273,5 +278,14 @@ public class Cliente implements Serializable {
 	public String toString() {
 		return "com.sea.backend.entities.Cliente[ idCliente=" + idCliente + " ]";
 	}
+
+	public boolean isActivo() {
+		return activo;
+	}
+
+	public void setActivo(boolean activo) {
+		this.activo = activo;
+	}
+	
 
 }
