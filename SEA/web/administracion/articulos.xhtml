@@ -2,6 +2,7 @@
 <html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
 	  xmlns:f="http://xmlns.jcp.org/jsf/core">
 	<h:head>
 		<title>Artículos | SEA</title>
@@ -14,60 +15,59 @@
 			<h:panelGroup layout="block" p:data-dataTable="">
 				<p:dataTable value="#{productoController.listaProducto}" var="producto" >
 					<p:column>
-							<f:facet name="header">
-								<h:outputLabel value="REFERENCIA"/>
-							</f:facet>
-							<h:outputText value="#{producto[0]}"/>
-						</p:column>
-						<p:column>
-							<f:facet name="header">
-								<h:outputLabel value="DESCRIPCION"/>
-							</f:facet>
-							<h:outputText value="#{producto[1]}"/>
-						</p:column>
-						<p:column>
-							<f:facet name="header">
-								<h:outputLabel value="MATERIAL"/>
-							</f:facet>
-							<h:outputText value="#{producto[2]}"/>
-						</p:column>
-						<p:column>
-							<f:facet name="header">
-								<h:outputLabel value="FABRICANTE"/>
-							</f:facet>
-							<h:outputText value="#{producto[3]}"/>
-						</p:column>
-						<p:column>
-							<f:facet name="header">
-								<h:outputLabel value="FECHA"/>
-							</f:facet>
-							<h:outputText value="#{producto[4]}"/>
-						</p:column>
-						<p:column>
-							<f:facet name="header">
-								<h:outputLabel value="COSTO"/>
-							</f:facet>
-							<h:outputText value="#{producto[5]}"/>
-						</p:column>
-						<p:column>
-							<f:facet name="header">
-								<h:outputLabel value="PRECIO"/>
-							</f:facet>
-							<h:outputText value="#{producto[6]}"/>
-						</p:column>
+						<f:facet name="header">
+							<h:outputLabel value="REFERENCIA"/>
+						</f:facet>
+						<h:outputText value="#{producto[0]}"/>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputLabel value="DESCRIPCION"/>
+						</f:facet>
+						<h:outputText value="#{producto[1]}"/>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputLabel value="MATERIAL"/>
+						</f:facet>
+						<h:outputText value="#{producto[2]}"/>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputLabel value="FABRICANTE"/>
+						</f:facet>
+						<h:outputText value="#{producto[3]}"/>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputLabel value="FECHA"/>
+						</f:facet>
+						<h:outputText value="#{producto[4]}"/>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputLabel value="COSTO"/>
+						</f:facet>
+						<h:outputText value="#{producto[5]}"/>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputLabel value="PRECIO"/>
+						</f:facet>
+						<h:outputText value="#{producto[6]}"/>
+					</p:column>
 				</p:dataTable>
 			</h:panelGroup>
 			<p:commandLink type="button" onclick="PF('agrePro').show();" styleClass="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored button-bottom_right toggleSubForm">
-						<i class="material-icons">add</i>
-					</p:commandLink>
+				<i class="material-icons">add</i>
+			</p:commandLink>
 		</main>
 		<p:dialog  widgetVar="agrePro">
-		<aside id="subForm">
-			<h:form id="addArticulo">
+			<h:form id="addArticulo" class="mdl-dialog">
 				<h3 class="mdl-dialog__title">Registrar artículo</h3>
 				<h:panelGroup layout="block" class="mdl-dialog__content">
 					<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-						<h:inputText class="mdl-textfield__input" id="referencia" value=" " disabled="disabled" />
+						<h:inputText class="mdl-textfield__input" id="referencia" value="#{productoController.prod.referencia}"/>
 						<h:outputLabel class="mdl-textfield__label" for="referencia">Referencia</h:outputLabel>
 					</h:panelGroup>
 					<h:outputLabel class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="personalizado">
@@ -75,11 +75,7 @@
 						<h:panelGroup class="mdl-switch__label">Artículo personalizado</h:panelGroup>
 					</h:outputLabel>
 					<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-						<h:inputText class="mdl-textfield__input" p:type="number" p:step="1" p:min="1" p:max="899" id="consecutivo" required="required" />
-						<h:outputLabel class="mdl-textfield__label" for="consecutivo">Consecutivo</h:outputLabel>
-					</h:panelGroup>
-					<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-						<h:inputTextarea class="mdl-textfield__input" id="descripcion" p:maxlength="500" required="required" />
+						<h:inputTextarea class="mdl-textfield__input" id="descripcion" p:maxlength="500" required="required" value="#{productoController.prod.descripcion}"/>
 						<h:outputLabel class="mdl-textfield__label" for="descripcion">Descripción</h:outputLabel>
 					</h:panelGroup>
 					<h:panelGroup layout="block" class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
@@ -89,635 +85,46 @@
 							<a href="#material-panel" class="mdl-tabs__tab">Materiales</a>
 							<a href="#sufijo-panel" class="mdl-tabs__tab">Sufijos</a>
 						</h:panelGroup>
-						<div layout="block" class="mdl-tabs__panel is-active" id="categoria-panel"><h:panelGroup>
-								<h:selectOneMenu styleClass="mdl-radio mdl-js-radio mdl-js-ripple-effect" id="categoria">
-								<f:selectItem itemLabel="Seleccione: " itemValue="" />
-								<f:selectItems value="#{categoriaController.listaCategoria}" var="lisCat" itemLabel="#{lisCat.nombre}" itemValue="#{lisCat.idCategoria}" />
-							</h:selectOneMenu>
+						<div layout="block" class="mdl-tabs__panel is-active" id="categoria-panel">
+							<h:panelGroup>
+								<p:selectOneMenu  styleClass="mdl-selectfield__select" id="categoria" value="#{productoController.categoria.idCategoria}" filter="true" filterMatchMode="contains" style="width: 100%" pt:required="required" required="true">
+									<p:ajax listener="#{productoController.obtenerSubcategoria()}" update="subCategoria, sufijo, material" />
+									<f:selectItem itemLabel="Seleccione: " itemValue="" />
+									<f:selectItems value="#{productoController.listaCategoria}" var="lisCat" itemLabel="#{lisCat.nombre}" itemValue="#{lisCat.idCategoria}" />
+								</p:selectOneMenu>
 							</h:panelGroup>
-							<h:outputLabel class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="categoria1">
-								<input type="radio" id="categoria1" class="mdl-radio__button" value="1" checked="checked" />
-								<h:panelGroup class="mdl-radio__label">Prendas</h:panelGroup>
-							</h:outputLabel><br />
-							<h:outputLabel class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="categoria2">
-								<input type="radio" id="categoria2" class="mdl-radio__button" value="2" />
-								<h:panelGroup class="mdl-radio__label">Seguridad industrial</h:panelGroup>
-							</h:outputLabel>
+
 						</div>
 						<div layout="block" class="mdl-tabs__panel" id="subcategoria-panel">
-							<h:outputLabel for="subcategoria1" class="mdl-radio mdl-js-radio mdl-js-ripple-effect">
-								<input type="radio" class="mdl-radio__button" id="subcategoria1" value="1" />
-								<h:panelGroup class="mdl-radio__label">CAMISETAS</h:panelGroup>
-							</h:outputLabel><br />
-							<h:outputLabel for="subcategoria2" class="mdl-radio mdl-js-radio mdl-js-ripple-effect">
-								<input type="radio" class="mdl-radio__button" id="subcategoria2" value="2" />
-								<h:panelGroup class="mdl-radio__label">BATAS</h:panelGroup>
-							</h:outputLabel><br />
-							<h:outputLabel for="subcategoria3" class="mdl-radio mdl-js-radio mdl-js-ripple-effect">
-								<input type="radio" class="mdl-radio__button" id="subcategoria3" value="3" />
-								<h:panelGroup class="mdl-radio__label">CAMISAS</h:panelGroup>
-							</h:outputLabel><br />
-							<h:outputLabel for="subcategoria4" class="mdl-radio mdl-js-radio mdl-js-ripple-effect">
-								<input type="radio" class="mdl-radio__button" id="subcategoria4" value="4" />
-								<h:panelGroup class="mdl-radio__label">BORDADOS</h:panelGroup>
-							</h:outputLabel><br />
-							<h:outputLabel for="subcategoria5" class="mdl-radio mdl-js-radio mdl-js-ripple-effect">
-								<input type="radio" class="mdl-radio__button" id="subcategoria5" value="5" />
-								<h:panelGroup class="mdl-radio__label">CABEZA</h:panelGroup>
-							</h:outputLabel><br />
-							<h:outputLabel for="subcategoria6" class="mdl-radio mdl-js-radio mdl-js-ripple-effect">
-								<input type="radio" class="mdl-radio__button" id="subcategoria6" value="6" />
-								<h:panelGroup class="mdl-radio__label">FACIAL</h:panelGroup>
-							</h:outputLabel><br />
-							<h:outputLabel for="subcategoria7" class="mdl-radio mdl-js-radio mdl-js-ripple-effect">
-								<input type="radio" class="mdl-radio__button" id="subcategoria7" value="7" />
-								<h:panelGroup class="mdl-radio__label">GORROS</h:panelGroup>
-							</h:outputLabel><br />
-							<h:outputLabel for="subcategoria8" class="mdl-radio mdl-js-radio mdl-js-ripple-effect">
-								<input type="radio" class="mdl-radio__button" id="subcategoria8" value="8" />
-								<h:panelGroup class="mdl-radio__label">CORPORAL</h:panelGroup>
-							</h:outputLabel><br />
-							<h:outputLabel for="subcategoria9" class="mdl-radio mdl-js-radio mdl-js-ripple-effect">
-								<input type="radio" class="mdl-radio__button" id="subcategoria9" value="9" />
-								<h:panelGroup class="mdl-radio__label">DELANTALES</h:panelGroup>
-							</h:outputLabel><br />
-							<h:outputLabel for="subcategoria10" class="mdl-radio mdl-js-radio mdl-js-ripple-effect">
-								<input type="radio" class="mdl-radio__button" id="subcategoria10" value="10" />
-								<h:panelGroup class="mdl-radio__label">BOTIQUINES</h:panelGroup>
-							</h:outputLabel><br />
-							<h:outputLabel for="subcategoria11" class="mdl-radio mdl-js-radio mdl-js-ripple-effect">
-								<input type="radio" class="mdl-radio__button" id="subcategoria11" value="11" />
-								<h:panelGroup class="mdl-radio__label">CAIDAS</h:panelGroup>
-							</h:outputLabel><br />
-							<h:outputLabel for="subcategoria12" class="mdl-radio mdl-js-radio mdl-js-ripple-effect">
-								<input type="radio" class="mdl-radio__button" id="subcategoria12" value="12" />
-								<h:panelGroup class="mdl-radio__label">CHALECOS</h:panelGroup>
-							</h:outputLabel><br />
-							<h:outputLabel for="subcategoria13" class="mdl-radio mdl-js-radio mdl-js-ripple-effect">
-								<input type="radio" class="mdl-radio__button" id="subcategoria13" value="13" />
-								<h:panelGroup class="mdl-radio__label">MALETINES</h:panelGroup>
-							</h:outputLabel><br />
-							<h:outputLabel for="subcategoria14" class="mdl-radio mdl-js-radio mdl-js-ripple-effect">
-								<input type="radio" class="mdl-radio__button" id="subcategoria14" value="14" />
-								<h:panelGroup class="mdl-radio__label">MANUAL</h:panelGroup>
-							</h:outputLabel><br />
-							<h:outputLabel for="subcategoria15" class="mdl-radio mdl-js-radio mdl-js-ripple-effect">
-								<input type="radio" class="mdl-radio__button" id="subcategoria15" value="15" />
-								<h:panelGroup class="mdl-radio__label">OTROS</h:panelGroup>
-							</h:outputLabel><br />
-							<h:outputLabel for="subcategoria16" class="mdl-radio mdl-js-radio mdl-js-ripple-effect">
-								<input type="radio" class="mdl-radio__button" id="subcategoria16" value="16" />
-								<h:panelGroup class="mdl-radio__label">PANTALONES</h:panelGroup>
-							</h:outputLabel><br />
-							<h:outputLabel for="subcategoria17" class="mdl-radio mdl-js-radio mdl-js-ripple-effect">
-								<input type="radio" class="mdl-radio__button" id="subcategoria17" value="17" />
-								<h:panelGroup class="mdl-radio__label">PROMOCIONALES</h:panelGroup>
-							</h:outputLabel><br />
-							<h:outputLabel for="subcategoria18" class="mdl-radio mdl-js-radio mdl-js-ripple-effect">
-								<input type="radio" class="mdl-radio__button" id="subcategoria18" value="18" />
-								<h:panelGroup class="mdl-radio__label">CHAQUETAS</h:panelGroup>
-							</h:outputLabel><br />
-							<h:outputLabel for="subcategoria19" class="mdl-radio mdl-js-radio mdl-js-ripple-effect">
-								<input type="radio" class="mdl-radio__button" id="subcategoria19" value="19" />
-								<h:panelGroup class="mdl-radio__label">RESPIRATORIA</h:panelGroup>
-							</h:outputLabel><br />
-							<h:outputLabel for="subcategoria20" class="mdl-radio mdl-js-radio mdl-js-ripple-effect">
-								<input type="radio" class="mdl-radio__button" id="subcategoria20" value="20" />
-								<h:panelGroup class="mdl-radio__label">ESTAMPADOS Y TRANSFER</h:panelGroup>
-							</h:outputLabel><br />
-							<h:outputLabel for="subcategoria21" class="mdl-radio mdl-js-radio mdl-js-ripple-effect">
-								<input type="radio" class="mdl-radio__button" id="subcategoria21" value="21" />
-								<h:panelGroup class="mdl-radio__label">CONJUNTOS</h:panelGroup>
-							</h:outputLabel><br />
-							<h:outputLabel for="subcategoria22" class="mdl-radio mdl-js-radio mdl-js-ripple-effect">
-								<input type="radio" class="mdl-radio__button" id="subcategoria22" value="22" />
-								<h:panelGroup class="mdl-radio__label">PVC</h:panelGroup>
-							</h:outputLabel><br />
-							<h:outputLabel for="subcategoria23" class="mdl-radio mdl-js-radio mdl-js-ripple-effect">
-								<input type="radio" class="mdl-radio__button" id="subcategoria23" value="23" />
-								<h:panelGroup class="mdl-radio__label">OVEROLES</h:panelGroup>
-							</h:outputLabel><br />
-							<h:outputLabel for="subcategoria24" class="mdl-radio mdl-js-radio mdl-js-ripple-effect">
-								<input type="radio" class="mdl-radio__button" id="subcategoria24" value="24" />
-								<h:panelGroup class="mdl-radio__label">VISUAL</h:panelGroup>
-							</h:outputLabel><br />
-							<h:outputLabel for="subcategoria25" class="mdl-radio mdl-js-radio mdl-js-ripple-effect">
-								<input type="radio" class="mdl-radio__button" id="subcategoria25" value="25" />
-								<h:panelGroup class="mdl-radio__label">AUDITIVA</h:panelGroup>
-							</h:outputLabel><br />
-							<h:outputLabel for="subcategoria26" class="mdl-radio mdl-js-radio mdl-js-ripple-effect">
-								<input type="radio" class="mdl-radio__button" id="subcategoria26" value="26" />
-								<h:panelGroup class="mdl-radio__label">SEÑALIZACIÓN</h:panelGroup>
-							</h:outputLabel><br />
-							<h:outputLabel for="subcategoria27" class="mdl-radio mdl-js-radio mdl-js-ripple-effect">
-								<input type="radio" class="mdl-radio__button" id="subcategoria27" value="27" />
-								<h:panelGroup class="mdl-radio__label">CALZADO</h:panelGroup>
-							</h:outputLabel>
+							<h:panelGroup>
+								<p:selectOneMenu  styleClass="mdl-selectfield__select" id="subCategoria" value="#{productoController.subcategoria.idSubcategoria}">
+									<f:selectItem itemLabel="Seleccione: " itemValue="" />
+									<f:selectItems value="#{productoController.listaSubcategoria}" var="lisSubca" itemLabel="#{lisSubca.nombre}" itemValue="#{lisSubca.idSubcategoria}" />
+								</p:selectOneMenu>
+							</h:panelGroup>
+
 						</div>
 						<div layout="block" class="mdl-tabs__panel" id="material-panel">
-							<h:outputLabel for="material1" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material1" />
-								<h:panelGroup class="mdl-switch__label">Garota</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material2" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material2" />
-								<h:panelGroup class="mdl-switch__label">Tela Ignífuga</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material3" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material3" />
-								<h:panelGroup class="mdl-switch__label">Antiestatic Lafshield</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material4" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material4" />
-								<h:panelGroup class="mdl-switch__label">Algodón Perchado</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material5" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material5" />
-								<h:panelGroup class="mdl-switch__label">Alviero Strech</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material6" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material6" />
-								<h:panelGroup class="mdl-switch__label">Cuero Nobuck</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material7" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material7" />
-								<h:panelGroup class="mdl-switch__label">Bogotana de Textiles</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material8" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material8" />
-								<h:panelGroup class="mdl-switch__label">Bonlam</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material9" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material9" />
-								<h:panelGroup class="mdl-switch__label">Berlín 60% Algodón, 40% Poliester</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material10" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material10" />
-								<h:panelGroup class="mdl-switch__label">Boston Fabrilar</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material11" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material11" />
-								<h:panelGroup class="mdl-switch__label">Cuero Negro</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material12" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material12" />
-								<h:panelGroup class="mdl-switch__label">Confort Flex</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material13" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material13" />
-								<h:panelGroup class="mdl-switch__label">Córcega  100% algodón</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material14" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material14" />
-								<h:panelGroup class="mdl-switch__label">Charol</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material15" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material15" />
-								<h:panelGroup class="mdl-switch__label">Campero</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material16" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material16" />
-								<h:panelGroup class="mdl-switch__label">Cuero Sintético</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material17" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material17" />
-								<h:panelGroup class="mdl-switch__label">Charol Blanco</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material18" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material18" />
-								<h:panelGroup class="mdl-switch__label">Carnaza</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material19" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material19" />
-								<h:panelGroup class="mdl-switch__label">Dril</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material20" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material20" />
-								<h:panelGroup class="mdl-switch__label">Dril Orión</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material21" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material21" />
-								<h:panelGroup class="mdl-switch__label">Dril Strech Quantto</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material22" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material22" />
-								<h:panelGroup class="mdl-switch__label">Dril Twill (Importado)</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material23" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material23" />
-								<h:panelGroup class="mdl-switch__label">Serrosport</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material24" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material24" />
-								<h:panelGroup class="mdl-switch__label">Serrosport</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material25" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material25" />
-								<h:panelGroup class="mdl-switch__label">Cuero Café</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material26" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material26" />
-								<h:panelGroup class="mdl-switch__label">Fleece</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material27" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material27" />
-								<h:panelGroup class="mdl-switch__label">Diagonal</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material28" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material28" />
-								<h:panelGroup class="mdl-switch__label">Género (Alg. 100%)</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material29" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material29" />
-								<h:panelGroup class="mdl-switch__label">Guata Prensada</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material30" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material30" />
-								<h:panelGroup class="mdl-switch__label">Gab. Tempo</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material31" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material31" />
-								<h:panelGroup class="mdl-switch__label">Indigo 14 Oz</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material32" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material32" />
-								<h:panelGroup class="mdl-switch__label">Indigo Lycrado</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material33" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material33" />
-								<h:panelGroup class="mdl-switch__label">Indigo 14 Oz Color Negro</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material34" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material34" />
-								<h:panelGroup class="mdl-switch__label">Impermeable</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material35" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material35" />
-								<h:panelGroup class="mdl-switch__label">Lona</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material36" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material36" />
-								<h:panelGroup class="mdl-switch__label">Dacrón</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material37" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material37" />
-								<h:panelGroup class="mdl-switch__label">Linoflex</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material38" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material38" />
-								<h:panelGroup class="mdl-switch__label">Lino 9000</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material39" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material39" />
-								<h:panelGroup class="mdl-switch__label">Liverpool</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material40" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material40" />
-								<h:panelGroup class="mdl-switch__label">Morgan</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material41" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material41" />
-								<h:panelGroup class="mdl-switch__label">Montesimone Bases Lafayette</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material42" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material42" />
-								<h:panelGroup class="mdl-switch__label">Nautica</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material43" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material43" />
-								<h:panelGroup class="mdl-switch__label">Nylon Dull</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material44" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material44" />
-								<h:panelGroup class="mdl-switch__label">Neopreno</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material45" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material45" />
-								<h:panelGroup class="mdl-switch__label">Novastrech</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material46" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material46" />
-								<h:panelGroup class="mdl-switch__label">Algodón 100% (180gr)</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material47" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material47" />
-								<h:panelGroup class="mdl-switch__label">Algodón 100% (160gr)</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material48" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material48" />
-								<h:panelGroup class="mdl-switch__label">Algodón Poliester 50/50</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material49" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material49" />
-								<h:panelGroup class="mdl-switch__label">Orion Lafayette</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material50" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material50" />
-								<h:panelGroup class="mdl-switch__label">Algodón Lycrado</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material51" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material51" />
-								<h:panelGroup class="mdl-switch__label">Praga</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material52" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material52" />
-								<h:panelGroup class="mdl-switch__label">Popelina</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material53" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material53" />
-								<h:panelGroup class="mdl-switch__label">Paño</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material54" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material54" />
-								<h:panelGroup class="mdl-switch__label">Ponti Roma</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material55" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material55" />
-								<h:panelGroup class="mdl-switch__label">Reebag</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material56" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material56" />
-								<h:panelGroup class="mdl-switch__label">Cuero Amarillo</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material57" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material57" />
-								<h:panelGroup class="mdl-switch__label">Ribana Nacional (Color Verde Cali)</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material58" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material58" />
-								<h:panelGroup class="mdl-switch__label">Reata</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material59" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material59" />
-								<h:panelGroup class="mdl-switch__label">Soho</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material60" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material60" />
-								<h:panelGroup class="mdl-switch__label">Seda pol</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material61" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material61" />
-								<h:panelGroup class="mdl-switch__label">Bases Sutex</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material62" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material62" />
-								<h:panelGroup class="mdl-switch__label">Bases Lafayette</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material63" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material63" />
-								<h:panelGroup class="mdl-switch__label">Tempestad</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material64" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material64" />
-								<h:panelGroup class="mdl-switch__label">Tela Toalla</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material65" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material65" />
-								<h:panelGroup class="mdl-switch__label">Universal (antifluido lafayette)</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material66" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material66" />
-								<h:panelGroup class="mdl-switch__label">Antifluidos</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material67" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material67" />
-								<h:panelGroup class="mdl-switch__label">Antifluido Dinam (Hilat)</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material68" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material68" />
-								<h:panelGroup class="mdl-switch__label">Vertigo/ Lisboa</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material69" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material69" />
-								<h:panelGroup class="mdl-switch__label">Vinilo</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material70" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material70" />
-								<h:panelGroup class="mdl-switch__label">Cuero Blanco</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material71" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material71" />
-								<h:panelGroup class="mdl-switch__label">Oxford</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material72" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material72" />
-								<h:panelGroup class="mdl-switch__label">Oxford Maxi</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material73" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material73" />
-								<h:panelGroup class="mdl-switch__label">Malla</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material74" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material74" />
-								<h:panelGroup class="mdl-switch__label">Vendaval Liso</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material75" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material75" />
-								<h:panelGroup class="mdl-switch__label">Vendaval Crushed</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="material76" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="material76" />
-								<h:panelGroup class="mdl-switch__label">Vendaval Importado</h:panelGroup>
-							</h:outputLabel>
+							<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+								<p:selectCheckboxMenu  id="material" value="#{productoController.selectedMaterial}" label="Materiales" filter="true" filterMatchMode="startsWith" >
+									<f:selectItems value="#{productoController.listaMaterial}" var="mat" itemLabel="#{mat.nombre}" />
+								</p:selectCheckboxMenu>
+							</h:panelGroup>
 						</div>
 						<div layout="block" class="mdl-tabs__panel" id="sufijo-panel">
-							<h:outputLabel for="sufijo1" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo1" />
-								<h:panelGroup class="mdl-switch__label">Ref C1</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo2" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo2" />
-								<h:panelGroup class="mdl-switch__label">Ref C2</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo3" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo3" />
-								<h:panelGroup class="mdl-switch__label">Ref C3</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo4" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo4" />
-								<h:panelGroup class="mdl-switch__label">Tallas Grandes</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo5" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo5" />
-								<h:panelGroup class="mdl-switch__label">Bordado Seguridad Privada</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo6" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo6" />
-								<h:panelGroup class="mdl-switch__label">Kondor</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo7" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo7" />
-								<h:panelGroup class="mdl-switch__label">Reflectivo Marca 3M</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo8" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo8" />
-								<h:panelGroup class="mdl-switch__label">Marca 3M</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo9" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo9" />
-								<h:panelGroup class="mdl-switch__label">DUPONT</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo10" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo10" />
-								<h:panelGroup class="mdl-switch__label">Bordado Incluido</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo11" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo11" />
-								<h:panelGroup class="mdl-switch__label">Tallas Niños</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo12" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo12" />
-								<h:panelGroup class="mdl-switch__label">Calzado 3025</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo13" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo13" />
-								<h:panelGroup class="mdl-switch__label">Térmico</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo14" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo14" />
-								<h:panelGroup class="mdl-switch__label">Resorte</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo15" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo15" />
-								<h:panelGroup class="mdl-switch__label">Doble Faz</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo16" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo16" />
-								<h:panelGroup class="mdl-switch__label">Steel Safe</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo17" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo17" />
-								<h:panelGroup class="mdl-switch__label">Westland</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo18" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo18" />
-								<h:panelGroup class="mdl-switch__label">link Tech</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo19" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo19" />
-								<h:panelGroup class="mdl-switch__label">Kimberly</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo20" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo20" />
-								<h:panelGroup class="mdl-switch__label">Rayas</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo21" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo21" />
-								<h:panelGroup class="mdl-switch__label">Estampado Incluido</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo22" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo22" />
-								<h:panelGroup class="mdl-switch__label">Negro</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo23" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo23" />
-								<h:panelGroup class="mdl-switch__label">Agroinsumos Alfa</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo24" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo24" />
-								<h:panelGroup class="mdl-switch__label">Ardipieles</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo25" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo25" />
-								<h:panelGroup class="mdl-switch__label">Boton Promo</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo26" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo26" />
-								<h:panelGroup class="mdl-switch__label">La bota Roja</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo27" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo27" />
-								<h:panelGroup class="mdl-switch__label">Cambio leve de diseño</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo28" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo28" />
-								<h:panelGroup class="mdl-switch__label">Calzado Meyver</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo29" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo29" />
-								<h:panelGroup class="mdl-switch__label">Micromax</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo30" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo30" />
-								<h:panelGroup class="mdl-switch__label">Dota Altura</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo31" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo31" />
-								<h:panelGroup class="mdl-switch__label">Drogas la Rebaja</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo32" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo32" />
-								<h:panelGroup class="mdl-switch__label">Dilan Mahecha</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo33" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo33" />
-								<h:panelGroup class="mdl-switch__label">Calzado Factoria</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo34" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo34" />
-								<h:panelGroup class="mdl-switch__label">ARSEG</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo35" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo35" />
-								<h:panelGroup class="mdl-switch__label">Inmadica Andina</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo36" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo36" />
-								<h:panelGroup class="mdl-switch__label">INDUSTRIAS SAFETY</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo37" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo37" />
-								<h:panelGroup class="mdl-switch__label">Seguridad</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo38" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo38" />
-								<h:panelGroup class="mdl-switch__label">mangas abatibles</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo39" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo39" />
-								<h:panelGroup class="mdl-switch__label">Ingeniero</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo40" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo40" />
-								<h:panelGroup class="mdl-switch__label">Puños Resortados</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo41" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo41" />
-								<h:panelGroup class="mdl-switch__label">Rain Power</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo42" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo42" />
-								<h:panelGroup class="mdl-switch__label">Reforzado</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo43" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo43" />
-								<h:panelGroup class="mdl-switch__label">Amarillo</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo44" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo44" />
-								<h:panelGroup class="mdl-switch__label">Segal Galleta Lafayette</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo45" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo45" />
-								<h:panelGroup class="mdl-switch__label">Solmaq</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo46" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo46" />
-								<h:panelGroup class="mdl-switch__label">Calzado Zatts</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo47" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo47" />
-								<h:panelGroup class="mdl-switch__label">Cuello V</h:panelGroup>
-							</h:outputLabel>
-							<h:outputLabel for="sufijo48" class="mdl-switch mdl-js-switch">
-								<h:selectBooleanCheckbox class="mdl-switch__input" id="sufijo48" />
-								<h:panelGroup class="mdl-switch__label">Estampado personalizado</h:panelGroup>
-							</h:outputLabel>
+							<h:panelGroup>
+								<p:selectOneMenu  styleClass="mdl-selectfield__select" id="sufijo" value="#{productoController.sufijo.idSufijo}">
+									<f:selectItem itemLabel="Seleccione: " itemValue="" />
+									<f:selectItems value="#{productoController.listaSufijo}" var="suf" itemLabel="#{suf.codigo}" itemValue="#{suf.idSufijo}" />
+								</p:selectOneMenu>
+							</h:panelGroup>
 						</div>
 					</h:panelGroup>
-					<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-						<h:inputText class="mdl-textfield__input" id="fabricante" p:maxlength="64" required="required" />
-						<h:outputLabel class="mdl-textfield__label" for="fabricante">Fabricante</h:outputLabel>
+					<h:panelGroup>
+						<p:selectOneMenu  styleClass="mdl-selectfield__select" id="fabricante" value="#{productoController.idFabricante}">
+							<f:selectItem itemLabel="Seleccione: " itemValue="" />
+							<f:selectItems value="#{productoController.listaFabricante}" var="fab" itemLabel="#{fab.nombre}" itemValue="#{fab.idFabricante}" />
+						</p:selectOneMenu>
 					</h:panelGroup>
 					<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
 						<h:inputText class="mdl-textfield__input" p:type="date" id="fechaActualizacion" />
@@ -758,11 +165,10 @@
 					</h:outputLabel>
 				</h:panelGroup>
 				<h:panelGroup layout="block" class="mdl-dialog__actions">
-					<h:commandButton id="mostrarArticuloNuevo" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm" value="Crear artículo" />
-					<h:commandButton type="reset" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect toggleSubForm" value="Cancelar" />
+					<p:commandButton id="mostrarArticuloNuevo" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm" value="Crear artículo" actionListener="#{productoController.registrarArticulo()}" />
+					<h:commandButton type="reset" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect toggleSubForm" value="Cancelar" actionListener="#{productoController.limpiar()}"/>
 				</h:panelGroup>
 			</h:form>
-		</aside>
 		</p:dialog>
 		<aside>
 			<h:panelGroup layout="block" id="articuloNuevo" class="mdl-js-snackbar mdl-snackbar">

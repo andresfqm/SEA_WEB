@@ -23,10 +23,13 @@
  */
 package com.sea.backend.model;
 
+import com.sea.backend.entities.Categoria;
 import com.sea.backend.entities.Subcategoria;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -45,6 +48,17 @@ public class SubcategoriaFacade extends AbstractFacade<Subcategoria> implements 
 
 	public SubcategoriaFacade() {
 		super(Subcategoria.class);
+	}
+
+	@Override
+	public List<Subcategoria> listaSubcategorias(Categoria ct) {
+				List<Subcategoria> lista;
+		String jpql = " FROM Subcategoria s\n"
+				+ "where s.tblCategoriaIdCategoria= ?1";
+		Query query = em.createQuery(jpql);
+		query.setParameter(1, ct);
+		lista = query.getResultList();
+		return lista;
 	}
 
 }

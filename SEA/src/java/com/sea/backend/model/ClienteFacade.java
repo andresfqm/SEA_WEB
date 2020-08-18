@@ -169,7 +169,7 @@ public class ClienteFacade extends AbstractFacade<Cliente> implements ClienteFac
 	public List<Cliente> listaClienteCotizacion(Usuario id) {
 		List<Cliente> lista;
 		String jpql = "SELECT c.idCliente, c.nombreORazonSocial, c.tblUsuarioIdUsuario FROM Cliente c\n"
-				+ "WHERE c.tblUsuarioIdUsuario = ?1";
+				+ "WHERE c.tblUsuarioIdUsuario = ?1 AND c.activo = 1";
 		Query query = em.createQuery(jpql);
 		query.setParameter(1, id);
 		lista = query.getResultList();

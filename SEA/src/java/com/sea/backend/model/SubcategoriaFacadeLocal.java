@@ -23,6 +23,7 @@
  */
 package com.sea.backend.model;
 
+import com.sea.backend.entities.Categoria;
 import com.sea.backend.entities.Subcategoria;
 import java.util.List;
 import javax.ejb.Local;
@@ -45,6 +46,8 @@ public interface SubcategoriaFacadeLocal {
 	List<Subcategoria> findAll();
 
 	List<Subcategoria> findRange(int[] range);
+
+	List<Subcategoria> listaSubcategorias(Categoria ct);
 
 	int count();
 

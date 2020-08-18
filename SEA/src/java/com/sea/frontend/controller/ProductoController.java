@@ -14,12 +14,19 @@ import com.sea.backend.model.MaterialFacadeLocal;
 import com.sea.backend.model.ProductoFacadeLocal;
 import com.sea.backend.model.SubcategoriaFacadeLocal;
 import com.sea.backend.model.SufijoFacadeLocal;
+import java.io.FileInputStream;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Properties;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
+import org.primefaces.event.ToggleEvent;
+import org.primefaces.event.ToggleSelectEvent;
+import org.primefaces.event.UnselectEvent;
 
 /**
  *
@@ -31,6 +38,7 @@ public class ProductoController implements Serializable {
 
 	@EJB
 	private ProductoFacadeLocal productoEJB;
+	private Producto prod;
 	@EJB
 	private FabricanteFacadeLocal fabricanteEJB;
 	private List<Producto> producto;
@@ -46,47 +54,96 @@ public class ProductoController implements Serializable {
 	String listString;
 	private Fabricante descripcionFabricante;
 	private Material datosMaterial;
-	
+
 	@EJB
 	private CategoriaFacadeLocal categoriaEJB;
 	private Categoria categoria;
 	private List<Categoria> listaCategoria;
-	
+
 	@EJB
 	private SubcategoriaFacadeLocal subcategoriaEJB;
 	private Subcategoria subcategoria;
 	private List<Subcategoria> listaSubcategoria;
-	
+
 	@EJB
 	private MaterialFacadeLocal materialEJB;
 	private Material material;
 	private List<Material> listaMaterial;
-	
+
 	@EJB
 	private SufijoFacadeLocal sufijoEJB;
 	private Sufijo sufijo;
 	private List<Sufijo> listaSufijo;
-	
+
 	private String referencia;
-	
-		@PostConstruct
+	private String[] selectedMaterial;
+
+	private final static Logger log = Logger.getLogger(ProductoController.class);
+
+	@PostConstruct
 	public void init() {
 
-		producto = productoEJB.findAll();
-		categoria = new Categoria();
-		subcategoria = new Subcategoria();
-		material = new Material();
-		sufijo = new Sufijo();
-		listaProducto =  productoEJB.listaProductos();
-		listaCategoria = categoriaEJB.findAll();
-		listaSubcategoria = subcategoriaEJB.findAll();
-		listaMaterial = materialEJB.findAll();
-		listaSufijo = sufijoEJB.findAll();
+		try {
+			Properties props = new Properties();
+			props.load(new FileInputStream("log4j.properties"));
+			PropertyConfigurator.configure(props);
+			producto = productoEJB.findAll();
+			prod = new Producto();
+			categoria = new Categoria();
+			subcategoria = new Subcategoria();
+			material = new Material();
+			sufijo = new Sufijo();
+			listaProducto = productoEJB.listaProductos();
+			listaCategoria = categoriaEJB.findAll();
+			listaFabricante = fabricanteEJB.findAll();
+
+		} catch (Exception e) {
+			log.error("Se presento el siguiente error en el bean de productos " + e.getMessage());
+			e.printStackTrace();
+		}
+
 	}
-	
-	public String referencia(){
+
+	public String referencia() {
 		referencia = subcategoria.getCodigo() + material.getCodigo() + sufijo.getCodigo();
-		return  referencia;
+		return referencia;
+	}
+
+	/*
+    * @author Andres Quintana
+	* Fecha creación 17/08/2020
+	* Metodo encargado de registrar los articulos
+	 */
+	public void registrarArticulo() {
+		log.info("Ingreso al proceso de registrar el articulo ");
+		System.out.println("xxxxx" + selectedMaterial);
+		Fabricante fb = new Fabricante();
+		fb.setIdFabricante(idFabricante);
+		prod.setMaterialList(listaMateriales);
+		prod.setSufijoList(listaSufijo);
+		prod.setTblFabricanteIdFabricante(fb);
+		prod.setTblSubcategoriaIdSubcategoria(subcategoria);
+		productoEJB.create(prod);
+
+	}
+
+	public void obtenerSubcategoria() {
+		log.info("Ingreso al proceso de obtener la subcategoria y sufijo para la categoria " + categoria.getNombre());
+		try {
+			listaSubcategoria = subcategoriaEJB.listaSubcategorias(categoria);
+			listaSufijo = sufijoEJB.findAll();
+			listaMaterial = materialEJB.findAll();
+		} catch (Exception e) {
+			log.error("Se presento el siguiente error al obtener la subcategoria y los sufijos " + e.getMessage());
+			e.printStackTrace();
+		}
+
+	}
+//		public void obtenerCiudad() {
+//		listaCiudad = ciudadEJB.listaCiudades(departamento);
+//	}
+
+	public void limpiar() {
 	}
 
 	public List<Producto> getProducto() {
@@ -294,5 +351,21 @@ public class ProductoController implements Serializable {
 	public double getProductoPrecio() {
 		return productoPrecio;
 	}
-	
+
+	public Producto getProd() {
+		return prod;
+	}
+
+	public void setProd(Producto prod) {
+		this.prod = prod;
+	}
+
+	public String[] getSelectedMaterial() {
+		return selectedMaterial;
+	}
+
+	public void setSelectedMaterial(String[] selectedMaterial) {
+		this.selectedMaterial = selectedMaterial;
+	}
+
 }
