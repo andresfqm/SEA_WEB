@@ -10,186 +10,210 @@
         <h:outputStylesheet library="css" name="administracion.css" />
 	</h:head>
 	<h:body>
-		<ui:composition template="/templates/header.xhtml" />
-		<main id="articulosDashboard">
-			<h:panelGroup layout="block" p:data-dataTable="">
-				<p:dataTable value="#{productoController.listaProducto}" var="producto" >
-					<p:column>
-						<f:facet name="header">
-							<h:outputLabel value="REFERENCIA"/>
-						</f:facet>
-						<h:outputText value="#{producto[0]}"/>
-					</p:column>
-					<p:column>
-						<f:facet name="header">
-							<h:outputLabel value="DESCRIPCION"/>
-						</f:facet>
-						<h:outputText value="#{producto[1]}"/>
-					</p:column>
-					<p:column>
-						<f:facet name="header">
-							<h:outputLabel value="MATERIAL"/>
-						</f:facet>
-						<h:outputText value="#{producto[2]}"/>
-					</p:column>
-					<p:column>
-						<f:facet name="header">
-							<h:outputLabel value="FABRICANTE"/>
-						</f:facet>
-						<h:outputText value="#{producto[3]}"/>
-					</p:column>
-					<p:column>
-						<f:facet name="header">
-							<h:outputLabel value="FECHA"/>
-						</f:facet>
-						<h:outputText value="#{producto[4]}"/>
-					</p:column>
-					<p:column>
-						<f:facet name="header">
-							<h:outputLabel value="COSTO"/>
-						</f:facet>
-						<h:outputText value="#{producto[5]}"/>
-					</p:column>
-					<p:column>
-						<f:facet name="header">
-							<h:outputLabel value="PRECIO"/>
-						</f:facet>
-						<h:outputText value="#{producto[6]}"/>
-					</p:column>
-				</p:dataTable>
-			</h:panelGroup>
-			<p:commandLink type="button" onclick="PF('agrePro').show();" styleClass="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored button-bottom_right toggleSubForm">
-				<i class="material-icons">add</i>
-			</p:commandLink>
-		</main>
-		<p:dialog  widgetVar="agrePro">
-			<h:form id="addArticulo" class="mdl-dialog">
-				<h3 class="mdl-dialog__title">Registrar artículo</h3>
-				<h:panelGroup layout="block" class="mdl-dialog__content">
-					<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-						<h:inputText class="mdl-textfield__input" id="referencia" value="#{productoController.prod.referencia}"/>
-						<h:outputLabel class="mdl-textfield__label" for="referencia">Referencia</h:outputLabel>
-					</h:panelGroup>
-					<h:outputLabel class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="personalizado">
-						<h:selectBooleanCheckbox id="personalizado" class="mdl-switch__input" />
-						<h:panelGroup class="mdl-switch__label">Artículo personalizado</h:panelGroup>
-					</h:outputLabel>
-					<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-						<h:inputTextarea class="mdl-textfield__input" id="descripcion" p:maxlength="500" required="required" value="#{productoController.prod.descripcion}"/>
-						<h:outputLabel class="mdl-textfield__label" for="descripcion">Descripción</h:outputLabel>
-					</h:panelGroup>
-					<h:panelGroup layout="block" class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
-						<h:panelGroup layout="block" class="mdl-tabs__tab-bar">
-							<a href="#categoria-panel" class="mdl-tabs__tab is-active">Categoría</a>
-							<a href="#subcategoria-panel" class="mdl-tabs__tab">Subcategoría</a>
-							<a href="#material-panel" class="mdl-tabs__tab">Materiales</a>
-							<a href="#sufijo-panel" class="mdl-tabs__tab">Sufijos</a>
+		<div class="mdl-layout mdl-js-layout">
+			<ui:composition template="/templates/header.xhtml" />
+			<ui:composition template="/templates/navGeneral.xhtml" />
+			<main id="articulosDashboard" class="mdl-layout__content">
+				<div class="page-content">
+					<h:form id="formTable">
+						<h:panelGroup class="fullWidth">
+							<p:dataTable value="#{productoController.listaProducto}" var="producto" emptyMessage="No se encontraron registros" 
+										 styleClass="mdl-data-table mdl-js-data-table  mdl-shadow--2dp " rowStyleClass="mdl-data-table__cell--non-numeric">
+								<p:column>
+									<f:facet name="header">
+										<h:outputLabel value="REFERENCIA"/>
+									</f:facet>
+									<h:outputText value="#{producto[1]}"/>
+								</p:column>
+								<p:column>
+									<f:facet name="header">
+										<h:outputLabel value="DESCRIPCION"/>
+									</f:facet>
+									<h:outputText value="#{producto[2]}"/>
+								</p:column>
+								<p:column>
+									<f:facet name="header">
+										<h:outputLabel value="MATERIAL"/>
+									</f:facet>
+									<h:outputText value="#{producto[7]}"/>
+								</p:column>
+								<p:column>
+									<f:facet name="header">
+										<h:outputLabel value="FABRICANTE"/>
+									</f:facet>
+									<h:outputText value="#{producto[6]}"/>
+								</p:column>
+								<p:column>
+									<f:facet name="header">
+										<h:outputLabel value="FECHA ACTUALIZACIÓN"/>
+									</f:facet>
+									<h:outputText value="#{producto[3]}"><f:convertDateTime pattern="dd/MM/yyyy" /></h:outputText>
+								</p:column>
+								<p:column>
+									<f:facet name="header">
+										<h:outputLabel value="COSTO"/>
+									</f:facet>
+									<h:outputText value="#{producto[4]}">
+										<f:convertNumber currencySymbol="$" groupingUsed="true" maxFractionDigits="0" type="currency" locale="es_CO" />
+									</h:outputText>
+								</p:column>
+								<p:column>
+									<f:facet name="header">
+										<h:outputLabel value="PRECIO"/>
+									</f:facet>
+									<h:outputText value="#{producto[5]}">
+											<f:convertNumber currencySymbol="$" groupingUsed="true" maxFractionDigits="0" type="currency" locale="es_CO" />
+									</h:outputText>
+								</p:column>
+							</p:dataTable>
 						</h:panelGroup>
-						<div layout="block" class="mdl-tabs__panel is-active" id="categoria-panel">
-							<h:panelGroup>
-								<p:selectOneMenu  styleClass="mdl-selectfield__select" id="categoria" value="#{productoController.categoria.idCategoria}" filter="true" filterMatchMode="contains" style="width: 100%" pt:required="required" required="true">
+						<p:commandLink type="button" styleClass="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored button-bottom_right toggleSubForm" actionListener="#{productoController.abrirDialogoCrearArticulo()}" update="addArticulo">
+							<i class="material-icons">add</i>
+						</p:commandLink>
+					</h:form>
+				</div>
+			
+			<p:dialog  widgetVar="agrePro">
+				<h:form id="addArticulo" class="mdl-dialog">
+					<p:growl showDetail="true"/>
+					<h3 class="mdl-dialog__title">Registrar artículo</h3>
+					<h:panelGroup layout="block" class="mdl-dialog__content">
+						<h:panelGrid columns="2">
+							<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+								<h:inputText class="mdl-textfield__input" id="referencia" value="#{productoController.prod.referencia}" p:min="0" p:maxlength="15" pt:required="required"/>
+								<h:outputLabel class="mdl-textfield__label" for="referencia">Referencia</h:outputLabel>
+							</h:panelGroup>			
+							<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+								<h:inputTextarea class="mdl-textfield__input" id="descripcion" p:maxlength="500" pt:required="required" value="#{productoController.prod.descripcion}"/>
+								<h:outputLabel class="mdl-textfield__label" for="descripcion">Descripción</h:outputLabel>
+							</h:panelGroup>
+						</h:panelGrid>
+
+						<h:panelGrid columns="2">
+							<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+								<p:selectOneMenu  styleClass="mdl-selectfield__select" id="categoria" value="#{productoController.categoria.idCategoria}" filter="true" filterMatchMode="contains" style="width: 100%" pt:required="required">
 									<p:ajax listener="#{productoController.obtenerSubcategoria()}" update="subCategoria, sufijo, material" />
 									<f:selectItem itemLabel="Seleccione: " itemValue="" />
 									<f:selectItems value="#{productoController.listaCategoria}" var="lisCat" itemLabel="#{lisCat.nombre}" itemValue="#{lisCat.idCategoria}" />
 								</p:selectOneMenu>
+								<h:outputLabel class="mdl-textfield__label" for="categoria">Categoria</h:outputLabel>
 							</h:panelGroup>
-
-						</div>
-						<div layout="block" class="mdl-tabs__panel" id="subcategoria-panel">
-							<h:panelGroup>
-								<p:selectOneMenu  styleClass="mdl-selectfield__select" id="subCategoria" value="#{productoController.subcategoria.idSubcategoria}">
+							<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+								<p:selectOneMenu  styleClass="mdl-selectfield__select" id="subCategoria" value="#{productoController.subcategoria.idSubcategoria}" pt:required="required">
 									<f:selectItem itemLabel="Seleccione: " itemValue="" />
 									<f:selectItems value="#{productoController.listaSubcategoria}" var="lisSubca" itemLabel="#{lisSubca.nombre}" itemValue="#{lisSubca.idSubcategoria}" />
 								</p:selectOneMenu>
+								<h:outputLabel class="mdl-textfield__label" for="subCategoria">SubCategoria</h:outputLabel>
 							</h:panelGroup>
+						</h:panelGrid>
 
-						</div>
-						<div layout="block" class="mdl-tabs__panel" id="material-panel">
+						<h:panelGrid columns="2">
 							<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-								<p:selectCheckboxMenu  id="material" value="#{productoController.selectedMaterial}" label="Materiales" filter="true" filterMatchMode="startsWith" >
-									<f:selectItems value="#{productoController.listaMaterial}" var="mat" itemLabel="#{mat.nombre}" />
+								<p:selectCheckboxMenu  id="material" panelStyle="width:250px" value="#{productoController.listaMaterialAux}" label="Materiales" filter="true" filterMatchMode="startsWith" pt:required="required">
+									<f:selectItems value="#{productoController.listaMaterial}" var="mat" itemLabel="#{mat.nombre}" itemValue="#{mat.idMaterial}"/>	
 								</p:selectCheckboxMenu>
+								<h:outputLabel class="mdl-textfield__label" for="material">Materiales</h:outputLabel>
 							</h:panelGroup>
-						</div>
-						<div layout="block" class="mdl-tabs__panel" id="sufijo-panel">
-							<h:panelGroup>
-								<p:selectOneMenu  styleClass="mdl-selectfield__select" id="sufijo" value="#{productoController.sufijo.idSufijo}">
+							<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+								<p:selectOneMenu  styleClass="mdl-selectfield__select" id="sufijo" value="#{productoController.sufijo.idSufijo}" pt:required="required">
 									<f:selectItem itemLabel="Seleccione: " itemValue="" />
 									<f:selectItems value="#{productoController.listaSufijo}" var="suf" itemLabel="#{suf.codigo}" itemValue="#{suf.idSufijo}" />
 								</p:selectOneMenu>
+								<h:outputLabel class="mdl-textfield__label" for="sufijo">Sufijo</h:outputLabel>
 							</h:panelGroup>
-						</div>
-					</h:panelGroup>
-					<h:panelGroup>
-						<p:selectOneMenu  styleClass="mdl-selectfield__select" id="fabricante" value="#{productoController.idFabricante}">
-							<f:selectItem itemLabel="Seleccione: " itemValue="" />
-							<f:selectItems value="#{productoController.listaFabricante}" var="fab" itemLabel="#{fab.nombre}" itemValue="#{fab.idFabricante}" />
-						</p:selectOneMenu>
-					</h:panelGroup>
-					<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-						<h:inputText class="mdl-textfield__input" p:type="date" id="fechaActualizacion" />
-						<h:outputLabel class="mdl-textfield__label" for="fechaActualizacion">Fecha de actualización</h:outputLabel>
-					</h:panelGroup>
-					<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-						<h:inputText class="mdl-textfield__input" p:type="number" p:min="0" p:maxlength="11" id="costo" required="required" />
-						<h:outputLabel class="mdl-textfield__label" for="costo">Costo</h:outputLabel>
-					</h:panelGroup>
-					<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-						<output class="mdl-textfield__input">Este valor es calculado</output>
-						<h:outputLabel class="mdl-textfield__label">Precio</h:outputLabel>
-					</h:panelGroup>
-					<h6 class="mdl-typography--headline">Aplicar los siguientes descuentos por unidades vendidas</h6>
-					<h:outputLabel for="descuento1" class="mdl-switch mdl-js-switch">
-						<h:selectBooleanCheckbox class="mdl-switch__input" id="descuento1" />
-						<h:panelGroup class="mdl-switch__label">3% (12 unidades)</h:panelGroup>
-					</h:outputLabel>
-					<h:outputLabel for="descuento2" class="mdl-switch mdl-js-switch">
-						<h:selectBooleanCheckbox class="mdl-switch__input" id="descuento2" />
-						<h:panelGroup class="mdl-switch__label">5% (50 unidades)</h:panelGroup>
-					</h:outputLabel>
-					<h:outputLabel for="descuento3" class="mdl-switch mdl-js-switch">
-						<h:selectBooleanCheckbox class="mdl-switch__input" id="descuento3" />
-						<h:panelGroup class="mdl-switch__label">10% (100 unidades)</h:panelGroup>
-					</h:outputLabel>
-					<h:outputLabel for="descuento4" class="mdl-switch mdl-js-switch">
-						<h:selectBooleanCheckbox class="mdl-switch__input" id="descuento4" />
-						<h:panelGroup class="mdl-switch__label">15% (300 unidades)</h:panelGroup>
-					</h:outputLabel>
-					<h:outputLabel for="descuento5" class="mdl-switch mdl-js-switch">
-						<h:selectBooleanCheckbox class="mdl-switch__input" id="descuento5" />
-						<h:panelGroup class="mdl-switch__label">20% (500 unidades)</h:panelGroup>
-					</h:outputLabel>
-					<h:outputLabel for="descuento6" class="mdl-switch mdl-js-switch">
-						<h:selectBooleanCheckbox class="mdl-switch__input" id="descuento6" />
-						<h:panelGroup class="mdl-switch__label">25% (1000 unidades)</h:panelGroup>
-					</h:outputLabel>
-				</h:panelGroup>
-				<h:panelGroup layout="block" class="mdl-dialog__actions">
-					<p:commandButton id="mostrarArticuloNuevo" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm" value="Crear artículo" actionListener="#{productoController.registrarArticulo()}" />
-					<h:commandButton type="reset" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect toggleSubForm" value="Cancelar" actionListener="#{productoController.limpiar()}"/>
-				</h:panelGroup>
-			</h:form>
-		</p:dialog>
-		<aside>
-			<h:panelGroup layout="block" id="articuloNuevo" class="mdl-js-snackbar mdl-snackbar">
-				<h:panelGroup layout="block" class="mdl-snackbar__text"></h:panelGroup>
-				<button class="mdl-snackbar__action" type="button"></button>
-			</h:panelGroup>
-			<script>
-				(function () {
-					'use strict';
-					window['counter'] = 0;
-					var snackbarContainer = document.querySelector('#articuloNuevo');
-					var showToastButton = document.querySelector('#mostrarArticuloNuevo');
-					showToastButton.addEventListener('click', function () {
-						'use strict';
-						var data = {message: 'Artículo creado satisfactoriamente.', timeout: 5000};
-						snackbarContainer.MaterialSnackbar.showSnackbar(data);
-					});
-				}());
-			</script>
-		</aside>
-		<ui:composition template="/templates/navGeneral.xhtml" />
+						</h:panelGrid>
 
+						<h:panelGrid columns="2">
+							<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+								<p:selectOneMenu  styleClass="mdl-selectfield__select" id="fabricante" value="#{productoController.idFabricante}" pt:required="required">
+									<f:selectItem itemLabel="Seleccione: " itemValue="" />
+									<f:selectItems value="#{productoController.listaFabricante}" var="fab" itemLabel="#{fab.nombre}" itemValue="#{fab.idFabricante}" />
+								</p:selectOneMenu>
+								<h:outputLabel class="mdl-textfield__label" for="fabricante">Fabricante</h:outputLabel>
+							</h:panelGroup>
+							<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+								<h:outputLabel class="mdl-textfield__label" for="german">Fecha de actualización</h:outputLabel>
+								<p:calendar id="german" value="#{productoController.date}" locale="de" navigator="true" pattern="yyyy-MMM-dd" required="true" />
+							</h:panelGroup>
+						</h:panelGrid>
+
+						<h:panelGrid columns="2">
+							<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+								<h:inputText class="mdl-textfield__input" onkeypress="if(event.which &lt; 48 || event.which &gt; 57) return false;" p:min="1" p:maxlength="9" id="costo" pt:required="required"  value="#{productoController.costo.costo}"/>
+								<h:outputLabel class="mdl-textfield__label" for="costo">Costo $</h:outputLabel>
+							</h:panelGroup>
+							<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+								<h:inputText class="mdl-textfield__input" onkeypress="if(event.which &lt; 48 || event.which &gt; 57) return false;" p:type="number" p:min="0" p:maxlength="9" id="precio" pt:required="required" value="#{productoController.prod.precio}"/>
+								<h:outputLabel class="mdl-textfield__label">Precio $</h:outputLabel>
+							</h:panelGroup>
+						</h:panelGrid>
+
+						<h5 class="mdl-typography--headline">Aplicar los siguientes descuentos por unidades vendidas</h5>
+
+						<h:panelGroup layout="block" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+							<p:selectCheckboxMenu id="descuento" value="#{productoController.listaDescuentoAux}" label="Descuentos" filter="true" filterMatchMode="startsWith">
+								<f:selectItems value="#{productoController.listaDescuento}" var="des" itemLabel="#{des.descuento},#{des.cantidadMinima}" itemValue="#{des.idDescuento}"/>	
+							</p:selectCheckboxMenu>
+							<h:outputLabel class="mdl-textfield__label" for="descuento">Descuentos</h:outputLabel>
+						</h:panelGroup>
+					</h:panelGroup>
+
+					<h:panelGroup layout="block" class="mdl-dialog__actions">
+						<p:commandButton id="mostrarArticuloNuevo" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent toggleSubForm" value="Crear artículo" actionListener="#{productoController.registrarArticulo()}" update=":formTable addArticulo" onclick="this.disabled = true;"/>
+						<p:commandButton type="reset" onclick="PF('agrePro').hide();" styleClass="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" value="Cancelar" actionListener="#{productoController.limpiar()}"/>
+					</h:panelGroup>
+				</h:form>
+			</p:dialog>
+			</main>
+			<aside>
+				<h:panelGroup layout="block" id="articuloNuevo" class="mdl-js-snackbar mdl-snackbar">
+					<h:panelGroup layout="block" class="mdl-snackbar__text"></h:panelGroup>
+					<button class="mdl-snackbar__action" type="button"></button>
+				</h:panelGroup>
+				<script>
+					(function () {
+						'use strict';
+						window['counter'] = 0;
+						var snackbarContainer = document.querySelector('#articuloNuevo');
+						var showToastButton = document.querySelector('#mostrarArticuloNuevo');
+						showToastButton.addEventListener('click', function () {
+							'use strict';
+							var data = {message: 'Artículo creado satisfactoriamente.', timeout: 5000};
+							snackbarContainer.MaterialSnackbar.showSnackbar(data);
+						});
+					}());
+				</script>
+
+				<script type="text/javascript">
+					PrimeFaces.locales ['de'] = {
+						closeText: 'Schließen',
+						prevText: 'Zurück',
+						nextText: 'Weiter',
+						monthNames: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
+						monthNamesShort: ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'],
+						dayNames: ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'],
+						dayNamesShort: ['Son', 'Mon', 'Die', 'Mit', 'Don', 'Fre', 'Sam'],
+						dayNamesMin: ['S', 'M', 'D', 'M ', 'D', 'F ', 'S'],
+						weekHeader: 'Woche',
+						firstDay: 1,
+						isRTL: false,
+						showMonthAfterYear: false,
+						yearSuffix: '',
+						timeOnlyTitle: 'Nur Zeit',
+						timeText: 'Zeit',
+						hourText: 'Stunde',
+						minuteText: 'Minute',
+						secondText: 'Sekunde',
+						currentText: 'Aktuelles Datum',
+						ampm: false,
+						month: 'Monat',
+						week: 'Woche',
+						day: 'Tag',
+						allDayText: 'Ganzer Tag'
+					};
+				</script>
+			</aside>
+
+		</div>
 	</h:body>
 </html>

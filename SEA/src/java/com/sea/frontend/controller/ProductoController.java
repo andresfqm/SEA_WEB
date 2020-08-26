@@ -1,32 +1,47 @@
 package com.sea.frontend.controller;
 
+import com.sea.backend.dto.ProductoDTO;
 import com.sea.backend.entities.Categoria;
+import com.sea.backend.entities.Descuento;
 import com.sea.backend.entities.Direccion;
 import com.sea.backend.entities.Fabricante;
 import com.sea.backend.entities.Material;
 import com.sea.backend.entities.Producto;
+import com.sea.backend.entities.RegistroCosto;
 import com.sea.backend.entities.Subcategoria;
 import com.sea.backend.entities.Sufijo;
 import com.sea.backend.model.CategoriaFacadeLocal;
+import com.sea.backend.model.DescuentoFacadeLocal;
 import com.sea.backend.model.DireccionFacadeLocal;
 import com.sea.backend.model.FabricanteFacadeLocal;
 import com.sea.backend.model.MaterialFacadeLocal;
 import com.sea.backend.model.ProductoFacadeLocal;
+import com.sea.backend.model.RegistroCostoFacadeLocal;
 import com.sea.backend.model.SubcategoriaFacadeLocal;
 import com.sea.backend.model.SufijoFacadeLocal;
+import com.sea.backend.util.AbrirCerrarDialogos;
 import java.io.FileInputStream;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.SelectEvent;
 import org.primefaces.event.ToggleEvent;
 import org.primefaces.event.ToggleSelectEvent;
 import org.primefaces.event.UnselectEvent;
+import org.primefaces.json.JSONObject;
 
 /**
  *
@@ -42,7 +57,7 @@ public class ProductoController implements Serializable {
 	@EJB
 	private FabricanteFacadeLocal fabricanteEJB;
 	private List<Producto> producto;
-	private List<Producto> listaProducto;
+	private List<ProductoDTO> listaProducto;
 	private List<Material> listaMateriales;
 	private List<Fabricante> listaFabricante;
 	private double productoPrecio;
@@ -75,10 +90,22 @@ public class ProductoController implements Serializable {
 	private Sufijo sufijo;
 	private List<Sufijo> listaSufijo;
 
+	@EJB
+	private DescuentoFacadeLocal descuentoEJB;
+	private Descuento descuento;
+	private List<Descuento> listaDescuento;
+	private List<Descuento> listaDescuentos;
+
 	private String referencia;
-	private String[] selectedMaterial;
+	private int[] listaMaterialAux;
+	private int[] listaDescuentoAux;
+	private Date date;
+	@EJB
+	private RegistroCostoFacadeLocal registroCostoEJB;
+	private RegistroCosto costo;
 
 	private final static Logger log = Logger.getLogger(ProductoController.class);
+	JSONObject snackbarData = new JSONObject();
 
 	@PostConstruct
 	public void init() {
@@ -93,9 +120,10 @@ public class ProductoController implements Serializable {
 			subcategoria = new Subcategoria();
 			material = new Material();
 			sufijo = new Sufijo();
+			listaDescuento = new ArrayList();
+			descuento = new Descuento();
+			costo = new RegistroCosto();
 			listaProducto = productoEJB.listaProductos();
-			listaCategoria = categoriaEJB.findAll();
-			listaFabricante = fabricanteEJB.findAll();
 
 		} catch (Exception e) {
 			log.error("Se presento el siguiente error en el bean de productos " + e.getMessage());
@@ -115,26 +143,113 @@ public class ProductoController implements Serializable {
 	* Metodo encargado de registrar los articulos
 	 */
 	public void registrarArticulo() {
-		log.info("Ingreso al proceso de registrar el articulo ");
-		System.out.println("xxxxx" + selectedMaterial);
-		Fabricante fb = new Fabricante();
-		fb.setIdFabricante(idFabricante);
-		prod.setMaterialList(listaMateriales);
-		prod.setSufijoList(listaSufijo);
-		prod.setTblFabricanteIdFabricante(fb);
-		prod.setTblSubcategoriaIdSubcategoria(subcategoria);
-		productoEJB.create(prod);
+
+		log.info("Ingreso al proceso de registrar el articulo : " + prod.getReferencia());
+
+		Material material = new Material();
+		Descuento descuento = new Descuento();
+		listaMateriales = new ArrayList();
+		listaDescuentos = new ArrayList();
+
+		if (prod.getReferencia().trim().isEmpty()) {
+			snackbarData.put("message", "Se debe ingresar la referencia");
+			RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
+		} else if (prod.getDescripcion().trim().isEmpty()) {
+			snackbarData.put("message", "Se debe ingresar la descripción del producto");
+			RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
+		} else if (categoria.getIdCategoria() == null) {
+			snackbarData.put("message", "Se debe seleccionar la categoria del producto");
+			RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
+		} else if (subcategoria.getIdSubcategoria() == null) {
+			snackbarData.put("message", "Se debe seleccionar la subcategoria de la categoria seleccionada");
+			RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
+		} else if (listaMaterialAux.length == 0) {
+			snackbarData.put("message", "Se debe seleccionar los materiales del producto");
+			RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
+		} else if (sufijo.getIdSufijo() == null) {
+			snackbarData.put("message", "Se debe seleccionar un sufijo");
+			RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
+		} else if (idFabricante == 0) {
+			snackbarData.put("message", "Se debe seleccionar el fabricante");
+			RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
+		} else if (costo.getCosto() == 0.0) {
+			snackbarData.put("message", "Se debe ingresar el costo del producto");
+			RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
+		} else if (prod.getPrecio() == 0.0) {
+			snackbarData.put("message", "Se debe ingresar el precio del producto");
+			RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
+		} else if (listaDescuentoAux.length == 0) {
+			snackbarData.put("message", "Se debe de seleccionar los descuentos que le aplicara al producto");
+			RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
+		} else {
+
+			for (int i = 0; i < listaMaterialAux.length; i++) {
+				for (Material mat : listaMaterial) {
+					if (mat.getIdMaterial() == listaMaterialAux[i]) {
+						listaMateriales.add(mat);
+					}
+				}
+
+			}
+			for (int i = 0; i < listaDescuentoAux.length; i++) {
+				for (Descuento des : listaDescuento) {
+					if (des.getIdDescuento() == listaDescuentoAux[i]) {
+						listaDescuentos.add(des);
+					}
+				}
+
+			}
+
+			List<Sufijo> liSufijo = new ArrayList<>();
+
+			for (Sufijo suf : listaSufijo) {
+				if (suf.getIdSufijo() == sufijo.getIdSufijo()) {
+					liSufijo.add(suf);
+					break;
+				}
+			}
+			Fabricante fb = new Fabricante();
+			fb.setIdFabricante(idFabricante);
+			prod.setSufijoList(liSufijo);
+			prod.setTblFabricanteIdFabricante(fb);
+			prod.setTblSubcategoriaIdSubcategoria(subcategoria);
+			prod.setFechaActualizacion(date);
+			try {
+
+				productoEJB.create(prod);
+
+				costo.setInicioVigencia(date);
+				costo.setFinVigencia(date);
+				costo.setTblProductoIdProducto(prod);
+				registroCostoEJB.create(costo);
+
+				for (Material prom : listaMateriales) {
+					productoEJB.crearProductoMaterial(prod.getIdProducto(), prom.getIdMaterial());
+				}
+				for (Descuento desc : listaDescuentos) {
+					productoEJB.crearProductoDescuento(desc.getIdDescuento(), prod.getIdProducto());
+				}
+				listaProducto = productoEJB.listaProductos();
+				snackbarData.put("message", "Se creo el artículo de referencia " + prod.getReferencia() + " de forma correcta");
+				RequestContext.getCurrentInstance().execute("mostrarSnackbar(" + snackbarData + ");");
+				AbrirCerrarDialogos.abrirCerrarDialogos("PF('agrePro').hide();");
+				limpiar();
+			} catch (Exception e) {
+				log.error("Se presento el siguinte error al registra el producto de referencia : " + prod.getReferencia());
+				e.printStackTrace();
+				limpiar();
+			}
+
+		}
 
 	}
 
 	public void obtenerSubcategoria() {
-		log.info("Ingreso al proceso de obtener la subcategoria y sufijo para la categoria " + categoria.getNombre());
+		log.info("Ingreso al proceso de obtener la subcategoria  de la Categoria " + categoria.getNombre());
 		try {
 			listaSubcategoria = subcategoriaEJB.listaSubcategorias(categoria);
-			listaSufijo = sufijoEJB.findAll();
-			listaMaterial = materialEJB.findAll();
 		} catch (Exception e) {
-			log.error("Se presento el siguiente error al obtener la subcategoria y los sufijos " + e.getMessage());
+			log.error("Se presento el siguiente error al obtener la subcategoria de la Categoria :" + categoria.getNombre() + " " + e.getMessage());
 			e.printStackTrace();
 		}
 
@@ -144,6 +259,48 @@ public class ProductoController implements Serializable {
 //	}
 
 	public void limpiar() {
+		listaCategoria = new ArrayList<>();
+		listaFabricante = new ArrayList<>();
+		listaSufijo = new ArrayList<>();
+		listaMaterial = new ArrayList<>();
+		prod = new Producto();
+		costo = new RegistroCosto();
+		material = new Material();
+		descuento = new Descuento();
+		listaMateriales = new ArrayList();
+		listaDescuentos = new ArrayList();
+		sufijo = new Sufijo();
+		categoria = new Categoria();
+		subcategoria = new Subcategoria();
+		idFabricante = 0;
+		listaMaterialAux = null;
+		listaDescuentoAux = null;
+		//AbrirCerrarDialogos.abrirCerrarDialogos("PF('agrePro').hide();");
+	}
+
+	/*
+    * @author Andres Quintana
+	* Fecha modificación 18/08/2020
+	* Metodo encargado de abrir el dialogo de crear articulos
+	 */
+	public void abrirDialogoCrearArticulo() {
+		listaCategoria = categoriaEJB.findAll();
+		listaFabricante = fabricanteEJB.findAll();
+		listaSufijo = sufijoEJB.findAll();
+		listaMaterial = materialEJB.findAll();
+		listaDescuento = descuentoEJB.findAll();
+		AbrirCerrarDialogos.abrirCerrarDialogos("PF('agrePro').show();");
+	}
+
+	public void onItemUnselect(UnselectEvent event) {
+		System.out.println("Ingreso al metodo onItemUnselect" + date);
+		FacesContext context = FacesContext.getCurrentInstance();
+
+		FacesMessage msg = new FacesMessage();
+		msg.setSummary("Item unselected: " + event.getObject().toString());
+		msg.setSeverity(FacesMessage.SEVERITY_INFO);
+
+		context.addMessage(null, msg);
 	}
 
 	public List<Producto> getProducto() {
@@ -268,11 +425,11 @@ public class ProductoController implements Serializable {
 
 	}
 
-	public List<Producto> getListaProducto() {
+	public List<ProductoDTO> getListaProducto() {
 		return listaProducto;
 	}
 
-	public void setListaProducto(List<Producto> listaProducto) {
+	public void setListaProducto(List<ProductoDTO> listaProducto) {
 		this.listaProducto = listaProducto;
 	}
 
@@ -360,12 +517,60 @@ public class ProductoController implements Serializable {
 		this.prod = prod;
 	}
 
-	public String[] getSelectedMaterial() {
-		return selectedMaterial;
+	public Descuento getDescuento() {
+		return descuento;
 	}
 
-	public void setSelectedMaterial(String[] selectedMaterial) {
-		this.selectedMaterial = selectedMaterial;
+	public void setDescuento(Descuento descuento) {
+		this.descuento = descuento;
+	}
+
+	public List<Descuento> getListaDescuento() {
+		return listaDescuento;
+	}
+
+	public void setListaDescuento(List<Descuento> listaDescuento) {
+		this.listaDescuento = listaDescuento;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
+
+	public int[] getListaMaterialAux() {
+		return listaMaterialAux;
+	}
+
+	public void setListaMaterialAux(int[] listaMaterialAux) {
+		this.listaMaterialAux = listaMaterialAux;
+	}
+
+	public int[] getListaDescuentoAux() {
+		return listaDescuentoAux;
+	}
+
+	public void setListaDescuentoAux(int[] listaDescuentoAux) {
+		this.listaDescuentoAux = listaDescuentoAux;
+	}
+
+	public List<Descuento> getListaDescuentos() {
+		return listaDescuentos;
+	}
+
+	public void setListaDescuentos(List<Descuento> listaDescuentos) {
+		this.listaDescuentos = listaDescuentos;
+	}
+
+	public RegistroCosto getCosto() {
+		return costo;
+	}
+
+	public void setCosto(RegistroCosto costo) {
+		this.costo = costo;
 	}
 
 }

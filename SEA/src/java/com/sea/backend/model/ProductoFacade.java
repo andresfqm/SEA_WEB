@@ -23,6 +23,7 @@
  */
 package com.sea.backend.model;
 
+import com.sea.backend.dto.ProductoDTO;
 import com.sea.backend.entities.Producto;
 import com.sea.frontend.controller.ProductoAuxiliar;
 import java.util.ArrayList;
@@ -87,16 +88,29 @@ public class ProductoFacade extends AbstractFacade<Producto> implements Producto
 	}
 
 	@Override
-	public List<Producto> listaProductos() {
-		List<Producto> listaProductoPrecio;
-		String consulta = "SELECT p.referencia, p.descripcion, m.nombre, f.nombre, p.fechaActualizacion, cos.costo, p.precio FROM Producto p "
-				+ "JOIN p.materialList m\n"
-				+ "JOIN p.tblFabricanteIdFabricante f\n"
-				+ "JOIN p.registroCostoList cos\n";
+	public List<ProductoDTO> listaProductos() {
+		List<Object[]> listaDatos;
+		List<ProductoDTO> listaProductoPrecio;
+//		String consulta = "SELECT p.referencia, p.descripcion, m.nombre, f.nombre, p.fechaActualizacion, cos.costo, p.precio FROM Producto p "
+//				+ "JOIN p.materialList m\n"
+//				+ "JOIN p.tblFabricanteIdFabricante f\n"
+//				+ "JOIN p.registroCostoList cos\n";
 
-		Query query = em.createQuery(consulta);
+		String consulta = "select p.ID_PRODUCTO, p.REFERENCIA, p.DESCRIPCION, p.FECHA_ACTUALIZACION, c.COSTO, p.PRECIO, f.NOMBRE as FABRICANTE, group_concat(distinct m.nombre) MATERIAL from tbl_producto_material pm\n"
+				+ "INNER JOIN tbl_material m\n"
+				+ "ON pm.TBL_MATERIAL_ID_MATERIAL = m.ID_MATERIAL\n"
+				+ "INNER JOIN tbl_producto p\n"
+				+ "ON pm.TBL_PRODUCTO_ID_PRODUCTO = p.ID_PRODUCTO\n"
+				+ "INNER JOIN tbl_fabricante f\n"
+				+ "ON p.TBL_FABRICANTE_ID_FABRICANTE = f.ID_FABRICANTE\n"
+				+ "INNER JOIN tbl_registro_costo c\n"
+				+ "ON c.TBL_PRODUCTO_ID_PRODUCTO = p.ID_PRODUCTO\n"
+				+ "group by p.ID_PRODUCTO;";
 
+		Query query = em.createNativeQuery(consulta);
+		//listaDatos = query.getResultList();
 		listaProductoPrecio = query.getResultList();
+		
 		return listaProductoPrecio;
 
 	}
@@ -128,5 +142,24 @@ public class ProductoFacade extends AbstractFacade<Producto> implements Producto
 		}
 
 		return listaDatosEspecificacionProducto;
+	}
+
+	@Override
+	public void crearProductoMaterial(int idProducto, int idMaterial) {
+		String insert = "INSERT INTO tbl_producto_material SET TBL_MATERIAL_ID_MATERIAL = ?1,TBL_PRODUCTO_ID_PRODUCTO = ?2";
+		Query query = em.createNativeQuery(insert);
+		query.setParameter(1, idMaterial);
+		query.setParameter(2, idProducto);
+		query.executeUpdate();
+	}
+
+	@Override
+	public void crearProductoDescuento(int idDescuento, int idProducto) {
+		//
+		String insert = "INSERT INTO tbl_producto_descuento SET TBL_DESCUENTO_ID_DESCUENTO = ?1,TBL_PRODUCTO_ID_PRODUCTO = ?2";
+		Query query = em.createNativeQuery(insert);
+		query.setParameter(1, idDescuento);
+		query.setParameter(2, idProducto);
+		query.executeUpdate();
 	}
 }

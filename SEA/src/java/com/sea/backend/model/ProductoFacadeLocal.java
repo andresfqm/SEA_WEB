@@ -23,6 +23,7 @@
  */
 package com.sea.backend.model;
 
+import com.sea.backend.dto.ProductoDTO;
 import com.sea.backend.entities.Producto;
 import com.sea.frontend.controller.ProductoAuxiliar;
 import java.util.List;
@@ -51,6 +52,9 @@ public interface ProductoFacadeLocal {
 
 	Producto productoDescripcion(int idProducto) throws Exception;
 	double productoPrecio(int idProducto) throws Exception;
-	List<Producto> listaProductos();
+	List<ProductoDTO> listaProductos();
 	List<ProductoAuxiliar> datosEspecificacionProducto(String referencia) throws Exception;
+	
+	void crearProductoMaterial(int idProducto, int idMaterial);
+	void crearProductoDescuento(int idDescuento, int idProducto);
 }
